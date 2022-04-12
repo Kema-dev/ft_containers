@@ -50,7 +50,6 @@ fclean:	clean
 
 debug: directories $(OBJECTS)
 	$(CC) $(DEBUGFLAG) -o $(TARGETDIR)/$(DEBUGOUT) $(OBJECTS)
-	@clear
 
 leaks: directories $(OBJECTS)
 	$(CC) -o $(TARGETDIR)/$(TARGET) $(OBJECTS)
