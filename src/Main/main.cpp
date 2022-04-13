@@ -123,53 +123,28 @@
 #include "../Tools/RBT.hpp"
 #endif
 
-#define wid 290
-
 using namespace std;
+using namespace ft;
 
 int main(void) {
-	ft::RBT<int, std::string> tree = ft::RBT<int, std::string>();
-	int num = 3;
-	std::string str = "three";
-	tree.insert(ft::make_kvp(num, str));
-	num = 1;
-	str = "1";
-	tree.insert(ft::make_kvp(num, str));
-	num = 6;
-	str = "6";
-	tree.insert(ft::make_kvp(num, str));
-	num = 2;
-	str = "2";
-	tree.insert(ft::make_kvp(num, str));
-	num = 5;
-	str = "5";
-	tree.insert(ft::make_kvp(num, str));
-	num = -1;
-	str = "-1";
-	tree.insert(ft::make_kvp(num, str));
-	num = 8;
-	str = "8";
-	tree.insert(ft::make_kvp(num, str));
-	num = -2;
-	str = "-2";
-	tree.insert(ft::make_kvp(num, str));
-	num = 0;
-	str = "0";
-	tree.insert(ft::make_kvp(num, str));
-	num = 7;
-	str = "7";
-	tree.insert(ft::make_kvp(num, str));
-	num = 3;
-	str = "3";
-	tree.insert(ft::make_kvp(num, str));
-	num = 9;
-	str = "9";
-	tree.insert(ft::make_kvp(num, str));
-	num = 10;
-	str = "10";
-	tree.insert(ft::make_kvp(num, str));
-	num = 11;
-	str = "11";
-	tree.insert(ft::make_kvp(num, str));
-	tree.print("", tree.getRoot(), false);
+	RBT<int, string> tree;
+	try {
+		tree = RBT<int, string>();
+	} catch (exception& e) {
+		cerr << e.what() << endl;
+	}
+	int max = 10;
+	try {
+		int nb;
+		string str;
+		for (nb = 0; nb < max; nb++) {
+			char buf[10];
+			sprintf(buf, "%d", nb);
+			str = string(buf);
+			tree.add(make_kvp(nb, str));
+		}
+		tree.print();
+	} catch (exception& e) {
+		cerr << e.what() << endl;
+	}
 }

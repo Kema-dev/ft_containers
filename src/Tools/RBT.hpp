@@ -5,6 +5,7 @@
 #include <string>
 
 #include "KVP.hpp"
+#include "Exceptions.hpp"
 
 enum e_color {
 	black,
@@ -15,183 +16,429 @@ enum e_branch {
 	right
 };
 
+#define RED "\e[31m"
+#define BLACK "\e[30m"
+#define DEFAULT "\e[39m"
+
 using namespace std;
 
+// SECTION namespace ft
 namespace ft {
+
+// SECTION Node
 template <typename K, typename V>
 struct node {
-	ft::kvp<K, V> pair;
-	e_color color;
-	node *parent;
-	node *left;
-	node *right;
-	//	*	Node constructors
-	node(kvp<K, V> &dpair)
-		: pair(dpair), color(red), parent(NULL), left(NULL), right(NULL) {
-	}
-	//	*	Node destructor
+	kvp<K, V> pair;
+	e_color	color;
+	node*	parent;
+	node*	left;
+	node*	right;
+	node(kvp<K, V>& dpair)
+		: pair(dpair), color(black), parent(NULL), left(NULL), right(NULL) {
+	};
 	~node(){};
 };
-//	*	RBT
+// !SECTION Node
+
+// SECTION RBT
 template <typename K, typename V>
 class RBT {
-   public:
-	//	*	Typedefinition
-	typedef node<K, V> *nodePtr;
+	public:
+	typedef node<K, V>*	nodePtr;
+	typedef node<K, V>&	nodeRef;
+	typedef node<K, V>	nodeType;
 
-   private:
+	private:
 	nodePtr _root;
 
-   public:
-	//	*	Swap
-	void swap(RBT &src) {
+	public:
+	// SECTION Constructors / Destructors
+	// INFO Create an empty tree
+	RBT(void)
+		: _root(NULL) {
+	};
+	/*
+	INFO Create a tree with root node containing KVP <dpair>
+	INFO Can throw exception (self: allocFail)
+	*/
+	RBT(kvp<K, V> dpair) {
+		_root = new node<K, V>(dpair);
+		if (!_root) {
+			throw allocFail();
+		}
+	};
+	/*
+	INFO Create a RBT with RBT <src> as "root"
+	INFO Can throw exception (calls)
+	*/
+	RBT(RBT const& src) {
+		*this = src;
+		_root->color = black;
+	};
+	/*
+	INFO Clear the tree from nodePtr <node>
+	INFO No exception
+	*/
+	void clear(nodePtr node) {
+		if (!node)
+			return;
+		clear(node->left);
+		clear(node->right);
+		delete node;
+	};
+	/*
+	INFO Clear the entire tree
+	INFO No exception
+	*/
+	~RBT(void) {
+		clear(_root);
+	};
+	// !SECTION Constructors / Destructors
+	// SECTION Operators and basic functions
+	// INFO Get the root node
+	nodePtr getRoot(void) const {
+		return _root;
+	};
+	/*
+	INFO Get a mint new node with KVP <dpair>
+	INFO Can throw exception (self: allocFail)
+	*/
+	nodePtr standaloneNode(kvp<K, V> dpair) const {
+		nodePtr buf = new node<K, V>(dpair);
+		if (!buf) {
+			throw allocFail();
+		}
+		return buf;
+	};
+	/*
+	INFO Make RBT <this> become a copy of RBT <rhs>
+	INFO Can throw exception (calls)
+	*/
+	RBT& operator=(RBT const& rhs) {
+		clear(_root);
+		_root = copy(rhs._root);
+		return *this;
+	};
+	/*
+	INFO Get a copy of nodePtr <node>
+	INFO Can throw exception (calls)
+	*/
+	nodePtr copy(nodePtr node) {
+		if (!node)
+			return NULL;
+		nodePtr newNode;
+		newNode = standaloneNode(node->pair);
+		newNode->color = node->color;
+		newNode->left = copy(node->left);
+		newNode->right = copy(node->right);
+		if (newNode->left)
+			newNode->left->parent = newNode;
+		if (newNode->right)
+			newNode->right->parent = newNode;
+		return newNode;
+	};
+	/*
+	INFO Swap RBT <this> and RBT <src>
+	INFO No exception
+	*/
+	void swap(RBT& src) {
 		nodePtr bufRoot = _root;
 		_root = src._root;
 		src._root = bufRoot;
 	}
-
-   public:
-	//	*	Constructors
-	RBT(void)
-		: _root(NULL){};
-	RBT(ft::kvp<K, V> pair)
-		: _root(allocator<nodePtr>(1)) {
-		allocator<nodePtr>(construct(_root, node<K, V>(pair)));
+	// !SECTION Operators and basic functions
+	// SECTION Insertion
+	/*
+	INFO /!\ DO NOT USE /!\ (Use "add" instead)
+	INFO Can throw exception (calls)
+	*/
+	nodePtr insert(kvp<K, V> dpair) {
+		nodePtr newNode = standaloneNode(dpair);
+		nodePtr curNode = _root;
+		nodePtr parent = NULL;
+		while (curNode) {
+			parent = curNode;
+			if (newNode->pair.key < curNode->pair.key)
+				curNode = curNode->left;
+			else
+				curNode = curNode->right;
+		}
+		newNode->parent = parent;
+		if (!parent) {
+			_root = newNode;
+			_root->color = black;
+			return newNode;
+		}
+		else if (newNode->pair.key < parent->pair.key)
+			parent->left = newNode;
+		else if (newNode->pair.key > parent->pair.key)
+			parent->right = newNode;
+		else {
+			delete newNode;
+			throw duplicateKey();
+		}
+		newNode->color = red;
+		return newNode;
 	};
-	RBT(RBT const &src)
-		: _root(NULL) {
-		*this = src;
+	/*
+	INFO Add KVP <dpair> to the tree
+	INFO Can throw exception (calls)
+	*/
+	void add(kvp<K, V> dpair) {
+		nodePtr newNode = insert(dpair);
+		fixInsert(newNode);
+	};
+	/*
+	INFO Fix the RBT after insertion of nodePtr <node>
+	INFO Can throw exception (calls)
+	*/
+	void fixInsert(nodePtr node) {
+		while (node->parent && node->parent->color == red) {
+			if (node->parent == node->parent->parent->left) {
+				nodePtr uncle = node->parent->parent->right;
+				if (uncle && uncle->color == red) {
+					node->parent->color = black;
+					uncle->color = black;
+					node->parent->parent->color = red;
+					node = node->parent->parent;
+				}
+				else {
+					if (node == node->parent->right) {
+						node = node->parent;
+						leftRotate(node);
+					}
+					node->parent->color = black;
+					node->parent->parent->color = red;
+					rightRotate(node->parent->parent);
+				}
+			}
+			else {
+				nodePtr uncle = node->parent->parent->left;
+				if (uncle && uncle->color == red) {
+					node->parent->color = black;
+					uncle->color = black;
+					node->parent->parent->color = red;
+					node = node->parent->parent;
+				}
+				else {
+					if (node == node->parent->left) {
+						node = node->parent;
+						rightRotate(node);
+					}
+					node->parent->color = black;
+					node->parent->parent->color = red;
+					leftRotate(node->parent->parent);
+				}
+			}
+		}
 		_root->color = black;
 	};
-	//	*	Destructor and associated function
-	void clear(nodePtr _root) {
-		if (!_root)
-			return;
-		clear(_root->left);
-		clear(_root->right);
-		delete (_root);	 // TODO ANCHOR Check if delete is ok
-	};
-	~RBT(void) {
-		clear(_root);
-	};
-	//	*	Getters / Setters
-	nodePtr getRoot(void) const {
-		return _root;
-	};
-	//	*	Other member functions
-	RBT &operator=(RBT const &rhs) {
-		clear(_root);
-		copy(rhs._root);
-		return *this;
-	};
-	nodePtr copy(nodePtr node) {
-		if (!node)
-			return NULL;
-		// this->getRoot()->pair = insert(node->pair);
-		// this->getRoot()->color = copy(node->color);
-		// this->getRoot()->parent = copy(node->parent);
-		// this->getRoot()->left = copy(node->left);
-		// this->getRoot()->right = copy(node->right);
-		// return this;
-		// TODO ANCHOR copy
-		return NULL;
-	};
-	nodePtr insert(ft::kvp<K, V> dpair) {
-		if (!_root)
-			_root = insert(_root, standaloneNode(dpair));
+	/*
+	INFO Rotate nodePtr <node> to the left
+	INFO Can throw exception (calls)
+	*/
+	void leftRotate(nodePtr node) {
+		nodePtr right = node->right;
+		node->right = right->left;
+		if (right->left)
+			right->left->parent = node;
+		right->parent = node->parent;
+		if (!node->parent)
+			_root = right;
+		else if (node == node->parent->left)
+			node->parent->left = right;
 		else
-			insert(_root, standaloneNode(dpair));
-		return _root;
-	}
-	nodePtr insert(nodePtr start, nodePtr leaf) {
-		if (!leaf) {
-			return NULL;
-		}
-		if (!start) {
-			start = leaf;
-			start->color = black;
-			return leaf;
-		}
-		if ((ft::less(start->pair, leaf->pair)) == true) {
-			if (!start->left) {
-				leaf->color = red;
-				leaf->parent = start;
-				start->left = leaf;
-				checkTree(leaf);
-			} else {
-				insert(start->left, leaf);
-			}
-		} else {
-			if (!start->right) {
-				leaf->color = red;
-				leaf->parent = start;
-				start->right = leaf;
-				checkTree(leaf);
-			} else {
-				insert(start->right, leaf);
-			}
-		}
-		return (leaf);
+			node->parent->right = right;
+		right->left = node;
+		node->parent = right;
 	};
-	nodePtr standaloneNode(ft::kvp<K, V> dpair) const {
-		return new node<K, V>(dpair);
+	/*
+	INFO Rotate nodePtr <node> to the right
+	INFO Can throw exception (calls)
+	*/
+	void rightRotate(nodePtr node) {
+		nodePtr left = node->left;
+		node->left = left->right;
+		if (left->right)
+			left->right->parent = node;
+		left->parent = node->parent;
+		if (!node->parent)
+			_root = left;
+		else if (node == node->parent->right)
+			node->parent->right = left;
+		else
+			node->parent->left = left;
+		left->right = node;
+		node->parent = left;
 	};
-	//	*	Searching functions
+	// !SECTION Insertion
+	// SECTION Deletion
+	/*
+	INFO Remove nodePtr <node> from the tree
+	INFO Can throw exception (calls)
+	*/
+	void	remove(nodePtr node) {
+		if (!node)
+			return;
+		nodePtr curNode = node;
+		nodePtr parent = node->parent;
+		nodePtr child = NULL;
+		nodePtr sibling = NULL;
+		bool isLeft = false;
+		if (node->left && node->right) {
+			curNode = node->right;
+			while (curNode->left)
+				curNode = curNode->left;
+			child = curNode->right;
+			sibling = curNode->parent;
+			isLeft = (curNode == sibling->left);
+			curNode->parent = parent;
+			curNode->left = node->left;
+			curNode->left->parent = curNode;
+			curNode->right = node->right;
+			curNode->right->parent = curNode;
+			curNode->color = node->color;
+		}
+		else if (node->left)
+			child = node->left;
+		else
+			child = node->right;
+		if (!parent)
+			_root = child;
+		else if (parent->left == node)
+			parent->left = child;
+		else
+			parent->right = child;
+		if (child)
+			child->parent = parent;
+		if (node->color == black)
+			fixRemove(child, sibling, isLeft);
+		delete node;
+	};
+	/*
+	INFO Fix the RBT after deletion of nodePtr <node>
+	INFO Can throw exception (calls)
+	*/
+	void	fixRemove(nodePtr node, nodePtr sibling, bool isLeft) {
+		if (!node)
+			return;
+		if (node->color == red) {
+			node->color = black;
+			return;
+		}
+		if (sibling) {
+			if (sibling->color == red) {
+				sibling->color = black;
+				if (isLeft) {
+					node->parent->color = red;
+					rightRotate(node->parent);
+				}
+				else {
+					node->parent->color = red;
+					leftRotate(node->parent);
+				}
+				sibling = node->parent->left;
+			}
+			if (sibling->left->color == black && sibling->right->color == black) {
+				sibling->color = red;
+				node = node->parent;
+			}
+			else {
+				if (sibling->left->color == black) {
+					sibling->right->color = black;
+					sibling->color = red;
+					leftRotate(sibling);
+					sibling = node->parent->left;
+				}
+				sibling->color = node->parent->color;
+				node->parent->color = black;
+				sibling->left->color = black;
+				rightRotate(node->parent);
+				node = _root;
+			}
+		}
+		else {
+			node->color = black;
+			node = node->parent;
+		}
+		fixRemove(node, node->left, true);
+		fixRemove(node, node->right, false);
+	};
+	// !SECTION Deletion
+	// SECTION Searching
+	/*
+	INFO Search for a node by <key>, from <this>'s root
+	INFO No exception
+	*/
 	nodePtr searchKey(K key) {
 		return (searchKey(_root, key));
 	};
+	/*
+	INFO Search for a node by <key>, from specified nodePtr <start>
+	INFO No exception
+	*/
 	nodePtr searchKey(nodePtr start, K key) {
 		if (!start || !key) {
 			return NULL;
 		} else {
-			if (key == start->key) {
+			if (key == start->pair.key) {
 				return start;
-			} else if (ft::less(key, start->key) == true) {
+			} else if (key < start->pair.key) {
 				return searchKey(start->left, key);
 			} else {
 				return searchKey(start->right, key);
 			}
 		}
 	};
-	//	*	Printing functions
+	// !SECTION Searching
+	// SECTION Printing
+	/*
+	INFO Set the terminal color according to node color
+	INFO No exception
+	*/
 	void setColor(nodePtr node) {
 		if (node->color == red)
-			cout << "\e[31m";
+			cout << RED;
 		else if (node->color == black)
-			cout << "\e[30m";
+			cout << BLACK;
 	};
+	/*
+	INFO Set the terminal color to default (white)
+	INFO No exception
+	*/
 	void unsetColor(void) {
-		cout << "\e[39m";
+		cout << DEFAULT;
 	};
-	void print(const string &prefix, const nodePtr node, bool isLeft) {
-		if (node != nullptr) {
+	// INFO /!\ DO NOT USE /!\ (Use function "print" instead)
+	void recursivePrint(const string &prefix, const nodePtr node, bool isLeft) {
+		if (node != NULL) {
 			cout << prefix;
 			cout << (isLeft ? "├──" : "└──");
 			setColor(node);
 			cout << node->pair.key << ":" << node->pair.value << endl;
 			unsetColor();
-			print(prefix + (isLeft ? "│   " : "    "), node->left, true);
-			print(prefix + (isLeft ? "│   " : "    "), node->right, false);
+			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->left, true);
+			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->right, false);
 		}
 	}
-	//	*	Checking and repairing functions
-	void checkTree(nodePtr node) {
-		if (node->parent->color == red) {
-			if (_root)
-				recolor_tree(_root);
-		}
-		node->color = red;
+	/*
+	INFO Prints the tree from specified nodePtr <node>
+	INFO No exception
+	*/
+	void print(const nodePtr node) {
+		recursivePrint("", node, false);
 	};
-	void recolor_tree(nodePtr node) {
-		if (node) {
-			if (node->color == red)
-				node->color = black;
-			else
-				node->color = red;
-			recolor_tree(node->left);
-			recolor_tree(node->right);
-		}
+	/*
+	INFO Prints <this> tree from root
+	INFO No exception
+	*/
+	void print(void) {
+		recursivePrint("", _root, false);
 	};
+	// !SECTION Printing
 };
-};	// namespace ft
+// !SECTION RBT
+
+};
+// !SECTION namespace ft
 #endif

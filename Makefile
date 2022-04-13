@@ -6,8 +6,8 @@ TARGET		:=	ft_containers.out
 DEBUGOUT	:=	debug.out
 
 #The Directories, Source, Includes, Objects, Binary and Resources
-SRCDIR		:=	src/
-INCDIR		:=	src/
+SRCDIR		:=	src
+INCDIR		:=	src
 OBJDIR		:=	obj
 TARGETDIR	:=	bin
 SRCEXT		:=	cpp
@@ -17,7 +17,7 @@ CHECKDIR	:=	check
 CHECKOUTDIR	:=	tmp
 
 #Flags, Libraries and Includes
-CFLAGS		:=	-Wall -Wextra -Werror -std=c++98
+CFLAGS		:=	-Wall -Wextra #-Werror -std=c++98
 DEBUGFLAG	:=	-Wall -Wextra -fsanitize=address
 ARG			:=	
 
