@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#include "KVP.hpp"
 #include "Exceptions.hpp"
+#include "KVP.hpp"
 
 enum e_color {
 	black,
@@ -27,36 +27,54 @@ namespace ft {
 
 // SECTION Node
 template <typename K, typename V>
-struct node {
+class node {
+   public:
 	kvp<K, V> pair;
-	e_color	color;
-	node*	parent;
-	node*	left;
-	node*	right;
+	e_color color;
+	node* parent;
+	node* left;
+	node* right;
+
 	node(kvp<K, V>& dpair)
-		: pair(dpair), color(black), parent(NULL), left(NULL), right(NULL) {
-	};
+		: pair(dpair), color(red), parent(NULL), left(NULL), right(NULL){};
 	~node(){};
+	bool operator<(const node& other) const {
+		return (pair < other.pair);
+	};
+	bool operator<=(const node& other) const {
+		return (pair <= other.pair);
+	};
+	bool operator>(const node& other) const {
+		return (pair > other.pair);
+	};
+	bool operator>=(const node& other) const {
+		return (pair >= other.pair);
+	};
+	bool operator==(const node& other) const {
+		return (pair == other.pair);
+	};
+	bool operator!=(const node& other) const {
+		return (pair != other.pair);
+	};
 };
 // !SECTION Node
 
 // SECTION RBT
 template <typename K, typename V>
 class RBT {
-	public:
-	typedef node<K, V>*	nodePtr;
-	typedef node<K, V>&	nodeRef;
-	typedef node<K, V>	nodeType;
+   public:
+	typedef node<K, V>* nodePtr;
+	typedef node<K, V>& nodeRef;
+	typedef node<K, V> nodeType;
 
-	private:
+   private:
 	nodePtr _root;
 
-	public:
+   public:
 	// SECTION Constructors / Destructors
 	// INFO Create an empty tree
 	RBT(void)
-		: _root(NULL) {
-	};
+		: _root(NULL){};
 	/*
 	INFO Create a tree with root node containing KVP <dpair>
 	INFO Can throw exception (self: allocFail)
@@ -141,6 +159,7 @@ class RBT {
 	INFO Swap RBT <this> and RBT <src>
 	INFO No exception
 	*/
+	// REVIEW Maybe not needed
 	void swap(RBT& src) {
 		nodePtr bufRoot = _root;
 		_root = src._root;
@@ -168,8 +187,7 @@ class RBT {
 			_root = newNode;
 			_root->color = black;
 			return newNode;
-		}
-		else if (newNode->pair.key < parent->pair.key)
+		} else if (newNode->pair.key < parent->pair.key)
 			parent->left = newNode;
 		else if (newNode->pair.key > parent->pair.key)
 			parent->right = newNode;
@@ -201,8 +219,7 @@ class RBT {
 					uncle->color = black;
 					node->parent->parent->color = red;
 					node = node->parent->parent;
-				}
-				else {
+				} else {
 					if (node == node->parent->right) {
 						node = node->parent;
 						leftRotate(node);
@@ -211,16 +228,14 @@ class RBT {
 					node->parent->parent->color = red;
 					rightRotate(node->parent->parent);
 				}
-			}
-			else {
+			} else {
 				nodePtr uncle = node->parent->parent->left;
 				if (uncle && uncle->color == red) {
 					node->parent->color = black;
 					uncle->color = black;
 					node->parent->parent->color = red;
 					node = node->parent->parent;
-				}
-				else {
+				} else {
 					if (node == node->parent->left) {
 						node = node->parent;
 						rightRotate(node);
@@ -277,7 +292,7 @@ class RBT {
 	INFO Remove nodePtr <node> from the tree
 	INFO Can throw exception (calls)
 	*/
-	void	remove(nodePtr node) {
+	void remove(nodePtr node) {
 		if (!node)
 			return;
 		nodePtr curNode = node;
@@ -298,8 +313,7 @@ class RBT {
 			curNode->right = node->right;
 			curNode->right->parent = curNode;
 			curNode->color = node->color;
-		}
-		else if (node->left)
+		} else if (node->left)
 			child = node->left;
 		else
 			child = node->right;
@@ -319,7 +333,7 @@ class RBT {
 	INFO Fix the RBT after deletion of nodePtr <node>
 	INFO Can throw exception (calls)
 	*/
-	void	fixRemove(nodePtr node, nodePtr sibling, bool isLeft) {
+	void fixRemove(nodePtr node, nodePtr sibling, bool isLeft) {
 		if (!node)
 			return;
 		if (node->color == red) {
@@ -332,8 +346,7 @@ class RBT {
 				if (isLeft) {
 					node->parent->color = red;
 					rightRotate(node->parent);
-				}
-				else {
+				} else {
 					node->parent->color = red;
 					leftRotate(node->parent);
 				}
@@ -342,8 +355,7 @@ class RBT {
 			if (sibling->left->color == black && sibling->right->color == black) {
 				sibling->color = red;
 				node = node->parent;
-			}
-			else {
+			} else {
 				if (sibling->left->color == black) {
 					sibling->right->color = black;
 					sibling->color = red;
@@ -356,8 +368,7 @@ class RBT {
 				rightRotate(node->parent);
 				node = _root;
 			}
-		}
-		else {
+		} else {
 			node->color = black;
 			node = node->parent;
 		}
@@ -410,7 +421,7 @@ class RBT {
 		cout << DEFAULT;
 	};
 	// INFO /!\ DO NOT USE /!\ (Use function "print" instead)
-	void recursivePrint(const string &prefix, const nodePtr node, bool isLeft) {
+	void recursivePrint(const string& prefix, const nodePtr node, bool isLeft) {
 		if (node != NULL) {
 			cout << prefix;
 			cout << (isLeft ? "├──" : "└──");
@@ -439,6 +450,6 @@ class RBT {
 };
 // !SECTION RBT
 
-};
+};	// namespace ft
 // !SECTION namespace ft
 #endif
