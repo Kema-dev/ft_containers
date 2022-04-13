@@ -7,8 +7,8 @@
 
 ## RBT
 
-- [ ] Insertion to be fixed
-- [ ] Deletion to be fixed
+- [ ] Insertion to be fixed (Balancing i guess)
+- [ ] Deletion to be fixed (Shadows branches)
 
 ## Vector
 
