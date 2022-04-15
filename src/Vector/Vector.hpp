@@ -1,188 +1,368 @@
 
 #ifndef FT_CONTAINERS_VECTOR_HPP
-# define FT_CONTAINERS_VECTOR_HPP
-# include <iostream>
-# include <cmath>
-# include "../Iterators/Iterator.hpp"
-# include "../Iterators/ReverseIterator.hpp"
+#define FT_CONTAINERS_VECTOR_HPP
+#include <cmath>
+#include <iostream>
 
-# define EXPANDING_RATIO 2
+#include "../Iterators/Iterator.hpp"
+#include "../Iterators/ReverseIterator.hpp"
+
+#define EXPANDING_RATIO 2
+
+using namespace std;
 
 namespace ft {
-	class OutOfRangeException : public std::exception {
-	public:
-		const char *what () const throw ()
-		{
-			return "Request is out of bounds";
+class OutOfRangeException : public exception {
+   public:
+	const char* what() const throw() {
+		return "Request is out of bounds";
+	}
+};
+
+template <typename T, class alloc = allocator<T> >
+class vector {
+   public:
+	typedef T value_type;
+	typedef T* pointer;
+	typedef T& reference;
+	typedef const T* const_pointer;
+	typedef const T& const_reference;
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+	typedef Iterator<T> iterator;
+	typedef ReverseIterator<T> reverse_iterator;
+	typedef Iterator<const T> const_iterator;
+	typedef ReverseIterator<const T> const_reverse_iterator;
+	typedef Allocator allocator_type;
+
+   protected:
+	alloc _alloc;
+	T* _array;
+	size_type _size;
+	size_type _capacity;
+
+   public:
+	// INFO Default construct
+	vector(void) {
+		_array = NULL;
+		_size = 0;
+		_capacity = 0;
+	};
+	// INFO Default construct specifiying allocator type <alloc>
+	explicit vector(const Allocator& alloc = Allocator()) {
+		_array = NULL;
+		_size = 0;
+		_capacity = 0;
+		_alloc = alloc;
+	};
+	// INFO Construct with <count> elements <value> (specifying allocator type <alloc>)
+	explicit vector(size_type count, const T& value = T(), const Allocator& alloc = Allocator())
+		: _alloc(alloc), _capacity(count * EXPANDING_RATIO), _size(count) {
+		_array = _alloc.allocate(_capacity);
+		for (size_type i = 0; i < _size; i++)
+			_alloc.construct(&_array[i], value);
+	};
+	// INFO Construct with elements <first> to <last> (specifying allocator type <alloc>)
+	template <class InputIt>
+	vector(InputIt first, InputIt last, const Allocator& alloc = Allocator())
+		: _alloc(alloc) {
+		int delta = last - first;
+		_capacity = delta * EXPANDING_RATIO;
+		_array = _alloc.allocate(_capacity);
+		_size = delta + 1;
+		for (int i = 0; i < _size; i++) {
+			_alloc.construct(&_array[i], *first);
+			first++;
 		}
 	};
-	template<typename T, class alloc = std::allocator<T> >
-	class vector {
-	public:
-		// typedef random_access_iterator 			const_iterator;
-		// typedef reverse_iterator<random_access_iterator> const_reverse_iterator;
-		// typedef typename alloc::const_reference	const_reference;
-		// typedef typename alloc::const_pointer	const_pointer;
-		typedef T								value_type;
-		typedef alloc							allocator_type;
-		typedef typename alloc::reference		reference;
-		typedef typename alloc::pointer			pointer;
-		typedef Iterator						iterator;
-		typedef ReverseIterator					reverse_iterator;
-		typedef std::ptrdiff_t					difference_type;
-		typedef size_t							size_type;
-	protected:
-		alloc						_alloc;
-		T*							_array;
-		size_type					_size;
-		size_type					_capacity;
-
-		public:
-			//	*	Constructors
-			vector(void) {
-			};
-			explicit vector(const allocator_type &alloct = allocator_type())
-				: _capacity(2), _size(0), _alloc(alloct) {
-				_array = _alloc.allocate(sizeof(T) * _capacity);
-			};
-			vector(const vector& other) {
-				*this = other;
-			};
-			explicit vector(size_type n,
-							const value_type &val = value_type(),
-							const allocator_type &alloct = allocator_type())
-							: _alloc(alloct), _capacity(n), _size(n) {
-				if (_capacity != 0)
-					_array = _alloc.allocate(_capacity);
-				for (size_type i = 0; i < _size ; i++) {
-					_alloc.construct(&_array[i], val);
-				}
-			};
-			template <class InputIterator>
-			vector (InputIterator first,
-					InputIterator last,
-					const allocator_type& alloct = allocator_type())
-					: _alloc(alloct), _capacity(0), _size(0) {
-				for (InputIterator it = first; it < last; it++) {
-					_size++;
-				}
-				_capacity = capacity(_size);
-				if (_capacity != 0)
-					_array = _alloc.allocate(_capacity);
-				size_t i = 0;
-				for (InputIterator it = first; it != last ; it++) {
-					_alloc.construct(&_array[i++], *it);
-				}
-			}
-			//	*	Destructor
-			virtual ~vector() {
-				clear();
-			};
-			//	*	Other member functions
-			vector &operator=(vector const &rhs) {
-				if (this != rhs)
-				{
-					clear();
-					_alloc = rhs._alloc;
-					_capacity = rhs._capacity;
-					if (_capacity != 0)
-						_array = _alloc.allocate(_capacity);
-					insert(this->begin(), rhs.begin(), rhs.end());
-				}
-				return (*this);
-			};
-			allocator_type get_allocator() const {
-				return allocator_type();
-			}
-			//	*	Element access
-			reference at(size_type n) {
-				if (n >= _size)
-					throw OutOfRangeException();
-				return (_array[n]);
-			}
-			reference	operator[](size_type n) {
-				if (n >= _size)
-					throw OutOfRangeException();
-				return (_array[n]);
-			}
-			reference front() {
-				return (_array[0]);
-			}
-			reference back() {
-				return (_array[_size]);
-			}
-			T* data() {
-				return (_array); // ! Not sure of that
-			}
-			//	*	Iterators
-			iterator	begin(void) {
-				return &_array[0];
-			}
-			iterator	end(void) {
-				return &_array[_size];
-			}
-			reverse_iterator	rbegin(void) {
-				return reinterpret_cast<reverse_iterator>(end());
-			}
-			reverse_iterator	rend(void) {
-				return reinterpret_cast<reverse_iterator>(begin());
-			}
-			//	*	Capacity
-			bool empty(void) const {
-				return _size == 0 ? true : false;
-			}
-			size_t	size(void) {
-				return _size;
-			}
-			size_t	max_size(void) {
-				return _alloc.max_size() / sizeof(T);
-			}
-			void reserve (size_type n) {
-				if (n > _capacity) {
-					_capacity = n;
-					pointer buf = _alloc.allocate(sizeof(T) * _capacity);
-					for (_size = 0; _size < _capacity; _size++) {
-						_alloc.construct(&buf[_size], _array[_size]);
-						_alloc.destroy(&_array[_size]);
-					}
-					_alloc.deallocate(_array, _capacity);
-					_array = buf;
-				}
-			}
-			size_t	capacity(void) {
-				return _capacity;
-			}
-			//	*	Modifiers
-			void clear() {
-				for (size_type i = 0; i < _size; ++i)
-					_alloc.destroy(&_array[i]);
-				if (_capacity > 0)
-					_alloc.deallocate(_array, _capacity);
-				_size = 0;
-				_capacity = 0;
-			}
-			void resize (size_type n,
-						value_type val = value_type()) {
-				if (n <= _size) {
-					for (_size = 0; _size < _capacity && _size < n; _size++) {
-						_alloc.construct(&_array[_size], val);
-					}
-					for (size_type i = _size; i < n; i++) {
-						_alloc.destroy(&_array[i]);
-					}
-				}
-				else {
-					clear();
-					_capacity = EXPANDING_RATIO * n;
-					_array = _alloc.allocate(sizeof(T) * _capacity);
-					for (_size = 0; _size < _capacity; _size++) {
-						_alloc.construct(&_array[_size], val);
-					}
-				}
-			}
-			
+	// INFO Construct from <other>
+	vector(const vector& other) {
+		_capacity = other._capacity;
+		_array = _alloc.allocate(_capacity);
+		_size = other._size;
+		for (size_type i = 0; i < _size; i++)
+			_alloc.construct(&_array[i], other._array[i]);
 	};
-
-}
+	// INFO Construct from <other> specifying allocator type <alloc>
+	vector(const vector& other, const Allocator& alloc)
+		: _alloc(alloc) {
+		_capacity = other._capacity;
+		_array = _alloc.allocate(_capacity);
+		_size = other._size;
+		for (size_type i = 0; i < _size; i++)
+			_alloc.construct(&_array[i], other._array[i]);
+	};
+	// INFO Destruct
+	virtual ~vector() {
+		for (size_type i = 0; i < _size; i++) {
+			_alloc.destroy(&_array[i]);
+		}
+		_alloc.deallocate(_array, _capacity);
+	};
+	// INFO Copy from <rhs>
+	vector& operator=(const vector& rhs) {
+		if (this != &rhs) {
+			clear();
+			_alloc.deallocate(_array, _capacity);
+			_alloc = rhs._alloc;
+			_capacity = rhs._capacity;
+			_array = _alloc.allocate(_capacity);
+			_size = rhs._size;
+			for (size_type i = 0; i < _size; i++) {
+				_alloc.construct(&_array[i], rhs._array[i]);
+			}
+		}
+		return *this;
+	};
+	// INFO Assign <count> elements <value>
+	void assign(size_type count, const T& value) {
+		clear();
+		if (count > _capacity) {
+			_alloc.deallocate(_array, _capacity);
+			_capacity = count * EXPANDING_RATIO;
+			_array = _alloc.allocate(_capacity);
+		}
+		_size = count;
+		for (size_type i = 0; i < _size; i++)
+			_alloc.construct(&_array[i], value);
+	};
+	// INFO Assign elements <first> to <last>
+	template <class InputIt>
+	void assign(InputIt first, InputIt last) {
+		clear();
+		int delta = last - first + 1;
+		if (delta > _capacity) {
+			resize(delta);
+		}
+		_size = delta;
+		for (int i = 0; i < _size; i++) {
+			_alloc.construct(&_array[i], *first);
+			first++;
+		}
+	};
+	// INFO Get allocator
+	Allocator get_allocator() const {
+		return _alloc;
+	};
+	/*
+	INFO Get element <n> (_array[n])
+	INFO Throws OutOfRangeException if <n> >= _size
+	*/
+	reference at(size_type n) {
+		if (n >= _size) {
+			throw OutOfRangeException();
+		}
+		return _array[n];
+	};
+	/*
+	INFO Get element <n> (_array[n])
+	INFO Undefined behavior if <n> >= _size
+	*/
+	reference operator[](size_type n) {
+		return _array[n];
+	};
+	/*
+	INFO Get first element
+	INFO Undefined behavior if <n> >= _size
+	*/
+	reference front() {
+		return _array[0];
+	};
+	/*
+	INFO Get last element
+	INFO Undefined behavior if <n> >= _size
+	*/
+	reference back() {
+		return _array[_size - 1];
+	};
+	/*
+	INFO Get _array
+	INFO Undefined behavior if _size == 0
+	*/
+	T* data() {
+		return _array;
+	};
+	// INFO Get iterator to first element
+	iterator begin(void) {
+		return iterator(_array);
+	};
+	// INFO Get iterator to last element
+	iterator end(void) {
+		return iterator(_array + _size);
+	};
+	// INFO Get const iterator to first element
+	const_iterator begin(void) const {
+		return const_iterator(_array);
+	};
+	// INFO Get const iterator to last element
+	const_iterator end(void) const {
+		return const_iterator(_array + _size);
+	};
+	// INFO Get reverse iterator to first element (reverse order)
+	reverse_iterator rbegin(void) {
+		return reverse_iterator(_array + _size - 1);
+	};
+	// INFO Get reverse iterator to last element (reverse order)
+	reverse_iterator rend(void) {
+		return reverse_iterator(_array - 1);
+	};
+	// INFO Get const reverse iterator to first element (reverse order)
+	const_reverse_iterator rbegin(void) const {
+		return const_reverse_iterator(_array + _size - 1);
+	};
+	// INFO Get const reverse iterator to last element (reverse order)
+	const_reverse_iterator rend(void) const {
+		return const_reverse_iterator(_array - 1);
+	};
+	// INFO Check if _size == 0
+	bool empty(void) const {
+		return _size == 0;
+	};
+	// INFO Get _size (number of elements)
+	size_type size(void) {
+		return _size;
+	};
+	// INFO Get theorical maximum allocable size
+	size_type max_size(void) {
+		return _alloc.max_size();
+	};
+	// INFO Reserve storage for <n> elements
+	void reserve(size_type n) {
+		if (n == 0) {
+			n = 1;
+		}
+		if (n > _capacity) {
+			_capacity = n;
+			T* tmp = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++) {
+				_alloc.construct(&tmp[i], _array[i]);
+				_alloc.destroy(&_array[i]);
+			}
+			_alloc.deallocate(_array, _capacity);
+			_array = tmp;
+		}
+	};
+	// INFO Get _capacity (real storage size)
+	size_type capacity(void) {
+		return _capacity;
+	};
+	// INFO Clear vector's content
+	void clear() {
+		for (size_type i = 0; i < _size; i++) {
+			_alloc.destroy(&_array[i]);
+		}
+		_size = 0;
+	};
+	// INFO Insert element <val> at position <pos>
+	iterator insert(iterator pos, const T& val) {
+		if (_size >= _capacity) {
+			reserve(_capacity * EXPANDING_RATIO);
+		}
+		for (size_type i = _size; i > pos._pos; i--) {
+			_alloc.construct(&_array[i], _array[i - 1]);
+			_alloc.destroy(&_array[i - 1]);
+		}
+		_alloc.construct(&_array[pos._pos], val);
+		_size++;
+		return iterator(_array + pos._pos);
+	};
+	// INFO Insert <count> elements <value> at position <pos>
+	void insert(iterator pos, size_type count, const T& value) {
+		if (_size + count > _capacity) {
+			reserve((_size + count) * EXPANDING_RATIO);
+		}
+		for (size_type i = _size; i > pos._pos; i--) {
+			_alloc.construct(&_array[i + count - 1], _array[i - 1]);
+			_alloc.destroy(&_array[i - 1]);
+		}
+		for (size_type i = 0; i < count; i++) {
+			_alloc.construct(&_array[pos._pos + i], *(first + i));
+		}
+		_size += count;
+	};
+	// INFO Insert elements <first> to <last> at position <pos>
+	template<class InputIt>
+	void insert(iterator pos, InputIt first, InputIt last) {
+		int delta = last - first + 1;
+		if (_size + delta > _capacity) {
+			reserve((_size + delta) * EXPANDING_RATIO);
+		}
+		for (size_type i = _size; i > pos._pos; i--) {
+			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
+			_alloc.destroy(&_array[i - 1]);
+		}
+		for (size_type i = 0; i < delta; i++) {
+			_alloc.construct(&_array[pos._pos + i], *(first + i));
+		}
+		_size += delta;
+	};
+	// INFO Erase element at position <pos>
+	iterator erase(iterator pos) {
+		if (pos._pos >= _size) {
+			throw OutOfRangeException();
+		}
+		for (size_type i = pos._pos; i < _size - 1; i++) {
+			_alloc.construct(&_array[i], _array[i + 1]);
+		}
+		_alloc.destroy(&_array[_size - 1]);
+		_size--;
+		return iterator(_array + pos._pos);
+	};
+	// INFO Erase elements from position <first> to position <last>
+	iterator erase(iterator first, iterator last) {
+		delta = last - first + 1;
+		if (first._pos >= _size || last._pos >= _size) {
+			throw OutOfRangeException();
+		}
+		for (size_type i = first._pos; i < _size - delta; i++) {
+			_alloc.construct(&_array[i], _array[i + delta]);
+		}
+		for (size_type i = 0; i < delta; i++) {
+			_alloc.destroy(&_array[_size - 1 - i]);
+		}
+		_size -= delta;
+		return iterator(_array + first._pos);
+	};
+	// INFO Add element <val> at the end
+	void push_back(const T& val) {
+		if (_size >= _capacity) {
+			reserve(_capacity * EXPANDING_RATIO);
+		}
+		_alloc.construct(&_array[_size], val);
+		_size++;
+	};
+	// INFO Remove last element
+	void pop_back() {
+		_alloc.destroy(&_array[_size - 1]);
+		_size--;
+	};
+	// INFO Resize the vector
+	void resize(size_type n, T val = T()) {
+		if (n > _capacity) {
+			_capacity = n;
+			T* tmp = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++) {
+				_alloc.construct(&tmp[i], _array[i]);
+				_alloc.destroy(&_array[i]);
+			}
+			_alloc.deallocate(_array, _capacity);
+			_array = tmp;
+		}
+		if (n > _size) {
+			for (size_type i = _size; i < n; i++) {
+				_alloc.construct(&_array[i], val);
+			}
+		}
+		_size = n;
+	};
+	void swap(vector& v) {
+		
+		std::swap(_alloc, v._alloc);
+		std::swap(_array, v._array);
+		std::swap(_size, v._size);
+		std::swap(_capacity, v._capacity);
+	};
+};
+} // end namespace ft
 
 #endif
