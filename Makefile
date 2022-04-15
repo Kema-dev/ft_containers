@@ -17,7 +17,7 @@ CHECKDIR	:=	check
 CHECKOUTDIR	:=	tmp
 
 #Flags, Libraries and Includes
-CFLAGS		:=	-Wall -Wextra #-Werror -std=c++98
+CFLAGS		:=	-Wall -Wextra -std=c++98 #-Werror 
 DEBUGFLAG	:=	-Wall -Wextra -fsanitize=address
 ARG			:=	
 

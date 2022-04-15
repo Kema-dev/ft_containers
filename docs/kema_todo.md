@@ -7,11 +7,22 @@
 ## RBT
 
 - [ ] Replace "new" and "delete" with "allocator"
-- [ ] Insertion to be fixed (Balancing i guess)
-- [ ] Deletion to be fixed (Shadows branches)
+- [ ] Lexicographical compare ? Is it a "less" alternative ? Change direct comparisons in methods and use "compare" function (which will itself use less / lexico comp or w/e)
+
+## Map
+
+- [ ] Everything (but RBT already done)
 
 ## Vector
 
-- [ ] Prevoir allocation du max et pas bug sur cap * EXPAND
-- [ ] Gerer si iterator last < first : Peut etre faire une fonction qui les inverse si besoin (meme resultat)
-- [ ] Voir si la facon d'utiliser l'expanding ratio est bonne
+- [ ] Try catch allocation to prevent from ENOMEM
+- [ ] if iterator last < first : invert them to prevent from infinite loop
+- [ ] Is my EXPANDING_RATIO usage the good one ?
+
+## Stack
+
+- [ ] Everything (But just use vector as under the hood container = easy)
+
+## Iterator
+
+- [ ] Implement full iterators (with iterator_traits)

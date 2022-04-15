@@ -4,8 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "../Iterators/Iterator.hpp"
-#include "../Iterators/ReverseIterator.hpp"
+// #include "../Iterators/Iterator.hpp"
 
 #define EXPANDING_RATIO 2
 
@@ -29,11 +28,11 @@ class vector {
 	typedef const T& const_reference;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef Iterator<T> iterator;
-	typedef ReverseIterator<T> reverse_iterator;
+	typedef iterator<T> Iterator;
+	typedef ReverseIterator<const T> const_iterator;
 	typedef Iterator<const T> const_iterator;
 	typedef ReverseIterator<const T> const_reverse_iterator;
-	typedef Allocator allocator_type;
+	typedef alloc allocator_type;
 
    protected:
 	alloc _alloc;
@@ -42,30 +41,24 @@ class vector {
 	size_type _capacity;
 
    public:
-	// INFO Default construct
-	vector(void) {
+	// INFO Construct an empty vector
+	vector(const allocator_type& alloct = allocator_type()) { // Combined both default constructor and allocator constructor
 		_array = NULL;
 		_size = 0;
 		_capacity = 0;
+		_alloc = alloct;
 	};
-	// INFO Default construct specifiying allocator type <alloc>
-	explicit vector(const Allocator& alloc = Allocator()) {
-		_array = NULL;
-		_size = 0;
-		_capacity = 0;
-		_alloc = alloc;
-	};
-	// INFO Construct with <count> elements <value> (specifying allocator type <alloc>)
-	explicit vector(size_type count, const T& value = T(), const Allocator& alloc = Allocator())
-		: _alloc(alloc), _capacity(count * EXPANDING_RATIO), _size(count) {
+	// INFO Construct a vector with <count> elements <value> (specifying allocator type <alloct>)
+	explicit vector(size_type count, const T& value = T(), const allocator_type& alloct = allocator_type())
+		: _alloc(alloct), _capacity(count * EXPANDING_RATIO), _size(count) {
 		_array = _alloc.allocate(_capacity);
 		for (size_type i = 0; i < _size; i++)
 			_alloc.construct(&_array[i], value);
 	};
-	// INFO Construct with elements <first> to <last> (specifying allocator type <alloc>)
+	// INFO Construct a vector with elements <first> to <last> (specifying allocator type <alloc>)
 	template <class InputIt>
-	vector(InputIt first, InputIt last, const Allocator& alloc = Allocator())
-		: _alloc(alloc) {
+	vector(InputIt first, InputIt last, const allocator_type& alloct = allocator_type())
+		: _alloc(alloct) {
 		int delta = last - first;
 		_capacity = delta * EXPANDING_RATIO;
 		_array = _alloc.allocate(_capacity);
@@ -75,7 +68,7 @@ class vector {
 			first++;
 		}
 	};
-	// INFO Construct from <other>
+	// INFO Construct a vector from <other>
 	vector(const vector& other) {
 		_capacity = other._capacity;
 		_array = _alloc.allocate(_capacity);
@@ -83,23 +76,23 @@ class vector {
 		for (size_type i = 0; i < _size; i++)
 			_alloc.construct(&_array[i], other._array[i]);
 	};
-	// INFO Construct from <other> specifying allocator type <alloc>
-	vector(const vector& other, const Allocator& alloc)
-		: _alloc(alloc) {
+	// INFO Construct a vector from <other> specifying allocator type <alloc>
+	vector(const vector& other, const allocator_type& alloct)
+		: _alloc(alloct) {
 		_capacity = other._capacity;
 		_array = _alloc.allocate(_capacity);
 		_size = other._size;
 		for (size_type i = 0; i < _size; i++)
 			_alloc.construct(&_array[i], other._array[i]);
 	};
-	// INFO Destruct
+	// INFO Destruct the vector
 	virtual ~vector() {
 		for (size_type i = 0; i < _size; i++) {
 			_alloc.destroy(&_array[i]);
 		}
 		_alloc.deallocate(_array, _capacity);
 	};
-	// INFO Copy from <rhs>
+	// INFO Copy vector <rhs>
 	vector& operator=(const vector& rhs) {
 		if (this != &rhs) {
 			clear();
@@ -141,7 +134,7 @@ class vector {
 		}
 	};
 	// INFO Get allocator
-	Allocator get_allocator() const {
+	allocator_type get_allocator() const {
 		return _alloc;
 	};
 	/*
@@ -191,13 +184,13 @@ class vector {
 		return iterator(_array + _size);
 	};
 	// INFO Get const iterator to first element
-	const_iterator begin(void) const {
-		return const_iterator(_array);
-	};
+	// const_iterator begin(void) const {
+	// 	return const_iterator(_array);
+	// };
 	// INFO Get const iterator to last element
-	const_iterator end(void) const {
-		return const_iterator(_array + _size);
-	};
+	// const_iterator end(void) const {
+	// 	return const_iterator(_array + _size);
+	// };
 	// INFO Get reverse iterator to first element (reverse order)
 	reverse_iterator rbegin(void) {
 		return reverse_iterator(_array + _size - 1);
@@ -207,13 +200,13 @@ class vector {
 		return reverse_iterator(_array - 1);
 	};
 	// INFO Get const reverse iterator to first element (reverse order)
-	const_reverse_iterator rbegin(void) const {
-		return const_reverse_iterator(_array + _size - 1);
-	};
+	// const_reverse_iterator rbegin(void) const {
+	// 	return const_reverse_iterator(_array + _size - 1);
+	// };
 	// INFO Get const reverse iterator to last element (reverse order)
-	const_reverse_iterator rend(void) const {
-		return const_reverse_iterator(_array - 1);
-	};
+	// const_reverse_iterator rend(void) const {
+	// 	return const_reverse_iterator(_array - 1);
+	// };
 	// INFO Check if _size == 0
 	bool empty(void) const {
 		return _size == 0;
@@ -276,7 +269,7 @@ class vector {
 			_alloc.destroy(&_array[i - 1]);
 		}
 		for (size_type i = 0; i < count; i++) {
-			_alloc.construct(&_array[pos._pos + i], *(first + i));
+			_alloc.construct(&_array[pos._pos + i], value);
 		}
 		_size += count;
 	};
@@ -310,7 +303,7 @@ class vector {
 	};
 	// INFO Erase elements from position <first> to position <last>
 	iterator erase(iterator first, iterator last) {
-		delta = last - first + 1;
+		int delta = last - first + 1;
 		if (first._pos >= _size || last._pos >= _size) {
 			throw OutOfRangeException();
 		}
@@ -323,7 +316,7 @@ class vector {
 		_size -= delta;
 		return iterator(_array + first._pos);
 	};
-	// INFO Add element <val> at the end
+	// INFO Add element <val> at end
 	void push_back(const T& val) {
 		if (_size >= _capacity) {
 			reserve(_capacity * EXPANDING_RATIO);
@@ -336,7 +329,7 @@ class vector {
 		_alloc.destroy(&_array[_size - 1]);
 		_size--;
 	};
-	// INFO Resize the vector
+	// INFO Resize vector
 	void resize(size_type n, T val = T()) {
 		if (n > _capacity) {
 			_capacity = n;

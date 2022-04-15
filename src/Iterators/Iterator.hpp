@@ -1,83 +1,77 @@
-#ifndef ITERATOR_HPP
-#define ITERATOR_HPP
-#include <deque>
-#include <iostream>
+#ifndef FT_ITERATOR_HPP
+#define FT_ITERATOR_HPP
 #include <sys/types.h>
 
-class Iterator
-{
-	private:
-		typename Iterator::pointer	_ptr;
-	public:
-		typedef Iterator	self_type;
-		Iterator() {
-		};
-		Iterator(pointer ptr) : _ptr(ptr) {
-		};
-		Iterator&	operator=(Iterator const& ref) {
-			_ptr = ref._ptr;
-			return *this;
-		}
-		bool	operator==(Iterator const& ref) {
-			return *this == ref ? true : false;
-		}
-		bool	operator!=(Iterator const& ref) {
-			return this->_ptr != ref._ptr ? true : false;
-		}
-		self_type	operator++() { // ? prefix
-			_ptr++;
-			return *this;
-		}
-		self_type	operator++(int n) { // ? postfix
-			if (n == 0)
-				_ptr++;
-			else {
-				_ptr += n;
-			}
-			return *this;
-		}
-		self_type	operator--() { // ? prefix
-			_ptr--;
-			return *this;
-		}
-		self_type	operator--(int n) { // ? postfix
-			if (n == 0)
-				_ptr--;
-			else {
-				_ptr += n;
-			}
-			return *this;
-		}
-		self_type operator+(int n) {
-			self_type other = *this;
-			for (int i = 0; i < n; i++)
-				other._ptr++;
-			return other;
-		}
-		self_type operator-(int n) {
-			self_type other = *this;
-			for (int i = 0; i < n; i++)
-				other._ptr--;
-			return other;
-		}
-		self_type operator+=(int n) {
-			for (int i = 0; i < n; i++)
-				_ptr++;
-			return *this;
-		}
-		self_type operator-=(int n) {
-			for (int i = 0; i < n; i++)
-				_ptr--;
-			return *this;
-		}
-		typename Iterator::reference operator*(void) {
-			return *_ptr;
-		}
-		typename Iterator::pointer operator&(void) {
-			return _ptr;
-		}
-		~Iterator() {
-		};
+#include <deque>
+#include <iostream>
+
+namespace ft {
+template <typename T>
+class Iterator {
+   public:
+	typedef typename deque<T>::iterator iterator;
+   private:
+	iterator _it;
+	iterator _end;
+
+   public:
+	Iterator(deque<T>::iterator it, deque<T>::iterator end) : _it(it), _end(end) {}
+	Iterator(const Iterator& src) : _it(src._it), _end(src._end) {}
+	Iterator& operator=(const Iterator& rhs) {
+		this->_it = rhs._it;
+		this->_end = rhs._end;
+		return *this;
+	}
+	~Iterator(void) {}
+	int operator*(void) const {
+		return *this->_it;
+	}
+	Iterator& operator&(void) {
+		return *this;
+	}
+	bool operator==(const Iterator& rhs) const {
+		return this->_it == rhs._it;
+	}
+	bool operator!=(const Iterator& rhs) const {
+		return this->_it != rhs._it;
+	}
+	Iterator& operator++(void) {
+		++this->_it;
+		return *this;
+	}
+	Iterator& operator++(int) {
+		++this->_it;
+		return *this;
+	}
+	Iterator& operator--(void) {
+		--this->_it;
+		return *this;
+	}
+	Iterator& operator--(int) {
+		--this->_it;
+		return *this;
+	}
+	Iterator& operator+=(int n) {
+		this->_it += n;
+		return *this;
+	}
+	Iterator& operator-=(int n) {
+		this->_it -= n;
+		return *this;
+	}
+	Iterator operator+(int n) {
+		return Iterator(this->_it + n, this->_end);
+	}
+	Iterator operator-(int n) {
+		return Iterator(this->_it - n, this->_end);
+	}
+	// int operator-(const Iterator& rhs) {
+	// 	return this->_it - rhs._it;
+	// }
+	// int operator+(const Iterator& rhs) {
+	// 	return this->_it + rhs._it;
+	// }
 };
+} // namespace ft
 
 #endif
