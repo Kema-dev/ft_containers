@@ -17,20 +17,12 @@ class OutOfRangeException : public exception {
 	}
 };
 
-template<typename K>
-class less {
-public:
-	bool	less(K &lhs, K &rhs) {
-		return lhs < rhs;
-	};
-};
-
-template<class K, class V, class Compare = ft::less<K>, class Allocator = allocator<ft::kvp<const K, V> > >
+template <class K, class V, class Compare = typename kvp<K, V>::less(), class Allocator = allocator<ft::kvp<const K, V> > >
 class map {
    public:
 	typedef K key_type;
-	typedef	V value_type;
-	typedef	Compare value_compare;
+	typedef V value_type;
+	typedef Compare value_compare;
 	typedef ft::kvp<const K, V> pair_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
@@ -42,9 +34,9 @@ class map {
 	typedef Compare key_compare;
 
    protected:
-	value_compare	comp;
-	allocator_type	alloc;
-	RBT<K, V>		*root;
+	value_compare comp;
+	allocator_type alloc;
+	RBT<K, V>* root;
 
    public:
 	// INFO Construct an empty map
@@ -60,7 +52,7 @@ class map {
 		alloc = alloct;
 	};
 	// INFO Construct a map containing elements <first> to <last> with comparison function <dcomp> and allocator type <dalloc>
-	template<class InputIt>
+	template <class InputIt>
 	map(InputIt first, InputIt last, const Compare& compt = Compare(), const Allocator& alloct = Allocator()) {
 		root = NULL;
 		comp = compt;
@@ -81,7 +73,7 @@ class map {
 		clear();
 	};
 	// INFO Copy <other>
-	map&	operator=(const map& other) {
+	map& operator=(const map& other) {
 		if (this != &other) {
 			clear();
 			comp = other.comp;
@@ -92,19 +84,19 @@ class map {
 		return *this;
 	};
 	// INFO Get the allocator type
-	allocator_type	get_allocator(void) const {
+	allocator_type get_allocator(void) const {
 		return alloc;
 	};
 	// INFO Get the value of the first pair matching <key>
-	V&	at(const K& key) {
+	V& at(const K& key) {
 		return find(key)->second;
 	};
 	// INFO Get the value of the first pair matching <key>
-	const V&	at(const K& key) const {
+	const V& at(const K& key) const {
 		return find(key)->second;
 	};
 	// INFO Get the value of the first pair matching <key> and insert it if it doesn't exist
-	V&	operator[](const K& key) {
+	V& operator[](const K& key) {
 		return insert(value_type(key, T())).first->second;
 	};
 	// INFO Get the begin
@@ -140,19 +132,19 @@ class map {
 		return const_reverse_iterator(begin());
 	};
 	// INFO Check if the map is empty
-	bool	empty(void) const {
+	bool empty(void) const {
 		return root.empty();
 	};
 	// INFO Get the size
-	size_type	size(void) const {
+	size_type size(void) const {
 		return root.size();
 	};
 	// INFO Get the maximum size
-	size_type	max_size(void) const {
+	size_type max_size(void) const {
 		return alloc.max_size();
 	};
 	// INFO Clear
-	void	clear(void) {
+	void clear(void) {
 		root.clear();
 	};
 	// INFO Insert <value>
@@ -164,7 +156,7 @@ class map {
 	// 	return root.add(hint, value);
 	// };
 	// INFO Insert <first> to <last>
-	template< class InputIt >
+	template <class InputIt>
 	void insert(InputIt first, InputIt last) {
 		for (InputIt it = first; it != last; it++)
 			insert(*it);
@@ -179,7 +171,7 @@ class map {
 			erase(first++);
 	};
 	// INFO Erase element with key <key>
-	size_type	erase(const K& key) {
+	size_type erase(const K& key) {
 		return root.remove(key);
 	};
 	// INFO Swap <this> with <other>
@@ -187,41 +179,41 @@ class map {
 		root.swap(other.root);
 	};
 	// INFO Check if <key> is in the map
-	size_type count( const Key& key ) const {
+	size_type count(const K& key) const {
 		if (root.find(key) == NULL)
 			return 0;
 		return 1;
 	};
 	// INFO Find element with key <key>
-	iterator find(const Key& key) {
+	iterator find(const K& key) {
 		return iterator(root.find(key));
 	};
 	// INFO Find element with key <key> (const)
-	const_iterator find(const Key& key) const {
+	const_iterator find(const K& key) const {
 		return const_iterator(root.find(key));
 	};
 	// INFO Get the range of elements matching <key>
-	pair_type<iterator,iterator> equal_range(const Key& key) {
+	pair_type<iterator, iterator> equal_range(const K& key) {
 		return pair_type(find(key), find(key) + 1);
 	};
 	// INFO Get the range of elements matching <key> (const)
-	pair_type<const_iterator,const_iterator> equal_range(const Key& key) const {
+	pair_type<const_iterator, const_iterator> equal_range(const K& key) const {
 		return pair_type(find(key), find(key) + 1);
 	};
 	// INFO Get the element directly lower than <key>
-	iterator lower_bound(const Key& key) {
+	iterator lower_bound(const K& key) {
 		return iterator(root.lower_bound(key));
 	};
 	// INFO Get the element directly lower than <key> (const)
-	const_iterator lower_bound(const Key& key) const {
+	const_iterator lower_bound(const K& key) const {
 		return const_iterator(root.lower_bound(key));
 	};
 	// INFO Get the element directly greater or equal to <key>
-	iterator upper_bound(const Key& key) {
+	iterator upper_bound(const K& key) {
 		return iterator(root.upper_bound(key));
 	};
 	// INFO Get the element directly greater or equal to <key> (const)
-	const_iterator upper_bound(const Key& key) const {
+	const_iterator upper_bound(const K& key) const {
 		return const_iterator(root.upper_bound(key));
 	};
 	// INFO Get the key comparison function
@@ -235,11 +227,11 @@ class map {
 	};
 	// SECTION Custom
 	// INFO Print the map as a tree
-	void	print(void) {
+	void print(void) {
 		root.print();
 	};
 	// !SECTION Custom
 };
-} // end namespace ft
+}  // end namespace ft
 
 #endif

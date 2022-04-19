@@ -11,12 +11,6 @@
 using namespace std;
 
 namespace ft {
-class OutOfRangeException : public exception {
-   public:
-	const char* what() const throw() {
-		return "Request is out of bounds";
-	}
-};
 
 template <typename T, class alloc = allocator<T> >
 class vector {
@@ -42,7 +36,7 @@ class vector {
 
    public:
 	// INFO Construct an empty vector
-	vector(const allocator_type& alloct = allocator_type()) { // Combined both default constructor and allocator constructor
+	vector(const allocator_type& alloct = allocator_type()) {  // Combined both default constructor and allocator constructor
 		_array = NULL;
 		_size = 0;
 		_capacity = 0;
@@ -274,7 +268,7 @@ class vector {
 		_size += count;
 	};
 	// INFO Insert elements <first> to <last> at position <pos>
-	template<class InputIt>
+	template <class InputIt>
 	void insert(iterator pos, InputIt first, InputIt last) {
 		int delta = last - first + 1;
 		if (_size + delta > _capacity) {
@@ -349,13 +343,12 @@ class vector {
 		_size = n;
 	};
 	void swap(vector& v) {
-		
 		std::swap(_alloc, v._alloc);
 		std::swap(_array, v._array);
 		std::swap(_size, v._size);
 		std::swap(_capacity, v._capacity);
 	};
 };
-} // end namespace ft
+}  // end namespace ft
 
 #endif

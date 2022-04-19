@@ -1,14 +1,14 @@
+#include <stdio.h>
+
 #include <deque>
 #include <iostream>
 #include <string>
 
-#include "../Tools/RBT.hpp"
 #include "../Map/Map.hpp"
-#include <stdio.h>
+#include "../Tools/RBT.hpp"
 
 // using namespace std;
 // using namespace ft;
-
 
 #include <map>
 

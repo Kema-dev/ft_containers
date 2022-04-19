@@ -69,13 +69,13 @@ class RBT {
 
    private:
 	nodePtr _root;
-	size_t	_size;
+	size_t _size;
 
    public:
 	// SECTION Constructors / Destructors
 	// INFO Create an empty tree
 	RBT(void)
-		: _root(NULL), _size(0) {};
+		: _root(NULL), _size(0){};
 	/*
 	INFO Create a tree with root node containing KVP <dpair>
 	INFO Can throw exception (self: allocFail)
