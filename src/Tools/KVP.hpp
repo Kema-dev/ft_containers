@@ -74,12 +74,5 @@ namespace ft {
 	kvp<K, V> make_kvp(K dkey, V dvalue) {
 		return kvp<K, V>(dkey, dvalue);
 	};
-	template<typename K, typename V>
-	bool	less(ft::kvp<K, V> &lhs, ft::kvp<K, V> &rhs) {
-		if (lhs < rhs) {
-			return true;
-		}
-		return false;
-	};
 }
 #endif
