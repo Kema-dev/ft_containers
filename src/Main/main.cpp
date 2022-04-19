@@ -3,30 +3,38 @@
 #include <string>
 
 #include "../Tools/RBT.hpp"
+#include "../Map/Map.hpp"
 #include <stdio.h>
 
-using namespace std;
-using namespace ft;
+// using namespace std;
+// using namespace ft;
+
+
+#include <map>
 
 int main(void) {
-	RBT<int, string> tree;
-	try {
-		tree = RBT<int, string>();
-	} catch (exception& e) {
-		cerr << e.what() << endl;
+	ft::map<int, int> m;
+	m.insert(pair<int, int>(1, 1));
+	m.insert(pair<int, int>(2, 2));
+	m.insert(pair<int, int>(3, 3));
+	m.insert(pair<int, int>(4, 4));
+	m.insert(pair<int, int>(5, 5));
+	m.insert(pair<int, int>(6, 6));
+	m.insert(pair<int, int>(7, 7));
+	m.insert(pair<int, int>(8, 8));
+	m.insert(pair<int, int>(9, 9));
+	m.insert(pair<int, int>(10, 10));
+	m.insert(pair<int, int>(11, 11));
+	m.insert(pair<int, int>(12, 12));
+	m.insert(pair<int, int>(13, 13));
+	m.insert(pair<int, int>(14, 14));
+	m.insert(pair<int, int>(15, 15));
+	// print the map
+	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++) {
+		cout << it->first << " " << it->second << endl;
 	}
-	int max = 100;
-	try {
-		int nb;
-		string str;
-		for (nb = 0; nb < max; nb++) {
-			char buf[10];
-			sprintf(buf, "%d", nb);
-			str = string(buf);
-			tree.add(make_kvp(nb, str));
-		}
-		tree.print();
-	} catch (exception& e) {
-		cerr << e.what() << endl;
+	// print the map reversely
+	for (map<int, int>::reverse_iterator it = m.rbegin(); it != m.rend(); it++) {
+		cout << it->first << " " << it->second << endl;
 	}
 }

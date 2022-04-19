@@ -69,12 +69,13 @@ class RBT {
 
    private:
 	nodePtr _root;
+	size_t	_size;
 
    public:
 	// SECTION Constructors / Destructors
 	// INFO Create an empty tree
 	RBT(void)
-		: _root(NULL){};
+		: _root(NULL), _size(0) {};
 	/*
 	INFO Create a tree with root node containing KVP <dpair>
 	INFO Can throw exception (self: allocFail)
@@ -84,6 +85,8 @@ class RBT {
 		if (!_root) {
 			throw allocFail();
 		}
+		_root->color = black;
+		_size = 1;
 	};
 	/*
 	INFO Create a RBT with RBT <src> as "root"
@@ -102,6 +105,7 @@ class RBT {
 			return;
 		clear(node->left);
 		clear(node->right);
+		_size--;
 		delete node;
 	};
 	/*
@@ -147,6 +151,8 @@ class RBT {
 		nodePtr newNode;
 		newNode = standaloneNode(node->pair);
 		newNode->color = node->color;
+		newNode->parent = NULL;
+		_size++;
 		newNode->left = copy(node->left);
 		newNode->right = copy(node->right);
 		if (newNode->left)
@@ -163,6 +169,7 @@ class RBT {
 	void swap(RBT& src) {
 		nodePtr bufRoot = _root;
 		_root = src._root;
+		_size = src._size;
 		src._root = bufRoot;
 	}
 	// !SECTION Operators and basic functions
@@ -196,6 +203,7 @@ class RBT {
 			throw duplicateKey();
 		}
 		newNode->color = red;
+		_size++;
 		return newNode;
 	};
 	/*
@@ -328,6 +336,7 @@ class RBT {
 		if (node->color == black)
 			fixRemove(child, sibling, isLeft);
 		delete node;
+		_size--;
 	};
 	/*
 	INFO Fix the RBT after deletion of nodePtr <node>
@@ -447,6 +456,161 @@ class RBT {
 		recursivePrint("", _root, false);
 	};
 	// !SECTION Printing
+	/*
+	INFO Return the root nodePtr
+	INFO No exception
+	*/
+	nodePtr getRoot(void) {
+		return _root;
+	};
+	/*
+	INFO Return the size of <this> tree
+	INFO No exception
+	*/
+	size_t getSize(void) {
+		return _size;
+	};
+	/*
+	INFO Get the nodePtr of the minimum value
+	INFO No exception
+	*/
+	nodePtr getMin(void) {
+		nodePtr curNode = _root;
+		while (curNode->left)
+			curNode = curNode->left;
+		return curNode;
+	};
+	/*
+	INFO Get the nodePtr of the maximum value
+	INFO No exception
+	*/
+	nodePtr getMax(void) {
+		nodePtr curNode = _root;
+		while (curNode->right)
+			curNode = curNode->right;
+		return curNode;
+	};
+	/*
+	INFO Get the nodePtr of the successor of <node> (first node with key > <node>'s key)
+	INFO No exception
+	*/
+	nodePtr getSuccessor(nodePtr node) {
+		if (node->right) {
+			node = node->right;
+			while (node->left)
+				node = node->left;
+			return node;
+		} else {
+			nodePtr parent = node->parent;
+			while (parent && node == parent->right) {
+				node = parent;
+				parent = parent->parent;
+			}
+			return parent;
+		}
+	};
+	/*
+	INFO Get the nodePtr of the predecessor of <node> (first node with key < <node>'s key)
+	INFO No exception
+	*/
+	nodePtr getPredecessor(nodePtr node) {
+		if (node->left) {
+			node = node->left;
+			while (node->right)
+				node = node->right;
+			return node;
+		} else {
+			nodePtr parent = node->parent;
+			while (parent && node == parent->left) {
+				node = parent;
+				parent = parent->parent;
+			}
+			return parent;
+		}
+	};
+	/*
+	INFO Get the range of pairs with keys equal to <key>
+	INFO No exception
+	*/
+	pair<nodePtr, nodePtr> getRange(K key) {
+		nodePtr start = searchKey(_root, key);
+		if (start) {
+			nodePtr end = getSuccessor(start);
+			return (make_pair(start, end));
+		} else {
+			return (make_pair(NULL, NULL));
+		}
+	};
+	/*
+	INFO Get the element directly lower than <key>
+	INFO No exception
+	*/
+	nodePtr getLowerBound(K key) {
+		return getLowerBoundUtil(_root, key);
+	};
+	/*
+	INFO Utility function for getLowerBound
+	INFO No exception
+	*/
+	nodePtr getLowerBoundUtil(nodePtr start, K key) {
+		if (!start || !key) {
+			return NULL;
+		} else {
+			if (key == start->pair.key) {
+				return start;
+			} else if (key < start->pair.key) {
+				start = start->right;
+				while (start->left && key < start->left->pair.key) {
+					start = start->left;
+				}
+				return start;
+			} else {
+				return getLowerBoundUtil(start->right, key);
+			}
+		}
+	};
+	/*
+	INFO Get the element directly lower than <key> (const)
+	INFO No exception
+	*/
+	nodePtr lower_bound(const K& key) const {
+		return getLowerBoundUtil(_root, key);
+	}
+	/*
+	INFO Get the element directly higher or equal to <key>
+	INFO No exception
+	*/
+	nodePtr getUpperBound(K key) {
+		return getUpperBoundUtil(_root, key);
+	};
+	/*
+	INFO Utility function for getUpperBound
+	INFO No exception
+	*/
+	nodePtr getUpperBoundUtil(nodePtr start, K key) {
+		if (!start || !key) {
+			return NULL;
+		} else {
+			if (key == start->pair.key) {
+				return getSuccessor(start);
+			} else if (key < start->pair.key) {
+				return getUpperBoundUtil(start->right, key);
+			} else {
+				start = start->left;
+				while (start->right && key < start->right->pair.key) {
+					start = start->right;
+				}
+				return start;
+			}
+		}
+	};
+	/*
+	INFO Get the element directly higher or equal to <key> (const)
+	INFO No exception
+	*/
+	nodePtr upper_bound(const K& key) const {
+		return getUpperBoundUtil(_root, key);
+	}
 };
 // !SECTION RBT
 
