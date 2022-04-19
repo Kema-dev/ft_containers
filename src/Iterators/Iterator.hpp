@@ -9,69 +9,72 @@ namespace ft {
 template <typename T>
 class Iterator {
    public:
-	typedef typename deque<T>::iterator iterator;
-   private:
-	iterator _it;
-	iterator _end;
+	typedef T value_type;
+	typedef T* pointer;
+	typedef T& reference;
+	typedef const T* const_pointer;
+	typedef const T& const_reference;
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+	typedef Iterator<T> iterator;
+	// typedef ReverseIterator<const T> const_iterator;
+	typedef Iterator<const T> const_iterator;
+	// typedef ReverseIterator<const T> const_reverse_iterator;
+
+   protected:
+	pointer _array;
 
    public:
-	Iterator(deque<T>::iterator it, deque<T>::iterator end) : _it(it), _end(end) {}
-	Iterator(const Iterator& src) : _it(src._it), _end(src._end) {}
-	Iterator& operator=(const Iterator& rhs) {
-		this->_it = rhs._it;
-		this->_end = rhs._end;
+	Iterator(pointer array) : _array(array) {}
+	Iterator(const iterator& it) : _array(it._array) {}
+
+	reference operator*() const { return *_array; }
+	pointer operator->() const { return _array; }
+	iterator& operator++() {
+		_array++;
 		return *this;
 	}
-	~Iterator(void) {}
-	int operator*(void) const {
-		return *this->_it;
+	iterator operator++(int) {
+		iterator tmp = *this;
+		++*this;
+		return tmp;
 	}
-	Iterator& operator&(void) {
+	iterator& operator--() {
+		_array--;
 		return *this;
 	}
-	bool operator==(const Iterator& rhs) const {
-		return this->_it == rhs._it;
+	iterator operator--(int) {
+		iterator tmp = *this;
+		--*this;
+		return tmp;
 	}
-	bool operator!=(const Iterator& rhs) const {
-		return this->_it != rhs._it;
-	}
-	Iterator& operator++(void) {
-		++this->_it;
+	iterator& operator+=(difference_type n) {
+		_array += n;
 		return *this;
 	}
-	Iterator& operator++(int) {
-		++this->_it;
+	iterator operator+(difference_type n) const {
+		iterator tmp = *this;
+		tmp += n;
+		return tmp;
+	}
+	iterator& operator-=(difference_type n) {
+		_array -= n;
 		return *this;
 	}
-	Iterator& operator--(void) {
-		--this->_it;
-		return *this;
+	iterator operator-(difference_type n) const {
+		iterator tmp = *this;
+		tmp -= n;
+		return tmp;
 	}
-	Iterator& operator--(int) {
-		--this->_it;
-		return *this;
-	}
-	Iterator& operator+=(int n) {
-		this->_it += n;
-		return *this;
-	}
-	Iterator& operator-=(int n) {
-		this->_it -= n;
-		return *this;
-	}
-	Iterator operator+(int n) {
-		return Iterator(this->_it + n, this->_end);
-	}
-	Iterator operator-(int n) {
-		return Iterator(this->_it - n, this->_end);
-	}
-	// int operator-(const Iterator& rhs) {
-	// 	return this->_it - rhs._it;
-	// }
-	// int operator+(const Iterator& rhs) {
-	// 	return this->_it + rhs._it;
-	// }
+	difference_type operator-(const iterator& it) const { return _array - it._array; }
+	reference operator[](difference_type n) const { return _array[n]; }
+	bool operator==(const iterator& it) const { return _array == it._array; }
+	bool operator!=(const iterator& it) const { return _array != it._array; }
+	bool operator<(const iterator& it) const { return _array < it._array; }
+	bool operator>(const iterator& it) const { return _array > it._array; }
+	bool operator<=(const iterator& it) const { return _array <= it._array; }
+	bool operator>=(const iterator& it) const { return _array >= it._array; }
 };
-} // namespace ft
+}
 
 #endif

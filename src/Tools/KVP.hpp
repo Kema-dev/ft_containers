@@ -2,8 +2,6 @@
 #define FT_CONTAINERS_KVP_HPP
 #include <iostream>
 
-using namespace std;
-
 namespace ft {
 template <typename K, typename V>
 class kvp {

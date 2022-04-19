@@ -7,8 +7,6 @@
 // #include "../Iterators/Iterator.hpp"
 #include "../Tools/RBT.hpp"
 
-using namespace std;
-
 namespace ft {
 class OutOfRangeException : public exception {
    public:
@@ -151,7 +149,7 @@ class map {
 	iterator insert(const value_type& value) {
 		return root.add(value);
 	};
-	// REVIEW WTF is this
+	// TODO WTF is this
 	// iterator insert(iterator hint, const value_type& value ) {
 	// 	return root.add(hint, value);
 	// };

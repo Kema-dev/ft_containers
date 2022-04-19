@@ -4,11 +4,11 @@
 #include <cmath>
 #include <iostream>
 
-// #include "../Iterators/Iterator.hpp"
-
 #define EXPANDING_RATIO 2
 
-using namespace std;
+#include "../Tools/Exceptions.hpp"
+#include "../Iterators/Iterator.hpp"
+#include "../Iterators/ReverseIterator.hpp"
 
 namespace ft {
 
@@ -22,8 +22,8 @@ class vector {
 	typedef const T& const_reference;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef iterator<T> Iterator;
-	typedef ReverseIterator<const T> const_iterator;
+	typedef Iterator<T> iterator;
+	typedef ReverseIterator<const T> reverse_iterator;
 	typedef Iterator<const T> const_iterator;
 	typedef ReverseIterator<const T> const_reverse_iterator;
 	typedef alloc allocator_type;
@@ -53,7 +53,7 @@ class vector {
 	template <class InputIt>
 	vector(InputIt first, InputIt last, const allocator_type& alloct = allocator_type())
 		: _alloc(alloct) {
-		int delta = last - first;
+		size_type delta = last - first;
 		_capacity = delta * EXPANDING_RATIO;
 		_array = _alloc.allocate(_capacity);
 		_size = delta + 1;
@@ -117,7 +117,7 @@ class vector {
 	template <class InputIt>
 	void assign(InputIt first, InputIt last) {
 		clear();
-		int delta = last - first + 1;
+		size_type delta = last - first + 1;
 		if (delta > _capacity) {
 			resize(delta);
 		}
@@ -270,7 +270,7 @@ class vector {
 	// INFO Insert elements <first> to <last> at position <pos>
 	template <class InputIt>
 	void insert(iterator pos, InputIt first, InputIt last) {
-		int delta = last - first + 1;
+		size_type delta = last - first + 1;
 		if (_size + delta > _capacity) {
 			reserve((_size + delta) * EXPANDING_RATIO);
 		}
@@ -297,7 +297,7 @@ class vector {
 	};
 	// INFO Erase elements from position <first> to position <last>
 	iterator erase(iterator first, iterator last) {
-		int delta = last - first + 1;
+		size_type delta = last - first + 1;
 		if (first._pos >= _size || last._pos >= _size) {
 			throw OutOfRangeException();
 		}
