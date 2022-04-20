@@ -29,7 +29,7 @@ namespace ft {
 template <typename K, typename V>
 class node {
    public:
-	pair<K, V> pair;
+	pair<const K, V> pair;
 	e_color color;
 	node* parent;
 	node* left;

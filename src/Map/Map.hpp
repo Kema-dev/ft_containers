@@ -149,7 +149,9 @@ class map {
 	};
 	// INFO Insert <value>
 	iterator insert(const value_type& value) {
-		return iterator(root->add(value));
+		ft::pair<const K, V>* pair = alloc.allocate(1);
+		alloc.construct(pair, value);
+		return root->insert(pair); // FIXME return iterator
 	};
 	// TODO WTF is this
 	// iterator insert(iterator hint, const value_type& value ) {

@@ -36,6 +36,10 @@ public:
 		current = _current;
 		root = _root;
 	};
+	MapIterator(const ft::pair<const K, V>& other) {
+		current = new ft::pair<const K, V>(other);
+		root = new ft::pair<const K, V>(other);
+	};
 	MapIterator(const iterator& other) {
 		current = other.current;
 		root = other.root;

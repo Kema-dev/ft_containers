@@ -22,10 +22,8 @@ class pair {
 	/*
 	INFO Copy <other>
 	*/
-	pair(ft::pair<const K, V> const& other) {
-		key = other.key;
-		value = other.value;
-	};
+	pair(ft::pair<const K, V> const& other)
+		: key(other.key), value(other.value){};
 	/*
 	INFO Destruct the pair
 	*/
@@ -92,10 +90,10 @@ class pair {
 	void print(void) {
 		std::cout << "Key: " << this->key << " Value: " << this->value << std::endl;
 	};
-	K& first(void) const {
+	const K& first(void) const {
 		return this->key;
 	};
-	V& second(void) const {
+	const V& second(void) const {
 		return this->value;
 	};
 };
