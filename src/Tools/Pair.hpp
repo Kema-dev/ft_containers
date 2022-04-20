@@ -1,12 +1,14 @@
-#ifndef FT_CONTAINERS_PAIR_HPP
-#define FT_CONTAINERS_PAIR_HPP
+#ifndef PAIR_HPP
+#define PAIR_HPP
 #include <iostream>
+
+#include "Less.hpp"
 
 namespace ft {
 template <typename K, typename V>
 class pair {
    public:
-	K key;
+	const K key;
 	V value;
 	/*
 	INFO Construct an empty pair
@@ -15,13 +17,14 @@ class pair {
 	/*
 	INFO Construct a pair with <dkey> and <dvalue>
 	*/
-	pair(K const &dkey, V const &dvalue)
+	pair(K const& dkey, V const& dvalue)
 		: key(dkey), value(dvalue){};
 	/*
 	INFO Copy <other>
 	*/
-	pair(pair<K, V> const &other) {
-		*this = other;
+	pair(ft::pair<const K, V> const& other) {
+		key = other.key;
+		value = other.value;
 	};
 	/*
 	INFO Destruct the pair
@@ -30,7 +33,7 @@ class pair {
 	/*
 	INFO Copy <other>
 	*/
-	pair &operator=(pair const &rhs) {
+	pair &operator=(ft::pair<const K, V> const& rhs) {
 		this->key = rhs.key;
 		this->value = rhs.value;
 		return *this;
@@ -38,26 +41,26 @@ class pair {
 	/*
 	INFO Check if <this> == <other>
 	*/
-	bool operator==(ft::pair<K, V> const &rhs) {
+	bool operator==(ft::pair<const K, V> const& rhs) {
 		return this->key == rhs.key && this->value == rhs.value;
 	};
 	/*
 	INFO Check if<this> != <other>
 	*/
-	bool operator!=(ft::pair<K, V> const &rhs) {
+	bool operator!=(ft::pair<const K, V> const& rhs) {
 		return this->key != rhs.key || this->value != rhs.value;
 	};
 	/*
 	INFO Check if <this> < <other>
 	*/
-	bool operator<(ft::pair<K, V> const &rhs) {
+	bool operator<(ft::pair<const K, V> const& rhs) {
 		return this->key < rhs.key ||
 			   (this->key == rhs.key && this->value < rhs.value);
 	};
 	/*
 	INFO Check if <this> <= <other>
 	*/
-	bool operator<=(ft::pair<K, V> const &rhs) {
+	bool operator<=(ft::pair<const K, V> const& rhs) {
 		return this->key < rhs.key ||
 			   (this->key == rhs.key && this->value < rhs.value) ||
 			   (this->key == rhs.key && this->value == rhs.value);
@@ -65,14 +68,14 @@ class pair {
 	/*
 	INFO Check if <this> > <other>
 	*/
-	bool operator>(ft::pair<K, V> const &rhs) {
+	bool operator>(ft::pair<const K, V> const& rhs) {
 		return this->key > rhs.key ||
 			   (this->key == rhs.key && this->value > rhs.value);
 	};
 	/*
 	INFO Check if <this> >= <other>
 	*/
-	bool operator>=(ft::pair<K, V> const &rhs) {
+	bool operator>=(ft::pair<const K, V> const& rhs) {
 		return this->key > rhs.key ||
 			   (this->key == rhs.key && this->value > rhs.value) ||
 			   (this->key == rhs.key && this->value == rhs.value);
@@ -80,7 +83,7 @@ class pair {
 	/*
 	INFO Check if <this> == <other>
 	*/
-	bool compare(ft::pair<K, V> const &lhs, ft::pair<K, V> const &rhs) {
+	bool compare(ft::pair<const K, V> const& lhs, ft::pair<const K, V> const& rhs) {
 		return lhs == rhs;
 	};
 	/*
@@ -89,19 +92,19 @@ class pair {
 	void print(void) {
 		std::cout << "Key: " << this->key << " Value: " << this->value << std::endl;
 	};
-	/*
-	INFO Standard comparison function
-	*/
-	bool less(K &lhs, K &rhs) {
-		return lhs < rhs;
+	K& first(void) const {
+		return this->key;
+	};
+	V& second(void) const {
+		return this->value;
 	};
 };
 template <typename K, typename V>
 /*
 INFO Make a new pair containing <key> and <value>
 */
-pair<K, V> make_pair(K dkey, V dvalue) {
-	return pair<K, V>(dkey, dvalue);
+pair<const K, V> make_pair(K dkey, V dvalue) {
+	return pair<const K, V>(dkey, dvalue);
 };
 }  // namespace ft
 #endif

@@ -1,5 +1,5 @@
-#ifndef FT_CONTAINERS_RBT_HPP
-#define FT_CONTAINERS_RBT_HPP
+#ifndef RBT_HPP
+#define RBT_HPP
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -210,9 +210,10 @@ class RBT {
 	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	void add(pair<K, V> dpair) {
+	nodePtr add(pair<const K, V> dpair) {
 		nodePtr newNode = insert(dpair);
 		fixInsert(newNode);
+		return newNode;
 	};
 	/*
 	INFO Fix the RBT after insertion of nodePtr <node>

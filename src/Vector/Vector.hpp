@@ -1,16 +1,16 @@
 
-#ifndef FT_CONTAINERS_VECTOR_HPP
-#define FT_CONTAINERS_VECTOR_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 #include <cmath>
 #include <iostream>
 
 #define EXPANDING_RATIO 2
-#define AB = 0
-#define A = 1
-#define B = 2
+#define AB 0
+#define A 1
+#define B 2
 
-#include "../Iterators/Iterator.hpp"
-#include "../Iterators/ReverseIterator.hpp"
+#include "../Iterators/Vector/Iterator.hpp"
+#include "../Iterators/Vector/ReverseIterator.hpp"
 #include "../Tools/Exceptions.hpp"
 
 namespace ft {
@@ -25,11 +25,11 @@ class vector {
 	typedef const T& const_reference;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef Iterator<T> iterator;
-	typedef ReverseIterator<const T> reverse_iterator;
-	typedef Iterator<const T> const_iterator;
-	typedef ReverseIterator<const T> const_reverse_iterator;
 	typedef alloc allocator_type;
+	typedef VectorIterator<T> iterator;
+	typedef VectorReverseIterator<T> reverse_iterator;
+	typedef VectorIterator<const T> const_iterator;
+	typedef VectorReverseIterator<const T> const_reverse_iterator;
 
    protected:
 	alloc _alloc;
@@ -310,7 +310,7 @@ class vector {
 	};
 	// INFO Erase element at position <pos>
 	iterator erase(iterator pos) {
-		if (pos - this->begin() >= _size) {
+		if (size_type(pos - this->begin()) >= _size) {
 			throw OutOfRangeException();
 		}
 		for (size_type i = pos - this->begin(); i < _size - 1; i++) {

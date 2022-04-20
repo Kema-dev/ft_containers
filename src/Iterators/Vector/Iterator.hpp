@@ -1,5 +1,5 @@
-#ifndef FT_ITERATOR_HPP
-#define FT_ITERATOR_HPP
+#ifndef VECTOR_ITERATOR_HPP
+#define VECTOR_ITERATOR_HPP
 #include <sys/types.h>
 
 #include <deque>
@@ -7,7 +7,7 @@
 
 namespace ft {
 template <typename T>
-class Iterator {
+class VectorIterator {
    public:
 	typedef T value_type;
 	typedef T* pointer;
@@ -16,17 +16,17 @@ class Iterator {
 	typedef const T& const_reference;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef Iterator<T> iterator;
-	// typedef ReverseIterator<const T> const_iterator;
-	typedef Iterator<const T> const_iterator;
-	// typedef ReverseIterator<const T> const_reverse_iterator;
+	typedef VectorIterator<T> iterator;
+	typedef VectorIterator<const T> const_iterator;
+	// typedef VectorReverseIterator<T> reverse_iterator;
+	// typedef VectorReverseIterator<const T> const_reverse_iterator;
 
    protected:
 	pointer _array;
 
    public:
-	Iterator(pointer array) : _array(array) {}
-	Iterator(const iterator& it) : _array(it._array) {}
+	VectorIterator(pointer array) : _array(array) {}
+	VectorIterator(const iterator& it) : _array(it._array) {}
 
 	reference operator*() const { return *_array; }
 	pointer operator->() const { return _array; }
