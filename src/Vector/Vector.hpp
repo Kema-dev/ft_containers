@@ -5,10 +5,13 @@
 #include <iostream>
 
 #define EXPANDING_RATIO 2
+#define AB = 0
+#define A = 1
+#define B = 2
 
-#include "../Tools/Exceptions.hpp"
 #include "../Iterators/Iterator.hpp"
 #include "../Iterators/ReverseIterator.hpp"
+#include "../Tools/Exceptions.hpp"
 
 namespace ft {
 
@@ -35,8 +38,11 @@ class vector {
 	size_type _capacity;
 
    public:
-	// INFO Construct an empty vector
-	vector(const allocator_type& alloct = allocator_type()) {  // Combined both default constructor and allocator constructor
+	/*
+	INFO Construct an empty vector
+	INFO Combined both default constructor and allocator constructor
+	*/
+	vector(const allocator_type& alloct = allocator_type()) {
 		_array = NULL;
 		_size = 0;
 		_capacity = 0;
@@ -49,17 +55,26 @@ class vector {
 		for (size_type i = 0; i < _size; i++)
 			_alloc.construct(&_array[i], value);
 	};
+
 	// INFO Construct a vector with elements <first> to <last> (specifying allocator type <alloc>)
 	template <class InputIt>
 	vector(InputIt first, InputIt last, const allocator_type& alloct = allocator_type())
 		: _alloc(alloct) {
-		size_type delta = last - first;
-		_capacity = delta * EXPANDING_RATIO;
-		_array = _alloc.allocate(_capacity);
-		_size = delta + 1;
-		for (int i = 0; i < _size; i++) {
-			_alloc.construct(&_array[i], *first);
-			first++;
+		if (first > last)
+			throw std::length_error("ft::vector::vector : first > last");
+		if (first == last) {
+			_array = NULL;
+			_size = 0;
+			_capacity = 0;
+		} else {
+			size_type delta = last - first;
+			_capacity = delta * EXPANDING_RATIO;
+			_array = _alloc.allocate(_capacity);
+			_size = delta;
+			for (size_type i = 0; i < _size; i++) {
+				_alloc.construct(&_array[i], *first);
+				first++;
+			}
 		}
 	};
 	// INFO Construct a vector from <other>
@@ -116,13 +131,18 @@ class vector {
 	// INFO Assign elements <first> to <last>
 	template <class InputIt>
 	void assign(InputIt first, InputIt last) {
+		if (first > last)
+			throw std::length_error("ft::vector::assign : first > last");
 		clear();
-		size_type delta = last - first + 1;
+		if (first == last) {
+			return;
+		}
+		size_type delta = last - first;
 		if (delta > _capacity) {
 			resize(delta);
 		}
 		_size = delta;
-		for (int i = 0; i < _size; i++) {
+		for (size_type i = 0; i < _size; i++) {
 			_alloc.construct(&_array[i], *first);
 			first++;
 		}
@@ -245,70 +265,75 @@ class vector {
 		if (_size >= _capacity) {
 			reserve(_capacity * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > pos._pos; i--) {
+		for (size_type i = _size; i > size_type(pos - this->begin()); i--) {
 			_alloc.construct(&_array[i], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
-		_alloc.construct(&_array[pos._pos], val);
+		_alloc.construct(&_array[pos - this->begin()], val);
 		_size++;
-		return iterator(_array + pos._pos);
+		return iterator(pos);
 	};
 	// INFO Insert <count> elements <value> at position <pos>
 	void insert(iterator pos, size_type count, const T& value) {
 		if (_size + count > _capacity) {
 			reserve((_size + count) * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > pos._pos; i--) {
+		for (size_type i = _size; i > pos - this->begin(); i--) {
 			_alloc.construct(&_array[i + count - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
 		for (size_type i = 0; i < count; i++) {
-			_alloc.construct(&_array[pos._pos + i], value);
+			_alloc.construct(&_array[pos - this->begin() + i], value);
 		}
 		_size += count;
 	};
 	// INFO Insert elements <first> to <last> at position <pos>
 	template <class InputIt>
 	void insert(iterator pos, InputIt first, InputIt last) {
-		size_type delta = last - first + 1;
+		if (first == last) {
+			return;
+		} else if (first > last) {
+			throw std::length_error("ft::Vector::insert : first > last");
+		}
+		size_type delta = last - first;
 		if (_size + delta > _capacity) {
 			reserve((_size + delta) * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > pos._pos; i--) {
+		for (size_type i = _size; i > pos - this->begin(); i--) {
 			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
 		for (size_type i = 0; i < delta; i++) {
-			_alloc.construct(&_array[pos._pos + i], *(first + i));
+			_alloc.construct(&_array[pos - this->begin() + i], *(first + i));
 		}
 		_size += delta;
 	};
 	// INFO Erase element at position <pos>
 	iterator erase(iterator pos) {
-		if (pos._pos >= _size) {
+		if (pos - this->begin() >= _size) {
 			throw OutOfRangeException();
 		}
-		for (size_type i = pos._pos; i < _size - 1; i++) {
+		for (size_type i = pos - this->begin(); i < _size - 1; i++) {
 			_alloc.construct(&_array[i], _array[i + 1]);
 		}
 		_alloc.destroy(&_array[_size - 1]);
 		_size--;
-		return iterator(_array + pos._pos);
+		return iterator(_array + size_type(pos - this->begin()));
 	};
 	// INFO Erase elements from position <first> to position <last>
 	iterator erase(iterator first, iterator last) {
-		size_type delta = last - first + 1;
-		if (first._pos >= _size || last._pos >= _size) {
+		size_type delta = last - first;
+		if (size_type(first - this->begin()) >= _size || size_type(last - this->begin()) >= _size) {
 			throw OutOfRangeException();
 		}
-		for (size_type i = first._pos; i < _size - delta; i++) {
+		for (size_type i = (size_type(first - this->begin())); i < _size - delta; i++) {
 			_alloc.construct(&_array[i], _array[i + delta]);
 		}
 		for (size_type i = 0; i < delta; i++) {
 			_alloc.destroy(&_array[_size - 1 - i]);
 		}
 		_size -= delta;
-		return iterator(_array + first._pos);
+		return iterator(_array + size_type(first - this->begin()));
 	};
 	// INFO Add element <val> at end
 	void push_back(const T& val) {
@@ -348,6 +373,61 @@ class vector {
 		std::swap(_size, v._size);
 		std::swap(_capacity, v._capacity);
 	};
+	// SECTION Custom
+	int	lexicographical_compare(T const &a, T const &b) {
+		for (size_t i = 0; i < a.size(); i++) {
+			if (a[i] < b[i])
+				return B;
+			else if (a[i] > b[i])
+				return A;
+		}
+		return AB;
+	}
+	// INFO Check if <this> == <v>
+	bool operator==(const vector& v) const {
+		if (_size != v._size) {
+			return false;
+		}
+		for (size_type i = 0; i < _size; i++) {
+			if (_array[i] != v._array[i]) {
+				return false;
+			}
+		}
+		return true;
+	};
+	// INFO Check if <this> != <v>
+	bool operator!=(const vector& v) const {
+		return !(*this == v);
+	};
+	// INFO Check if <this> < <v>
+	bool operator<(const vector& v) const {
+		if (_size < v._size) {
+			return true;
+		} else if (_size > v._size) {
+			return false;
+		}
+		for (size_type i = 0; i < _size; i++) {
+			if (_array[i] < v._array[i]) {
+				return true;
+			} else if (_array[i] > v._array[i]) {
+				return false;
+			}
+		}
+		return false;
+	};
+	// INFO Check if <this> <= <v>
+	bool operator<=(const vector& v) const {
+		return (*this < v || *this == v);
+	};
+	// INFO Check if <this> > <v>
+	bool operator>(const vector& v) const {
+		return !(*this <= v);
+	};
+	// INFO Check if <this> >= <v>
+	bool operator>=(const vector& v) const {
+		return !(*this < v);
+	};
+	// !SECTION Custom
 };
 }  // end namespace ft
 

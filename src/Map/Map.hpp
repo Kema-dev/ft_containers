@@ -4,24 +4,19 @@
 #include <cmath>
 #include <iostream>
 
-// #include "../Iterators/Iterator.hpp"
+#include "../Iterators/Iterator.hpp"
+#include "../Iterators/ReverseIterator.hpp"
 #include "../Tools/RBT.hpp"
 
 namespace ft {
-class OutOfRangeException : public exception {
-   public:
-	const char* what() const throw() {
-		return "Request is out of bounds";
-	}
-};
 
-template <class K, class V, class Compare = typename kvp<K, V>::less(), class Allocator = allocator<ft::kvp<const K, V> > >
+template <class K, class V, class Compare = typename ft::pair<K, V>::less(), class Allocator = std::allocator<ft::pair<const K, V> > >
 class map {
    public:
 	typedef K key_type;
 	typedef V value_type;
 	typedef Compare value_compare;
-	typedef ft::kvp<const K, V> pair_type;
+	typedef ft::pair<const K, V> pair_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 	typedef value_type* pointer;
@@ -221,7 +216,7 @@ class map {
 	// INFO Get the value comparison function
 	pair_type value_comp() const {
 		// REVIEW maybe not working
-		return kvp::less<value_type>();
+		return pair::less<value_type>();
 	};
 	// SECTION Custom
 	// INFO Print the map as a tree

@@ -1,3 +1,6 @@
+#ifndef EXCEPTIONS_HPP
+#define EXCEPTIONS_HPP
+
 #include <iostream>
 
 using namespace std;
@@ -22,3 +25,5 @@ class OutOfRangeException : public exception {
 		return "Request is out of bounds";
 	}
 };
+
+#endif

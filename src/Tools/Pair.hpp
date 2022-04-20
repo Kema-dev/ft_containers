@@ -1,36 +1,36 @@
-#ifndef FT_CONTAINERS_KVP_HPP
-#define FT_CONTAINERS_KVP_HPP
+#ifndef FT_CONTAINERS_PAIR_HPP
+#define FT_CONTAINERS_PAIR_HPP
 #include <iostream>
 
 namespace ft {
 template <typename K, typename V>
-class kvp {
+class pair {
    public:
 	K key;
 	V value;
 	/*
-	INFO Construct an empty kvp
+	INFO Construct an empty pair
 	*/
-	kvp() : key(), value(){};
+	pair() : key(), value(){};
 	/*
-	INFO Construct a kvp with <dkey> and <dvalue>
+	INFO Construct a pair with <dkey> and <dvalue>
 	*/
-	kvp(K const &dkey, V const &dvalue)
+	pair(K const &dkey, V const &dvalue)
 		: key(dkey), value(dvalue){};
 	/*
 	INFO Copy <other>
 	*/
-	kvp(kvp<K, V> const &other) {
+	pair(pair<K, V> const &other) {
 		*this = other;
 	};
 	/*
-	INFO Destruct the kvp
+	INFO Destruct the pair
 	*/
-	~kvp(void){};
+	~pair(void){};
 	/*
 	INFO Copy <other>
 	*/
-	kvp &operator=(kvp const &rhs) {
+	pair &operator=(pair const &rhs) {
 		this->key = rhs.key;
 		this->value = rhs.value;
 		return *this;
@@ -38,26 +38,26 @@ class kvp {
 	/*
 	INFO Check if <this> == <other>
 	*/
-	bool operator==(ft::kvp<K, V> const &rhs) {
+	bool operator==(ft::pair<K, V> const &rhs) {
 		return this->key == rhs.key && this->value == rhs.value;
 	};
 	/*
 	INFO Check if<this> != <other>
 	*/
-	bool operator!=(ft::kvp<K, V> const &rhs) {
+	bool operator!=(ft::pair<K, V> const &rhs) {
 		return this->key != rhs.key || this->value != rhs.value;
 	};
 	/*
 	INFO Check if <this> < <other>
 	*/
-	bool operator<(ft::kvp<K, V> const &rhs) {
+	bool operator<(ft::pair<K, V> const &rhs) {
 		return this->key < rhs.key ||
 			   (this->key == rhs.key && this->value < rhs.value);
 	};
 	/*
 	INFO Check if <this> <= <other>
 	*/
-	bool operator<=(ft::kvp<K, V> const &rhs) {
+	bool operator<=(ft::pair<K, V> const &rhs) {
 		return this->key < rhs.key ||
 			   (this->key == rhs.key && this->value < rhs.value) ||
 			   (this->key == rhs.key && this->value == rhs.value);
@@ -65,14 +65,14 @@ class kvp {
 	/*
 	INFO Check if <this> > <other>
 	*/
-	bool operator>(ft::kvp<K, V> const &rhs) {
+	bool operator>(ft::pair<K, V> const &rhs) {
 		return this->key > rhs.key ||
 			   (this->key == rhs.key && this->value > rhs.value);
 	};
 	/*
 	INFO Check if <this> >= <other>
 	*/
-	bool operator>=(ft::kvp<K, V> const &rhs) {
+	bool operator>=(ft::pair<K, V> const &rhs) {
 		return this->key > rhs.key ||
 			   (this->key == rhs.key && this->value > rhs.value) ||
 			   (this->key == rhs.key && this->value == rhs.value);
@@ -80,14 +80,14 @@ class kvp {
 	/*
 	INFO Check if <this> == <other>
 	*/
-	bool compare(ft::kvp<K, V> const &lhs, ft::kvp<K, V> const &rhs) {
+	bool compare(ft::pair<K, V> const &lhs, ft::pair<K, V> const &rhs) {
 		return lhs == rhs;
 	};
 	/*
-	INFO Print the kvp
+	INFO Print the pair
 	*/
 	void print(void) {
-		cout << "Key: " << this->key << " Value: " << this->value << endl;
+		std::cout << "Key: " << this->key << " Value: " << this->value << std::endl;
 	};
 	/*
 	INFO Standard comparison function
@@ -98,10 +98,10 @@ class kvp {
 };
 template <typename K, typename V>
 /*
-INFO Make a new kvp containing <key> and <value>
+INFO Make a new pair containing <key> and <value>
 */
-kvp<K, V> make_kvp(K dkey, V dvalue) {
-	return kvp<K, V>(dkey, dvalue);
+pair<K, V> make_pair(K dkey, V dvalue) {
+	return pair<K, V>(dkey, dvalue);
 };
 }  // namespace ft
 #endif

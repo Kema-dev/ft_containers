@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Exceptions.hpp"
-#include "KVP.hpp"
+#include "Pair.hpp"
 
 enum e_color {
 	black,
@@ -29,13 +29,13 @@ namespace ft {
 template <typename K, typename V>
 class node {
    public:
-	kvp<K, V> pair;
+	pair<K, V> pair;
 	e_color color;
 	node* parent;
 	node* left;
 	node* right;
 
-	node(kvp<K, V>& dpair)
+	node(ft::pair<K, V>& dpair)
 		: pair(dpair), color(red), parent(NULL), left(NULL), right(NULL){};
 	~node(){};
 	bool operator<(const node& other) const {
@@ -77,10 +77,10 @@ class RBT {
 	RBT(void)
 		: _root(NULL), _size(0){};
 	/*
-	INFO Create a tree with root node containing KVP <dpair>
+	INFO Create a tree with root node containing pair <dpair>
 	INFO Can throw exception (self: allocFail)
 	*/
-	RBT(kvp<K, V> dpair) {
+	RBT(pair<K, V> dpair) {
 		_root = new node<K, V>(dpair);
 		if (!_root) {
 			throw allocFail();
@@ -122,10 +122,10 @@ class RBT {
 		return _root;
 	};
 	/*
-	INFO Get a mint new node with KVP <dpair>
+	INFO Get a mint new node with pair <dpair>
 	INFO Can throw exception (self: allocFail)
 	*/
-	nodePtr standaloneNode(kvp<K, V> dpair) const {
+	nodePtr standaloneNode(pair<K, V> dpair) const {
 		nodePtr buf = new node<K, V>(dpair);
 		if (!buf) {
 			throw allocFail();
@@ -178,7 +178,7 @@ class RBT {
 	INFO /!\ DO NOT USE /!\ (Use "add" instead)
 	INFO Can throw exception (calls)
 	*/
-	nodePtr insert(kvp<K, V> dpair) {
+	nodePtr insert(pair<K, V> dpair) {
 		nodePtr newNode = standaloneNode(dpair);
 		nodePtr curNode = _root;
 		nodePtr parent = NULL;
@@ -207,10 +207,10 @@ class RBT {
 		return newNode;
 	};
 	/*
-	INFO Add KVP <dpair> to the tree
+	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	void add(kvp<K, V> dpair) {
+	void add(pair<K, V> dpair) {
 		nodePtr newNode = insert(dpair);
 		fixInsert(newNode);
 	};
