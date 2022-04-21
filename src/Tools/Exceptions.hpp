@@ -3,23 +3,21 @@
 
 #include <iostream>
 
-using namespace std;
-
-class allocFail : public exception {
+class allocFail : public std::exception {
    public:
 	virtual const char* what() const throw() {
 		return ("Memory allocation failed");
 	}
 };
 
-class duplicateKey : public exception {
+class duplicateKey : public std::exception {
    public:
 	virtual const char* what() const throw() {
 		return ("Provided key is a duplicate");
 	}
 };
 
-class OutOfRangeException : public exception {
+class OutOfRangeException : public std::exception {
    public:
 	const char* what() const throw() {
 		return "Request is out of bounds";

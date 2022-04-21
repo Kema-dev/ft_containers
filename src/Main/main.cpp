@@ -18,11 +18,11 @@ void print_v(ft::vector<int>& v) {
 // 	std::cout << std::endl;
 // }
 
-#include <vector>
-
 int main(void) {
-	ft::map<int, std::string> m;
-	m[1];
-	// print_m(m);
+	ft::map<int, std::string> map;
+	for (int i = 1; i <= 25; ++i)
+		map.insert(i, std::to_string(i));
+	// map.erase(5);
+	map.print();
 	return 0;
 }
