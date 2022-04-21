@@ -63,14 +63,45 @@ class map {
 		bool operator!=(const MapIterator& other) const {
 			return ptr != other.ptr;
 		}
-		value_type& operator*() {
+		pairType& operator*() {
 			return ptr->pair;
 		}
-		value_type* operator->() {
+		pairType* operator->() {
 			return &(ptr->pair);
 		}
-
-	   private:
+		bool operator<(const MapIterator& other) const {
+			return ptr < other.ptr;
+		}
+		bool operator>(const MapIterator& other) const {
+			return ptr > other.ptr;
+		}
+		bool operator<=(const MapIterator& other) const {
+			return ptr <= other.ptr;
+		}
+		bool operator>=(const MapIterator& other) const {
+			return ptr >= other.ptr;
+		}
+		bool operator==(const MapIterator& other) {
+			return ptr == other.ptr;
+		}
+		bool operator!=(const MapIterator& other) {
+			return ptr != other.ptr;
+		}
+		bool operator!() {
+			return ptr == nullptr;
+		}
+		const K& first() {
+			return ptr->pair.first();
+		}
+		const V& second() {
+			return ptr->pair.second();
+		}
+		MapIterator operator+(int n) {
+			return ptr + n;
+		}
+		MapIterator operator-(int n) {
+			return ptr - n;
+		}
 		nodePtr ptr;
 	};
 
@@ -106,14 +137,45 @@ class map {
 		bool operator!=(const MapReverseIterator& other) const {
 			return ptr != other.ptr;
 		}
-		value_type& operator*() {
+		pairType& operator*() {
 			return ptr->pair;
 		}
-		value_type* operator->() {
+		pairType* operator->() {
 			return &(ptr->pair);
 		}
-
-	   private:
+		bool operator<(const MapReverseIterator& other) const {
+			return ptr < other.ptr;
+		}
+		bool operator>(const MapReverseIterator& other) const {
+			return ptr > other.ptr;
+		}
+		bool operator<=(const MapReverseIterator& other) const {
+			return ptr <= other.ptr;
+		}
+		bool operator>=(const MapReverseIterator& other) const {
+			return ptr >= other.ptr;
+		}
+		bool operator==(const MapReverseIterator& other) {
+			return ptr == other.ptr;
+		}
+		bool operator!=(const MapReverseIterator& other) {
+			return ptr != other.ptr;
+		}
+		bool operator!() {
+			return ptr == nullptr;
+		}
+		const K& first() {
+			return ptr->pair.first();
+		}
+		const V& second() {
+			return ptr->pair.second();
+		}
+		MapReverseIterator operator+(int n) {
+			return ptr + n;
+		}
+		MapReverseIterator operator-(int n) {
+			return ptr - n;
+		}
 		nodePtr ptr;
 	};
 
@@ -219,50 +281,50 @@ class map {
 	};
 	// INFO access specified element with bounds checking
 	value_reference at(const key_type& key) {
-		nodePtr node = find(key);
+		iterator node = find(key);
 		if (!node)
 			throw std::out_of_range("map::at");
 		return node->pair.second;
 	};
 	// INFO access or insert specified element
 	value_reference operator[](const key_type& key) {
-		nodePtr node = find(key);
+		iterator node = find(key);
 		if (!node) {
-			node = insert(value_type(key, V())).first;
+			return insert(pairType(key, V()))->pair.second();
 		}
-		return node->pair.second;
+		return node.ptr->pair.second();
 	};
 	// INFO Get the first element as an iterator
 	iterator begin(void) {
-		return iterator(_root);
+		return iterator(this->getMin());
 	};
 	// INFO Get the first element as a const_iterator
 	const_iterator begin(void) const {
-		return const_iterator(_root);
+		return const_iterator(this->getMin());
 	};
 	// INFO Get the last element as an iterator
 	iterator end(void) {
-		return iterator(NULL);
+		return iterator(this->getMax() + 1);
 	};
 	// INFO Get the last element as a const_iterator
 	const_iterator end(void) const {
-		return const_iterator(NULL);
+		return const_iterator(this->getMax() + 1);
 	};
 	// INFO Get the first element as a reverse_iterator
 	reverse_iterator rbegin(void) {
-		return reverse_iterator(_root);
+		return reverse_iterator(this->getMax());
 	};
 	// INFO Get the first element as a const_reverse_iterator
 	const_reverse_iterator rbegin(void) const {
-		return const_reverse_iterator(_root);
+		return const_reverse_iterator(this->getMax());
 	};
 	// INFO Get the last element as a reverse_iterator
 	reverse_iterator rend(void) {
-		return reverse_iterator(NULL);
+		return reverse_iterator(this->getMin() - 1);
 	};
 	// INFO Get the last element as a const_reverse_iterator
 	const_reverse_iterator rend(void) const {
-		return const_reverse_iterator(NULL);
+		return const_reverse_iterator(this->getMin() - 1);
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
@@ -277,20 +339,20 @@ class map {
 		return size_type(-1);
 	};
 	// INFO erase the element at position <pos>
-	iterator erase(iterator pos) {
+	void erase(iterator pos) {
 		remove(pos.ptr);
 	};
 	// INFO erase the elements in the range [<first>, <last>)
-	iterator erase(iterator first, iterator last) {
+	void erase(iterator first, iterator last) {
 		while (first != last)
 			erase(first++);
 	};
 	// INFO erase the element with key <key>
 	size_type erase(const key_type& key) {
-		nodePtr node = find(key);
+		iterator node = find(key);
 		if (!node)
 			return 0;
-		remove(node);
+		erase(node);
 		return 1;
 	};
 	// INFO swap the contents of <this> and <other>
@@ -765,44 +827,6 @@ class map {
 		while (curNode->right)
 			curNode = curNode->right;
 		return curNode;
-	};
-	/*
-	INFO Get the nodePtr of the successor of <node> (first node with key > <node>'s key)
-	INFO No exception
-	*/
-	nodePtr getSuccessor(nodePtr node) {
-		if (node->right) {
-			node = node->right;
-			while (node->left)
-				node = node->left;
-			return node;
-		} else {
-			nodePtr parent = node->parent;
-			while (parent && node == parent->right) {
-				node = parent;
-				parent = parent->parent;
-			}
-			return parent;
-		}
-	};
-	/*
-	INFO Get the nodePtr of the predecessor of <node> (first node with key < <node>'s key)
-	INFO No exception
-	*/
-	nodePtr getPredecessor(nodePtr node) {
-		if (node->left) {
-			node = node->left;
-			while (node->right)
-				node = node->right;
-			return node;
-		} else {
-			nodePtr parent = node->parent;
-			while (parent && node == parent->left) {
-				node = parent;
-				parent = parent->parent;
-			}
-			return parent;
-		}
 	};
 	/*
 	INFO Get the range of pairs with keys equal to <key>

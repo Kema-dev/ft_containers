@@ -12,17 +12,12 @@ void print_v(ft::vector<int>& v) {
 	std::cout << std::endl;
 }
 
-// void print_m(ft::map<int, std::string>& m) {
-// 	for (ft::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
-// 		std::cout << *it << " ";
-// 	std::cout << std::endl;
-// }
-
 int main(void) {
 	ft::map<int, std::string> map;
 	for (int i = 1; i <= 25; ++i)
 		map.insert(i, std::to_string(i));
-	// map.erase(5);
+	for (int i = 1; i <= 25; ++i)
+		std::cout << map[i] << std::endl;
 	map.print();
 	return 0;
 }
