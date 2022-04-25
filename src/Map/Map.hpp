@@ -283,7 +283,7 @@ class map {
 	const_value_reference at(const key_type& key) {
 		iterator node = find(key);
 		if (!node)
-			throw std::out_of_range("map::at");
+			throw std::out_of_range("map::at: key not found");
 		return node->pair.second;
 	};
 	// INFO access or insert specified element
@@ -344,6 +344,8 @@ class map {
 	};
 	// INFO erase the elements in the range [<first>, <last>)
 	void erase(iterator first, iterator last) {
+		if (first > last)
+			throw std::out_of_range("map::erase: first > last");
 		while (first != last)
 			erase(first++);
 	};

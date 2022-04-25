@@ -61,7 +61,7 @@ class vector {
 	vector(InputIt first, InputIt last, const allocator_type& alloct = allocator_type())
 		: _alloc(alloct) {
 		if (first > last)
-			throw std::length_error("ft::vector::vector : first > last");
+			throw std::out_of_range("ft::vector::vector : first > last");
 		if (first == last) {
 			_array = NULL;
 			_size = 0;
@@ -132,7 +132,7 @@ class vector {
 	template <class InputIt>
 	void assign(InputIt first, InputIt last) {
 		if (first > last)
-			throw std::length_error("ft::vector::assign : first > last");
+			throw std::out_of_range("ft::vector::assign : first > last");
 		clear();
 		if (first == last) {
 			return;
@@ -322,6 +322,9 @@ class vector {
 	};
 	// INFO Erase elements from position <first> to position <last>
 	iterator erase(iterator first, iterator last) {
+		if (first > last) {
+			throw std::out_of_range("ft::Vector::erase : first > last");
+		}
 		size_type delta = last - first;
 		if (size_type(first - this->begin()) >= _size || size_type(last - this->begin()) >= _size) {
 			throw OutOfRangeException();
