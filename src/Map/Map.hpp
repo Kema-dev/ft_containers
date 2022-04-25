@@ -280,14 +280,14 @@ class map {
 		return _root;
 	};
 	// INFO access specified element with bounds checking
-	value_reference at(const key_type& key) {
+	const_value_reference at(const key_type& key) {
 		iterator node = find(key);
 		if (!node)
 			throw std::out_of_range("map::at");
 		return node->pair.second;
 	};
 	// INFO access or insert specified element
-	value_reference operator[](const key_type& key) {
+	const_value_reference operator[](const key_type& key) {
 		iterator node = find(key);
 		if (!node) {
 			return insert(pairType(key, V()))->pair.second();

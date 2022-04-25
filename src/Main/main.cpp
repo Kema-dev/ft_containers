@@ -18,6 +18,7 @@ int main(void) {
 		map.insert(i, std::to_string(i));
 	for (int i = 1; i <= 25; ++i)
 		std::cout << map[i] << std::endl;
+	cout << "map size: " << map.size() << endl;
 	map.print();
 	return 0;
 }
