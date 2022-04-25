@@ -7,6 +7,7 @@
 
 ## Map
 
+- [ ] if iterator last < first : invert them to prevent from infinite loop
 - [ ] insert needs to return a pair value : bool and return existing value if already exists (changes boole truth value)
 
 ## Vector
