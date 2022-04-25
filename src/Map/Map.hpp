@@ -290,7 +290,7 @@ class map {
 	const_value_reference operator[](const key_type& key) {
 		iterator node = find(key);
 		if (!node) {
-			return insert(pairType(key, V()))->pair.second();
+			return insert_old_kv(key, V())->pair.second();
 		}
 		return node.ptr->pair.second();
 	};
@@ -522,6 +522,7 @@ class map {
 		if (!parent) {
 			_root = newNode;
 			_root->color = black;
+			_size++;
 			return newNode;
 		} else if (newNode->pair.key < parent->pair.key)
 			parent->left = newNode;
@@ -539,18 +540,30 @@ class map {
 	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	nodePtr insert(pairType dpair) {
-		nodePtr newNode = add(dpair);
+	ft::pair<iterator, bool> insert(const pairType dpair) {
+		nodePtr newNode;
+		try {
+			newNode = add(dpair);
+		}
+		catch (duplicateKey) {
+			return ft::pair<iterator, bool>(find(dpair.key), false);
+		}
 		fixInsert(newNode);
-		return newNode;
+		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
 	/*
 	INFO Add a new node with pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	nodePtr insert(const K& key, const V& value) {
+	nodePtr insert_old_kv(const K& key, const V& value) {
 		pairType dpair = ft::make_pair(key, value);
-		nodePtr newNode = add(dpair);
+		nodePtr newNode;
+		try {
+			newNode = add(dpair);
+		}
+		catch (duplicateKey) {
+			return find(key).ptr;
+		}
 		fixInsert(newNode);
 		return newNode;
 	};

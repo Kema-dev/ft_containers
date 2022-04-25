@@ -15,7 +15,7 @@ void print_v(ft::vector<int>& v) {
 int main(void) {
 	ft::map<int, std::string> map;
 	for (int i = 1; i <= 25; ++i)
-		map.insert(i, std::to_string(i));
+		map.insert(ft::pair<const int, std::string>(i, std::to_string(i)));
 	for (int i = 1; i <= 25; ++i)
 		std::cout << map[i] << std::endl;
 	cout << "map size: " << map.size() << endl;
