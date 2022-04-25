@@ -16,18 +16,18 @@ class map {
 	typedef ft::node<const K, V>* nodePtr;
 	typedef ft::node<const K, V>& nodeRef;
 	typedef ft::node<const K, V> nodeType;
-	typedef ft::pair<const K, V> pairType;
+	typedef ft::pair<const K, V> value_type;
 	typedef ft::pair<const K, V>& pairRef;
 	typedef ft::pair<const K, V>* pairPtr;
 
 	typedef K key_type;
-	typedef V value_type;
+	typedef V mapped_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef value_type* value_pointer;
-	typedef value_type& value_reference;
-	typedef const value_type* const_value_pointer;
-	typedef const value_type& const_value_reference;
+	typedef mapped_type* mapped_type_pointer;
+	typedef mapped_type& mapped_type_reference;
+	typedef const mapped_type* const_mapped_type_pointer;
+	typedef const mapped_type& const_mapped_type_reference;
 	typedef Allocator allocator_type;
 	typedef Compare key_compare;
 
@@ -63,10 +63,10 @@ class map {
 		bool operator!=(const MapIterator& other) const {
 			return ptr != other.ptr;
 		}
-		pairType& operator*() {
+		value_type& operator*() {
 			return ptr->pair;
 		}
-		pairType* operator->() {
+		value_type* operator->() {
 			return &(ptr->pair);
 		}
 		bool operator<(const MapIterator& other) const {
@@ -137,10 +137,10 @@ class map {
 		bool operator!=(const MapReverseIterator& other) const {
 			return ptr != other.ptr;
 		}
-		pairType& operator*() {
+		value_type& operator*() {
 			return ptr->pair;
 		}
-		pairType* operator->() {
+		value_type* operator->() {
 			return &(ptr->pair);
 		}
 		bool operator<(const MapReverseIterator& other) const {
@@ -186,7 +186,7 @@ class map {
 
 	class value_compare {
 	   public:
-		bool operator()(const value_type& lhs, const value_type& rhs) const {
+		bool operator()(const mapped_type& lhs, const mapped_type& rhs) const {
 			return comp(lhs.first, rhs.first);
 		}
 		value_compare(Compare comp) : comp(comp) {}
@@ -223,7 +223,7 @@ class map {
 	INFO Create a tree with root node containing pair <dpair>
 	INFO Can throw exception (self: allocFail)
 	*/
-	map(pairType dpair) {
+	map(value_type dpair) {
 		_root = standaloneNode(dpair);
 		_root->color = black;
 		_size = 1;
@@ -280,14 +280,14 @@ class map {
 		return _root;
 	};
 	// INFO access specified element with bounds checking
-	const_value_reference at(const key_type& key) {
+	const_mapped_type_reference at(const key_type& key) {
 		iterator node = find(key);
 		if (!node)
 			throw std::out_of_range("map::at: key not found");
 		return node->pair.second;
 	};
 	// INFO access or insert specified element
-	const_value_reference operator[](const key_type& key) {
+	const_mapped_type_reference operator[](const key_type& key) {
 		iterator node = find(key);
 		if (!node) {
 			return insert_old_kv(key, V())->pair.second();
@@ -468,13 +468,13 @@ class map {
 	};
 	// INFO Get the value comparison object
 	value_compare value_comp(void) const {
-		return _comp;
+		return _comp; // FIXME
 	};
 	/*
 	INFO Get a mint new node with pair <dpair>
 	INFO Can throw exception (self: allocFail)
 	*/
-	nodePtr standaloneNode(pairType dpair) const {
+	nodePtr standaloneNode(value_type dpair) const {
 		nodePtr buf = new nodeType(dpair);
 		if (!buf) {
 			throw allocFail();
@@ -507,7 +507,7 @@ class map {
 	INFO /!\ DO NOT USE /!\ (Use "add" instead)
 	INFO Can throw exception (calls)
 	*/
-	nodePtr add(pairType dpair) {
+	nodePtr add(value_type dpair) {
 		nodePtr newNode = standaloneNode(dpair);
 		nodePtr curNode = _root;
 		nodePtr parent = NULL;
@@ -540,7 +540,7 @@ class map {
 	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	ft::pair<iterator, bool> insert(const pairType dpair) {
+	ft::pair<iterator, bool> insert(const value_type dpair) {
 		nodePtr newNode;
 		try {
 			newNode = add(dpair);
@@ -556,7 +556,7 @@ class map {
 	INFO Can throw exception (calls)
 	*/
 	nodePtr insert_old_kv(const K& key, const V& value) {
-		pairType dpair = ft::make_pair(key, value);
+		value_type dpair = ft::make_pair(key, value);
 		nodePtr newNode;
 		try {
 			newNode = add(dpair);
