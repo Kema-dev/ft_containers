@@ -31,6 +31,9 @@ class map {
 	typedef Allocator allocator_type;
 	typedef Compare key_compare;
 
+	key_type key;
+	mapped_type value;
+
 	class MapIterator {
 	   public:
 		MapIterator(nodePtr ptr) : ptr(ptr) {}
@@ -522,13 +525,15 @@ class map {
 			_root->color = black;
 			_size++;
 			return newNode;
-		} else if (Compare()(newNode->pair.key, parent->pair.key))
-			parent->left = newNode;
-		else if (Compare()(newNode->pair.key, parent->pair.key) && (newNode->pair.key != parent->pair.key))
-			parent->right = newNode;
-		else {
-			std::allocator<nodeType>().deallocate(newNode, 1);
-			throw duplicateKey();
+		} else {
+			if (Compare()(newNode->pair.key, parent->pair.key))
+				parent->left = newNode;
+			else if (!Compare()(newNode->pair.key, parent->pair.key) && (newNode->pair.key != parent->pair.key))
+				parent->right = newNode;
+			else {
+				std::allocator<nodeType>().deallocate(newNode, 1);
+				throw duplicateKey();
+			}
 		}
 		newNode->color = red;
 		_size++;

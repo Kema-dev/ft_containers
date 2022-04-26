@@ -7,7 +7,8 @@
 
 ## Map
 
-- [ ] map[i].first / it.first
+- [ ] map[i].first
+- [ ] it.first
 
 ## Vector
 
