@@ -291,7 +291,6 @@ class map {
 	};
 	// INFO access or insert specified element
 	const_mapped_type_reference operator[](const key_type& key) {
-		std::cerr << "key=" << key << std::endl;
 		iterator node = find(key);
 		if (!node) {
 			return insert_old_kv(key, V())->pair.second();
@@ -308,11 +307,11 @@ class map {
 	};
 	// INFO Get the last element as an iterator
 	iterator end(void) {
-		return iterator(this->getMax() + 1);
+		return ++iterator(this->getMax());
 	};
 	// INFO Get the last element as a const_iterator
 	const_iterator end(void) const {
-		return const_iterator(this->getMax() + 1);
+		return ++const_iterator(this->getMax());
 	};
 	// INFO Get the first element as a reverse_iterator
 	reverse_iterator rbegin(void) {
@@ -324,11 +323,11 @@ class map {
 	};
 	// INFO Get the last element as a reverse_iterator
 	reverse_iterator rend(void) {
-		return reverse_iterator(this->getMin() - 1);
+		return --reverse_iterator(this->getMin());
 	};
 	// INFO Get the last element as a const_reverse_iterator
 	const_reverse_iterator rend(void) const {
-		return const_reverse_iterator(this->getMin() - 1);
+		return --const_reverse_iterator(this->getMin());
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
