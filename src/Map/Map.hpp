@@ -291,6 +291,7 @@ class map {
 	};
 	// INFO access or insert specified element
 	const_mapped_type_reference operator[](const key_type& key) {
+		std::cerr << "key=" << key << std::endl;
 		iterator node = find(key);
 		if (!node) {
 			return insert_old_kv(key, V())->pair.second();

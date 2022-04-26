@@ -7,8 +7,8 @@
 
 ## Map
 
-- [ ] map[i].first
-- [ ] it.first
+- [ ] it->first
+- [ ] build with non-const pair key
 
 ## Vector
 
