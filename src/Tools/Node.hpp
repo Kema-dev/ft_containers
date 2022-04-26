@@ -65,7 +65,8 @@ class node {
 	INFO No exception
 	*/
 	node* getSuccessor(void) {
-		node* nodePtr = new node(this->pair);
+		node* nodePtr = std::allocator<node>().allocate(1);
+		nodePtr = this;
 		if (nodePtr->right != NULL) {
 			nodePtr = nodePtr->right;
 			while (nodePtr->left != NULL)
@@ -82,7 +83,8 @@ class node {
 	INFO No exception
 	*/
 	node* getPredecessor(void) {
-		node* nodePtr = new node(this->pair);
+		node* nodePtr = std::allocator<node>().allocate(1);
+		nodePtr = this;
 		if (nodePtr->left != NULL) {
 			nodePtr = nodePtr->left;
 			while (nodePtr->right != NULL)

@@ -237,7 +237,7 @@ class map {
 			return;
 		clear(node->left);
 		clear(node->right);
-		delete node;
+		std::allocator<nodeType>().destroy(node);
 		_size--;
 	};
 	// INFO Clear the tree (fully)
@@ -475,10 +475,8 @@ class map {
 	INFO Can throw exception (self: allocFail)
 	*/
 	nodePtr standaloneNode(value_type dpair) const {
-		nodePtr buf = new nodeType(dpair);
-		if (!buf) {
-			throw allocFail();
-		}
+		nodePtr buf = std::allocator<nodeType>().allocate(1);
+		std::allocator<nodeType>().construct(buf, dpair);
 		return buf;
 	};
 	/*
@@ -529,7 +527,7 @@ class map {
 		else if (Compare()(newNode->pair.key, parent->pair.key) && (newNode->pair.key != parent->pair.key))
 			parent->right = newNode;
 		else {
-			delete newNode;
+			std::allocator<nodeType>().deallocate(newNode, 1);
 			throw duplicateKey();
 		}
 		newNode->color = red;
@@ -688,7 +686,7 @@ class map {
 			child->parent = parent;
 		if (node->color == black)
 			fixRemove(child, sibling, isLeft);
-		delete node;
+		std::allocator<nodeType>().destroy(node);
 		_size--;
 	};
 	/*

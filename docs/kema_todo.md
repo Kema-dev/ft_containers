@@ -3,7 +3,6 @@
 ## Global
 
 - [ ] Put back "Werror" in Makefile
-- [ ] Remove all "new" occurences
 - [ ] Lexicographical compare ?
 
 ## Map
