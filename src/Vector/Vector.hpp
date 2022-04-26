@@ -33,7 +33,7 @@ class vector {
 
    protected:
 	alloc _alloc;
-	T* _array;
+	pointer _array;
 	size_type _size;
 	size_type _capacity;
 
@@ -135,6 +135,7 @@ class vector {
 			throw std::out_of_range("ft::vector::assign : first > last");
 		clear();
 		if (first == last) {
+			clear();
 			return;
 		}
 		size_type delta = last - first;
@@ -271,7 +272,7 @@ class vector {
 		}
 		_alloc.construct(&_array[pos - this->begin()], val);
 		_size++;
-		return iterator(pos);
+		return pos;
 	};
 	// INFO Insert <count> elements <value> at position <pos>
 	void insert(iterator pos, size_type count, const T& value) {
@@ -381,7 +382,7 @@ class vector {
 		for (size_t i = 0; i < a.size(); i++) {
 			if (a[i] < b[i])
 				return B;
-			else if (a[i] > b[i])
+			else if (a[i] != b[i])
 				return A;
 		}
 		return AB;

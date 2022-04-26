@@ -3,12 +3,12 @@
 ## Global
 
 - [ ] Put back "Werror" in Makefile
+- [ ] Remove all "new" occurences
+- [ ] Lexicographical compare ?
 
 ## Map
 
-- [ ] Lexicographical compare ? Is it a "less" alternative ? Change direct comparisons in methods and use "compare" function (which will itself use less / lexico comp or w/e)
-- [ ] Use "Compare(a, b)"
-- [ ] Fix value_comp()
+- [ ] map[i].first / it.first
 
 ## Vector
 

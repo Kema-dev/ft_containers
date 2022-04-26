@@ -344,8 +344,8 @@ class map {
 	};
 	// INFO erase the elements in the range [<first>, <last>)
 	void erase(iterator first, iterator last) {
-		if (first > last)
-			throw std::out_of_range("map::erase: first > last");
+		if (!Compare(first.ptr->pair.first, last.ptr->pair.first))
+			throw std::out_of_range("map::erase: first >= last");
 		while (first != last)
 			erase(first++);
 	};
@@ -394,9 +394,9 @@ class map {
 		} else {
 			if (key == start->pair.key) {
 				return start;
-			} else if (key < start->pair.key) {
+			} else if (Compare(key, start->pair.key)) {
 				start = start->right;
-				while (start->left && key < start->left->pair.key) {
+				while (start->left && Compare(key, start->left->pair.key)) {
 					start = start->left;
 				}
 				return start;
@@ -413,9 +413,9 @@ class map {
 		} else {
 			if (key == start->pair.key) {
 				return start;
-			} else if (key < start->pair.key) {
+			} else if (Compare(key, start->pair.key)) {
 				start = start->right;
-				while (start->left && key < start->left->pair.key) {
+				while (start->left && Compare(key, start->left->pair.key)) {
 					start = start->left;
 				}
 				return start;
@@ -432,11 +432,11 @@ class map {
 		} else {
 			if (key == start->pair.key) {
 				return start;
-			} else if (key < start->pair.key) {
+			} else if (Compare(key, start->pair.key)) {
 				return start;
 			} else {
 				start = start->right;
-				while (start->left && key < start->left->pair.key) {
+				while (start->left && Compare(key, start->left->pair.key)) {
 					start = start->left;
 				}
 				return start;
@@ -451,11 +451,11 @@ class map {
 		} else {
 			if (key == start->pair.key) {
 				return start;
-			} else if (key < start->pair.key) {
+			} else if (Compare(key, start->pair.key)) {
 				return start;
 			} else {
 				start = start->right;
-				while (start->left && key < start->left->pair.key) {
+				while (start->left && Compare(key, start->left->pair.key)) {
 					start = start->left;
 				}
 				return start;
@@ -464,11 +464,11 @@ class map {
 	};
 	// INFO Get the comparison object
 	key_compare key_comp(void) const {
-		return _comp;
+		return key_compare(_comp);
 	};
 	// INFO Get the value comparison object
 	value_compare value_comp(void) const {
-		return _comp; // FIXME
+		return _comp;
 	};
 	/*
 	INFO Get a mint new node with pair <dpair>
@@ -513,7 +513,7 @@ class map {
 		nodePtr parent = NULL;
 		while (curNode) {
 			parent = curNode;
-			if (newNode->pair.key < curNode->pair.key)
+			if (Compare()(newNode->pair.key, curNode->pair.key))
 				curNode = curNode->left;
 			else
 				curNode = curNode->right;
@@ -524,9 +524,9 @@ class map {
 			_root->color = black;
 			_size++;
 			return newNode;
-		} else if (newNode->pair.key < parent->pair.key)
+		} else if (Compare()(newNode->pair.key, parent->pair.key))
 			parent->left = newNode;
-		else if (newNode->pair.key > parent->pair.key)
+		else if (Compare()(newNode->pair.key, parent->pair.key) && (newNode->pair.key != parent->pair.key))
 			parent->right = newNode;
 		else {
 			delete newNode;
@@ -756,7 +756,7 @@ class map {
 		} else {
 			if (key == start->pair.key) {
 				return start;
-			} else if (key < start->pair.key) {
+			} else if (Compare()(key, start->pair.key)) {
 				return searchKey(start->left, key);
 			} else {
 				return searchKey(start->right, key);

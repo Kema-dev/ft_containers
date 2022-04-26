@@ -3,12 +3,9 @@
 #include <iostream>
 
 namespace ft {
-template <typename K>
-class less {
-public:
-	bool operator()(K const &lhs, K const &rhs) const {
-		return lhs < rhs;
-	}
+template <class T>
+struct less : std::binary_function<T, T, bool> {
+	bool operator()(const T& x, const T& y) const { return x < y; }
 };
 }  // namespace ft
 
