@@ -3,11 +3,9 @@
 ## Global
 
 - [ ] Put back "Werror" in Makefile
-- [ ] Lexicographical compare ?
 
 ## Map
 
-- [ ] it->first
 - [ ] build with non-const pair key
 
 ## Vector
