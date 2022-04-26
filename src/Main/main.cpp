@@ -30,7 +30,7 @@ int main(void) {
 
 
 	for (ft::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it) {
-		std::cout << "first: " << it->first << " second: " << it->second << std::endl;
+		std::cout << it->first << ":" << it->second << std::endl;
 	}
 
 
@@ -45,7 +45,7 @@ int main(void) {
 
 
 
-
+	map.print();
 	return 0;
 }
 

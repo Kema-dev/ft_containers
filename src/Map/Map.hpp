@@ -788,7 +788,7 @@ class map {
 			cout << prefix;
 			cout << (isLeft ? "├──" : "└──");
 			setColor(node);
-			cout << node->pair.first << ":" << node->pair.value << endl;
+			cout << node->pair.first << ":" << node->pair.second << endl;
 			unsetColor();
 			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->left, true);
 			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->right, false);
