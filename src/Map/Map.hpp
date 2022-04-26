@@ -31,9 +31,6 @@ class map {
 	typedef Allocator allocator_type;
 	typedef Compare key_compare;
 
-	key_type key;
-	mapped_type value;
-
 	class MapIterator {
 	   public:
 		MapIterator(nodePtr ptr) : ptr(ptr) {}
@@ -93,12 +90,12 @@ class map {
 		bool operator!() {
 			return ptr == nullptr;
 		}
-		const K& first() {
-			return ptr->pair.first();
-		}
-		const V& second() {
-			return ptr->pair.second();
-		}
+		// const K& first() {
+		// 	return ptr->pair.first();
+		// }
+		// const V& second() {
+		// 	return ptr->pair.second();
+		// }
 		MapIterator operator+(int n) {
 			return ptr + n;
 		}
@@ -307,11 +304,11 @@ class map {
 	};
 	// INFO Get the last element as an iterator
 	iterator end(void) {
-		return ++iterator(this->getMax());
+		return iterator(NULL);
 	};
 	// INFO Get the last element as a const_iterator
 	const_iterator end(void) const {
-		return ++const_iterator(this->getMax());
+		return const_iterator(NULL);
 	};
 	// INFO Get the first element as a reverse_iterator
 	reverse_iterator rbegin(void) {
@@ -323,11 +320,11 @@ class map {
 	};
 	// INFO Get the last element as a reverse_iterator
 	reverse_iterator rend(void) {
-		return --reverse_iterator(this->getMin());
+		return reverse_iterator(NULL);
 	};
 	// INFO Get the last element as a const_reverse_iterator
 	const_reverse_iterator rend(void) const {
-		return --const_reverse_iterator(this->getMin());
+		return const_reverse_iterator(NULL);
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
@@ -395,11 +392,11 @@ class map {
 		if (!start || !key) {
 			return NULL;
 		} else {
-			if (key == start->pair.key) {
+			if (key == start->pair.first) {
 				return start;
-			} else if (Compare(key, start->pair.key)) {
+			} else if (Compare(key, start->pair.first)) {
 				start = start->right;
-				while (start->left && Compare(key, start->left->pair.key)) {
+				while (start->left && Compare(key, start->left->pair.first)) {
 					start = start->left;
 				}
 				return start;
@@ -414,11 +411,11 @@ class map {
 		if (!start || !key) {
 			return NULL;
 		} else {
-			if (key == start->pair.key) {
+			if (key == start->pair.first) {
 				return start;
-			} else if (Compare(key, start->pair.key)) {
+			} else if (Compare(key, start->pair.first)) {
 				start = start->right;
-				while (start->left && Compare(key, start->left->pair.key)) {
+				while (start->left && Compare(key, start->left->pair.first)) {
 					start = start->left;
 				}
 				return start;
@@ -433,13 +430,13 @@ class map {
 		if (!start || !key) {
 			return NULL;
 		} else {
-			if (key == start->pair.key) {
+			if (key == start->pair.first) {
 				return start;
-			} else if (Compare(key, start->pair.key)) {
+			} else if (Compare(key, start->pair.first)) {
 				return start;
 			} else {
 				start = start->right;
-				while (start->left && Compare(key, start->left->pair.key)) {
+				while (start->left && Compare(key, start->left->pair.first)) {
 					start = start->left;
 				}
 				return start;
@@ -452,13 +449,13 @@ class map {
 		if (!start || !key) {
 			return NULL;
 		} else {
-			if (key == start->pair.key) {
+			if (key == start->pair.first) {
 				return start;
-			} else if (Compare(key, start->pair.key)) {
+			} else if (Compare(key, start->pair.first)) {
 				return start;
 			} else {
 				start = start->right;
-				while (start->left && Compare(key, start->left->pair.key)) {
+				while (start->left && Compare(key, start->left->pair.first)) {
 					start = start->left;
 				}
 				return start;
@@ -514,7 +511,7 @@ class map {
 		nodePtr parent = NULL;
 		while (curNode) {
 			parent = curNode;
-			if (Compare()(newNode->pair.key, curNode->pair.key))
+			if (Compare()(newNode->pair.first, curNode->pair.first))
 				curNode = curNode->left;
 			else
 				curNode = curNode->right;
@@ -526,9 +523,9 @@ class map {
 			_size++;
 			return newNode;
 		} else {
-			if (Compare()(newNode->pair.key, parent->pair.key))
+			if (Compare()(newNode->pair.first, parent->pair.first))
 				parent->left = newNode;
-			else if (!Compare()(newNode->pair.key, parent->pair.key) && (newNode->pair.key != parent->pair.key))
+			else if (!Compare()(newNode->pair.first, parent->pair.first) && (newNode->pair.first != parent->pair.first))
 				parent->right = newNode;
 			else {
 				std::allocator<nodeType>().deallocate(newNode, 1);
@@ -549,7 +546,7 @@ class map {
 			newNode = add(dpair);
 		}
 		catch (duplicateKey) {
-			return ft::pair<iterator, bool>(find(dpair.key), false);
+			return ft::pair<iterator, bool>(find(dpair.first), false);
 		}
 		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
@@ -757,9 +754,9 @@ class map {
 		if (!start || !key) {
 			return NULL;
 		} else {
-			if (key == start->pair.key) {
+			if (key == start->pair.first) {
 				return start;
-			} else if (Compare()(key, start->pair.key)) {
+			} else if (Compare()(key, start->pair.first)) {
 				return searchKey(start->left, key);
 			} else {
 				return searchKey(start->right, key);
@@ -791,7 +788,7 @@ class map {
 			cout << prefix;
 			cout << (isLeft ? "├──" : "└──");
 			setColor(node);
-			cout << node->pair.key << ":" << node->pair.value << endl;
+			cout << node->pair.first << ":" << node->pair.value << endl;
 			unsetColor();
 			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->left, true);
 			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->right, false);
