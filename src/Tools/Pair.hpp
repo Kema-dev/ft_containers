@@ -17,7 +17,7 @@ class pair {
 	/*
 	INFO Construct a pair with <dkey> and <dvalue>
 	*/
-	pair(K const& dkey, V const& dvalue)
+	pair(const K& dkey, const V& dvalue)
 		: first(dkey), second(dvalue){};
 	/*
 	INFO Copy <other>

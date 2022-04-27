@@ -15,7 +15,8 @@ void print_v(ft::vector<int>& v) {
 int main(void) {
 	ft::map<int, std::string> map;
 	for (int i = 1; i <= 25; ++i) {
-		map.insert(ft::pair<const int, std::string>(i, std::to_string(i + 100)));
+		// map.insert(ft::make_pair(i, std::to_string(i + 100)));
+		map.insert(ft::pair<int, std::string>(i, std::to_string(i + 100)));
 	}
 
 
@@ -54,7 +55,7 @@ int main(void) {
 // int main(void) {
 // 	std::map<int, std::string> map;
 // 	for (int i = 1; i <= 25; ++i)
-// 		map.insert(std::pair<const int, std::string>(i, std::to_string(i)));
+// 		map.insert(std::pair<int, std::string>(i, std::to_string(i)));
 // 	for (std::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it) {
 // 		std::cout << it->first << " " << it->second << std::endl;
 // 	}

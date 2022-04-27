@@ -552,6 +552,22 @@ class map {
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
 	/*
+	INFO Add pair (non const) <dpair> to the tree
+	INFO Can throw exception (calls)
+	*/
+	ft::pair<iterator, bool> insert(const ft::pair<K, V> dpair) {
+		nodePtr newNode;
+		value_type dpair2(dpair.first, dpair.second);
+		try {
+			newNode = add(dpair2);
+		}
+		catch (duplicateKey) {
+			return ft::pair<iterator, bool>(find(dpair2.first), false);
+		}
+		fixInsert(newNode);
+		return ft::pair<iterator, bool>(iterator(newNode), true);
+	};
+	/*
 	INFO Add a new node with pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
