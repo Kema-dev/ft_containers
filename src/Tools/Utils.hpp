@@ -5,7 +5,7 @@
 
 namespace ft {
 
-//SECTION equal
+// SECTION equal
 template <class InputIterator1, class InputIterator2>
 class equality {
    public:

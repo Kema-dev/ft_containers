@@ -7,6 +7,7 @@
 ## Map
 
 - [ ] build with non-const pair key
+- [ ] map[5] = x ??
 
 ## Vector
 
