@@ -6,6 +6,7 @@
 #include "../Map/Map.hpp"
 #include "../Vector/Vector.hpp"
 #include "../Stack/Stack.hpp"
+#include "../Set/Set.hpp"
 
 void print_v(ft::vector<int>& v) {
 	for (ft::vector<int>::iterator it = v.begin(); it != v.end(); ++it)
@@ -14,15 +15,12 @@ void print_v(ft::vector<int>& v) {
 }
 
 int main(void) {
-	ft::stack<int> s;
-	s.push(1);
-	s.push(2);
-	s.push(3);
-	s.push(4);
-	s.push(5);
-	s.pop();
-	s.pop();
-	for (ft::stack<int>::iterator it = s.begin(); it != s.end(); ++it)
+	ft::set<int> s;
+	s.insert(1);
+	s.insert(2);
+	s.insert(3);
+	s.insert(4);
+	for (ft::set<int>::iterator it = s.begin(); it != s.end(); ++it)
 		std::cout << *it << " ";
 	return 0;
 }

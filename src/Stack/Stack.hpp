@@ -57,5 +57,4 @@ class stack {
 		bool operator>=(const stack<T,Container>& lhs) const { return _container >= lhs._container; };
 };
 }  // namespace ft
-// !SECTION namespace ft
 #endif
