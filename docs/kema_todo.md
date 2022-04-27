@@ -10,11 +10,9 @@
 
 ## Stack
 
-- [ ] Everything (But just use vector as under the hood container = easy)
-
 ## Set
 
-- [ ] Everything (But just use map as under the hood container = easy)
+- [ ] Fix minor compilation issues
 
 ## Iterator
 
