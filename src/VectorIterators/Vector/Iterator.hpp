@@ -4,10 +4,11 @@
 
 #include <deque>
 #include <iostream>
+#include "../../Iterator/Iterator.hpp"
 
 namespace ft {
 template <typename T>
-class VectorIterator {
+class VectorIterator : public Iterator<class Category, class T, class Distance, class Pointer, class Reference> {
    public:
 	typedef T value_type;
 	typedef T* pointer;
@@ -25,7 +26,7 @@ class VectorIterator {
 	pointer _array;
 
    public:
-	VectorIterator(pointer array) : _array(array) {}
+	VectorIterator(pointer array) : _array(array),  iterator_category(std::bidirectional_iterator_tag) {}
 	VectorIterator(const iterator& it) : _array(it._array) {}
 
 	reference operator*() const { return *_array; }

@@ -6,6 +6,7 @@
 
 #include "../Tools/Exceptions.hpp"
 #include "../Tools/Node.hpp"
+#include "../Iterator/Iterator.hpp"
 
 namespace ft {
 
@@ -90,12 +91,6 @@ class map {
 		bool operator!() {
 			return ptr == nullptr;
 		}
-		// const K& first() {
-		// 	return ptr->pair.first();
-		// }
-		// const V& second() {
-		// 	return ptr->pair.second();
-		// }
 		MapIterator operator+(int n) {
 			return ptr + n;
 		}
@@ -163,12 +158,6 @@ class map {
 		}
 		bool operator!() {
 			return ptr == nullptr;
-		}
-		const K& first() {
-			return ptr->pair.first();
-		}
-		const V& second() {
-			return ptr->pair.second();
 		}
 		MapReverseIterator operator+(int n) {
 			return ptr + n;

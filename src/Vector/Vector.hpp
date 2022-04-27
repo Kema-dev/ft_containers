@@ -9,8 +9,8 @@
 #define A 1
 #define B 2
 
-#include "../Iterators/Vector/Iterator.hpp"
-#include "../Iterators/Vector/ReverseIterator.hpp"
+#include "../VectorIterators/Vector/Iterator.hpp"
+#include "../VectorIterators/Vector/ReverseIterator.hpp"
 #include "../Tools/Exceptions.hpp"
 
 namespace ft {

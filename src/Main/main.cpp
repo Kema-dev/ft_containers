@@ -19,17 +19,6 @@ int main(void) {
 		map.insert(ft::pair<int, std::string>(i, std::to_string(i + 100)));
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	for (ft::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it) {
 		std::cout << it->first << ":" << it->second << std::endl;
 	}
@@ -37,17 +26,6 @@ int main(void) {
 		std::cout << map[i] << std::endl;
 	}
 	map[600] = "600";
-
-
-
-
-
-
-
-
-
-
-
 
 
 	map.print();
