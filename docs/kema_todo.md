@@ -6,8 +6,6 @@
 
 ## Map
 
-- [ ] map[5] = x ??
-
 ## Vector
 
 ## Stack

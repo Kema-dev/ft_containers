@@ -287,12 +287,12 @@ class map {
 		return node->pair.second;
 	};
 	// INFO access or insert specified element
-	const_mapped_type_reference operator[](const key_type& key) {
+	mapped_type_reference operator[](const key_type& key) {
 		iterator node = find(key);
 		if (!node) {
-			return insert_old_kv(key, V())->pair.second();
+			return insert_old_kv(key, V())->pair.second;
 		}
-		return node.ptr->pair.second();
+		return node.ptr->pair.second;
 	};
 	// INFO Get the first element as an iterator
 	iterator begin(void) {

@@ -33,6 +33,10 @@ int main(void) {
 	for (ft::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it) {
 		std::cout << it->first << ":" << it->second << std::endl;
 	}
+	for (int i = 1; i <= 25; ++i) {
+		std::cout << map[i] << std::endl;
+	}
+	map[600] = "600";
 
 
 
@@ -56,6 +60,7 @@ int main(void) {
 // 	std::map<int, std::string> map;
 // 	for (int i = 1; i <= 25; ++i)
 // 		map.insert(std::pair<int, std::string>(i, std::to_string(i)));
+// 	map[600];
 // 	for (std::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it) {
 // 		std::cout << it->first << " " << it->second << std::endl;
 // 	}
