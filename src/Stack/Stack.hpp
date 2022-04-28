@@ -10,8 +10,8 @@ namespace ft {
 
 template <class T, class Container = ft::vector<T> >
 class stack {
-	private:
-		Container _container;
+	protected:
+		Container c;
 	public:
 		typedef typename Container::iterator iterator;
 		typedef typename Container::const_iterator const_iterator;
@@ -25,36 +25,36 @@ class stack {
 		typedef typename Container::pointer pointer;
 		typedef typename Container::const_pointer const_pointer;
 
-		stack() : _container() {};
-		stack(const stack& other) : _container(other._container) {};
+		stack() : c() {};
+		stack(const stack& other) : c(other.c) {};
 		stack& operator=(const stack& other) {
-			_container = other._container;
+			c = other.c;
 			return *this;
 		};
 
-		iterator begin() { return _container.begin(); };
-		iterator end() { return _container.end(); };
-		const_iterator begin() const { return _container.begin(); };
-		const_iterator end() const { return _container.end(); };
-		reverse_iterator rbegin() { return _container.rbegin(); };
-		reverse_iterator rend() { return _container.rend(); };
-		const_reverse_iterator rbegin() const { return _container.rbegin(); };
-		const_reverse_iterator rend() const { return _container.rend(); };
+		iterator begin() { return c.begin(); };
+		iterator end() { return c.end(); };
+		const_iterator begin() const { return c.begin(); };
+		const_iterator end() const { return c.end(); };
+		reverse_iterator rbegin() { return c.rbegin(); };
+		reverse_iterator rend() { return c.rend(); };
+		const_reverse_iterator rbegin() const { return c.rbegin(); };
+		const_reverse_iterator rend() const { return c.rend(); };
 
-		bool empty() const { return _container.empty(); };
-		size_type size() const { return _container.size(); };
-		size_type max_size() const { return _container.max_size(); };
-		reference top() { return _container.back(); };
-		const_reference top() const { return _container.back(); };
-		void push(const T& value) { _container.push_back(value); };
-		void pop() { _container.pop_back(); };
+		bool empty() const { return c.empty(); };
+		size_type size() const { return c.size(); };
+		size_type max_size() const { return c.max_size(); };
+		reference top() { return c.back(); };
+		const_reference top() const { return c.back(); };
+		void push(const T& value) { c.push_back(value); };
+		void pop() { c.pop_back(); };
 
-		bool operator==(const stack<T,Container>& lhs) const { return _container == lhs._container; };
-		bool operator!=(const stack<T,Container>& lhs) const { return _container != lhs._container; };
-		bool operator<(const stack<T,Container>& lhs) const { return _container < lhs._container; };
-		bool operator<=(const stack<T,Container>& lhs) const { return _container <= lhs._container; };
-		bool operator>(const stack<T,Container>& lhs) const { return _container > lhs._container; };
-		bool operator>=(const stack<T,Container>& lhs) const { return _container >= lhs._container; };
+		bool operator==(const stack<T,Container>& lhs) const { return c == lhs.c; };
+		bool operator!=(const stack<T,Container>& lhs) const { return c != lhs.c; };
+		bool operator<(const stack<T,Container>& lhs) const { return c < lhs.c; };
+		bool operator<=(const stack<T,Container>& lhs) const { return c <= lhs.c; };
+		bool operator>(const stack<T,Container>& lhs) const { return c > lhs.c; };
+		bool operator>=(const stack<T,Container>& lhs) const { return c >= lhs.c; };
 };
 }  // namespace ft
 #endif
