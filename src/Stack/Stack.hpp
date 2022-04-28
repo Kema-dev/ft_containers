@@ -8,22 +8,22 @@
 
 namespace ft {
 
-template <class T, class Container = ft::vector<T> >
+template <class T, class container_type = ft::vector<T> >
 class stack {
 	protected:
-		Container c;
+		container_type c;
 	public:
-		typedef typename Container::iterator iterator;
-		typedef typename Container::const_iterator const_iterator;
-		typedef typename Container::reverse_iterator reverse_iterator;
-		typedef typename Container::const_reverse_iterator const_reverse_iterator;
-		typedef typename Container::value_type value_type;
-		typedef typename Container::reference reference;
-		typedef typename Container::const_reference const_reference;
-		typedef typename Container::size_type size_type;
-		typedef typename Container::difference_type difference_type;
-		typedef typename Container::pointer pointer;
-		typedef typename Container::const_pointer const_pointer;
+		typedef typename container_type::iterator iterator;
+		typedef typename container_type::const_iterator const_iterator;
+		typedef typename container_type::reverse_iterator reverse_iterator;
+		typedef typename container_type::const_reverse_iterator const_reverse_iterator;
+		typedef typename container_type::value_type value_type;
+		typedef typename container_type::reference reference;
+		typedef typename container_type::const_reference const_reference;
+		typedef typename container_type::size_type size_type;
+		typedef typename container_type::difference_type difference_type;
+		typedef typename container_type::pointer pointer;
+		typedef typename container_type::const_pointer const_pointer;
 
 		stack() : c() {};
 		stack(const stack& other) : c(other.c) {};
@@ -49,12 +49,12 @@ class stack {
 		void push(const T& value) { c.push_back(value); };
 		void pop() { c.pop_back(); };
 
-		bool operator==(const stack<T,Container>& lhs) const { return c == lhs.c; };
-		bool operator!=(const stack<T,Container>& lhs) const { return c != lhs.c; };
-		bool operator<(const stack<T,Container>& lhs) const { return c < lhs.c; };
-		bool operator<=(const stack<T,Container>& lhs) const { return c <= lhs.c; };
-		bool operator>(const stack<T,Container>& lhs) const { return c > lhs.c; };
-		bool operator>=(const stack<T,Container>& lhs) const { return c >= lhs.c; };
+		bool operator==(const stack<T,container_type>& lhs) const { return c == lhs.c; };
+		bool operator!=(const stack<T,container_type>& lhs) const { return c != lhs.c; };
+		bool operator<(const stack<T,container_type>& lhs) const { return c < lhs.c; };
+		bool operator<=(const stack<T,container_type>& lhs) const { return c <= lhs.c; };
+		bool operator>(const stack<T,container_type>& lhs) const { return c > lhs.c; };
+		bool operator>=(const stack<T,container_type>& lhs) const { return c >= lhs.c; };
 };
 }  // namespace ft
 #endif

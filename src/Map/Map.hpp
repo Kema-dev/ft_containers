@@ -105,7 +105,7 @@ class map {
 		nodePtr ptr;
 	};
 
-	class MapReverseIterator {
+	class MapReverseIterator{
 	   public:
 		MapReverseIterator(nodePtr ptr) : ptr(ptr) {}
 		MapReverseIterator(const MapReverseIterator& other) : ptr(other.ptr) {}
