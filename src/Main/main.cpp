@@ -25,15 +25,16 @@ int main(void) {
 	return 0;
 }
 
-// #include <map>
+// #include <set>
 
 // int main(void) {
-// 	std::map<int, std::string> map;
-// 	for (int i = 1; i <= 25; ++i)
-// 		map.insert(std::pair<int, std::string>(i, std::to_string(i)));
-// 	map[600];
-// 	for (std::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it) {
-// 		std::cout << it->first << " " << it->second << std::endl;
-// 	}
+// 	std::set<int> s;
+// 	s.insert(1);
+// 	s.insert(2);
+// 	s.insert(3);
+// 	s.insert(4);
+// 	for (std::set<int>::iterator it = s.begin(); it != s.end(); ++it)
+// 		std::cout << *it << " ";
+// 	return 0;
 // }
 

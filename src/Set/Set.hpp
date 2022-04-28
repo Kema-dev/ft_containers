@@ -13,10 +13,6 @@ class set {
 	private:
 		ft::map<T,T,Compare,Alloc> _container;
 	public:
-		typedef typename ft::map<T,T,Compare,Alloc>::iterator iterator;
-		typedef typename ft::map<T,T,Compare,Alloc>::const_iterator const_iterator;
-		typedef typename ft::map<T,T,Compare,Alloc>::reverse_iterator reverse_iterator;
-		typedef typename ft::map<T,T,Compare,Alloc>::const_reverse_iterator const_reverse_iterator;
 		typedef typename ft::map<T,T,Compare,Alloc>::key_type key_type;
 		typedef typename ft::map<T,T,Compare,Alloc>::value_type value_type;
 		typedef typename ft::map<T,T,Compare,Alloc>::key_compare key_compare;
@@ -38,6 +34,134 @@ class set {
 			return *this;
 		};
 
+		class iterator : public ft::map<T,T,Compare,Alloc>::iterator {
+			public:
+				iterator() : ft::map<T,T,Compare,Alloc>::iterator() {};
+				iterator(const typename ft::map<T,T,Compare,Alloc>::iterator& other) : ft::map<T,T,Compare,Alloc>::iterator(other) {};
+				iterator(const iterator& other) : ft::map<T,T,Compare,Alloc>::iterator(other) {};
+				iterator& operator=(const iterator& other) {
+					ft::map<T,T,Compare,Alloc>::iterator::operator=(other);
+					return *this;
+				};
+				iterator& operator++() {
+					ft::map<T,T,Compare,Alloc>::iterator::operator++();
+					return *this;
+				};
+				iterator operator++(int) {
+					iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::iterator::operator++();
+					return tmp;
+				};
+				iterator& operator--() {
+					ft::map<T,T,Compare,Alloc>::iterator::operator--();
+					return *this;
+				};
+				iterator operator--(int) {
+					iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::iterator::operator--();
+					return tmp;
+				};
+				const T& operator*() {
+					return ft::map<T,T,Compare,Alloc>::iterator::operator*().first;
+				};
+		};
+
+		class const_iterator : public ft::map<T,T,Compare,Alloc>::const_iterator {
+			public:
+				const_iterator() : ft::map<T,T,Compare,Alloc>::const_iterator() {};
+				const_iterator(const typename ft::map<T,T,Compare,Alloc>::const_iterator& other) : ft::map<T,T,Compare,Alloc>::const_iterator(other) {};
+				const_iterator(const const_iterator& other) : ft::map<T,T,Compare,Alloc>::const_iterator(other) {};
+				const_iterator& operator=(const const_iterator& other) {
+					ft::map<T,T,Compare,Alloc>::const_iterator::operator=(other);
+					return *this;
+				};
+				const_iterator& operator++() {
+					ft::map<T,T,Compare,Alloc>::const_iterator::operator++();
+					return *this;
+				};
+				const_iterator operator++(int) {
+					const_iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::const_iterator::operator++();
+					return tmp;
+				};
+				const_iterator& operator--() {
+					ft::map<T,T,Compare,Alloc>::const_iterator::operator--();
+					return *this;
+				};
+				const_iterator operator--(int) {
+					const_iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::const_iterator::operator--();
+					return tmp;
+				};
+				const T& operator*() {
+					return ft::map<T,T,Compare,Alloc>::const_iterator::operator*().first;
+				};
+		};
+
+		class reverse_iterator : public ft::map<T,T,Compare,Alloc>::reverse_iterator {
+			public:
+				reverse_iterator() : ft::map<T,T,Compare,Alloc>::reverse_iterator() {};
+				reverse_iterator(const typename ft::map<T,T,Compare,Alloc>::reverse_iterator& other) : ft::map<T,T,Compare,Alloc>::reverse_iterator(other) {};
+				reverse_iterator(const reverse_iterator& other) : ft::map<T,T,Compare,Alloc>::reverse_iterator(other) {};
+				reverse_iterator& operator=(const reverse_iterator& other) {
+					ft::map<T,T,Compare,Alloc>::reverse_iterator::operator=(other);
+					return *this;
+				};
+				reverse_iterator& operator++() {
+					ft::map<T,T,Compare,Alloc>::reverse_iterator::operator++();
+					return *this;
+				};
+				reverse_iterator operator++(int) {
+					reverse_iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::reverse_iterator::operator++();
+					return tmp;
+				};
+				reverse_iterator& operator--() {
+					ft::map<T,T,Compare,Alloc>::reverse_iterator::operator--();
+					return *this;
+				};
+				reverse_iterator operator--(int) {
+					reverse_iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::reverse_iterator::operator--();
+					return tmp;
+				};
+				const T& operator*() {
+					return ft::map<T,T,Compare,Alloc>::reverse_iterator::operator*().first;
+				};
+		};
+
+		class const_reverse_iterator : public ft::map<T,T,Compare,Alloc>::const_reverse_iterator {
+			public:
+				const_reverse_iterator() : ft::map<T,T,Compare,Alloc>::const_reverse_iterator() {};
+				const_reverse_iterator(const typename ft::map<T,T,Compare,Alloc>::const_reverse_iterator& other) : ft::map<T,T,Compare,Alloc>::const_reverse_iterator(other) {};
+				const_reverse_iterator(const const_reverse_iterator& other) : ft::map<T,T,Compare,Alloc>::const_reverse_iterator(other) {};
+				const_reverse_iterator& operator=(const const_reverse_iterator& other) {
+					ft::map<T,T,Compare,Alloc>::const_reverse_iterator::operator=(other);
+					return *this;
+				};
+				const_reverse_iterator& operator++() {
+					ft::map<T,T,Compare,Alloc>::const_reverse_iterator::operator++();
+					return *this;
+				};
+				const_reverse_iterator operator++(int) {
+					const_reverse_iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::const_reverse_iterator::operator++();
+					return tmp;
+				};
+				const_reverse_iterator& operator--() {
+					ft::map<T,T,Compare,Alloc>::const_reverse_iterator::operator--();
+					return *this;
+				};
+				const_reverse_iterator operator--(int) {
+					const_reverse_iterator tmp(*this);
+					ft::map<T,T,Compare,Alloc>::const_reverse_iterator::operator--();
+					return tmp;
+				};
+				const T& operator*() {
+					return ft::map<T,T,Compare,Alloc>::const_reverse_iterator::operator*().first;
+				};
+		};
+
 		iterator begin() { return _container.begin(); };
 		iterator end() { return _container.end(); };
 		const_iterator begin() const { return _container.begin(); };
@@ -50,7 +174,10 @@ class set {
 		bool empty() const { return _container.empty(); };
 		size_type size() const { return _container.size(); };
 		size_type max_size() const { return _container.max_size(); };
-		ft::pair<iterator, bool> insert(const value_type& val) { return _container.insert(val); };
+		ft::pair<iterator, bool> insert(const T& val) {
+			ft::pair<typename ft::map<T,T,Compare,Alloc>::iterator, bool> buf = _container.insert(make_pair(val, val));
+			return ft::pair<iterator, bool>(iterator(buf.first), buf.second);
+		};
 		iterator insert(iterator position, const value_type& val) { return _container.insert(position, val); };
 		template<class InputIterator>
 		void insert(InputIterator first, InputIterator last) { _container.insert(first, last); };
