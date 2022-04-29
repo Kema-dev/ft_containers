@@ -9,8 +9,6 @@
 #define A 1
 #define B 2
 
-#include "../VectorIterators/Vector/Iterator.hpp"
-#include "../VectorIterators/Vector/ReverseIterator.hpp"
 #include "../Tools/Exceptions.hpp"
 
 namespace ft {
@@ -26,10 +24,114 @@ class vector {
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 	typedef alloc allocator_type;
-	typedef VectorIterator<T> iterator;
-	typedef VectorReverseIterator<T> reverse_iterator;
-	typedef VectorIterator<const T> const_iterator;
-	typedef VectorReverseIterator<const T> const_reverse_iterator;
+
+	class VectorIterator {
+	protected:
+		pointer _array;
+
+	public:
+		VectorIterator(pointer array) : _array(array) {}
+		VectorIterator(const VectorIterator& it) : _array(it._array) {}
+
+		reference operator*() const { return *_array; }
+		pointer operator->() const { return _array; }
+		VectorIterator& operator++() {
+			_array++;
+			return *this;
+		}
+		VectorIterator operator++(int) {
+			VectorIterator tmp = *this;
+			++*this;
+			return tmp;
+		}
+		VectorIterator& operator--() {
+			_array--;
+			return *this;
+		}
+		VectorIterator operator--(int) {
+			VectorIterator tmp = *this;
+			--*this;
+			return tmp;
+		}
+		VectorIterator& operator+=(difference_type n) {
+			_array += n;
+			return *this;
+		}
+		VectorIterator operator+(difference_type n) const {
+			VectorIterator tmp = *this;
+			tmp += n;
+			return tmp;
+		}
+		VectorIterator& operator-=(difference_type n) {
+			_array -= n;
+			return *this;
+		}
+		VectorIterator operator-(difference_type n) const {
+			VectorIterator tmp = *this;
+			tmp -= n;
+			return tmp;
+		}
+		difference_type operator-(const VectorIterator& it) const { return _array - it._array; }
+		reference operator[](difference_type n) const { return _array[n]; }
+		bool operator==(const VectorIterator& it) const { return _array == it._array; }
+		bool operator!=(const VectorIterator& it) const { return _array != it._array; }
+		bool operator<(const VectorIterator& it) const { return _array < it._array; }
+		bool operator>(const VectorIterator& it) const { return _array > it._array; }
+		bool operator<=(const VectorIterator& it) const { return _array <= it._array; }
+		bool operator>=(const VectorIterator& it) const { return _array >= it._array; }
+	};
+
+	class VectorReverseIterator {
+	protected:
+		pointer _array;
+
+	public:
+		VectorReverseIterator(pointer array)
+			: _array(array) {}
+		VectorReverseIterator(VectorReverseIterator& it) : _array(it._array) {}
+
+		VectorReverseIterator& operator++() {
+			_array--;
+			return *this;
+		}
+		VectorReverseIterator operator++(int) {
+			VectorReverseIterator tmp = *this;
+			++*this;
+			return tmp;
+		}
+		VectorReverseIterator& operator--() {
+			_array++;
+			return *this;
+		}
+		VectorReverseIterator operator--(int) {
+			VectorReverseIterator tmp = *this;
+			--*this;
+			return tmp;
+		}
+		VectorReverseIterator& operator+=(difference_type n) {
+			_array -= n;
+			return *this;
+		}
+		VectorReverseIterator operator+(difference_type n) const {
+			VectorReverseIterator tmp = *this;
+			tmp += n;
+			return tmp;
+		}
+		VectorReverseIterator& operator-=(difference_type n) {
+			_array += n;
+			return *this;
+		}
+		VectorReverseIterator operator-(difference_type n) const {
+			VectorReverseIterator tmp = *this;
+			tmp -= n;
+			return tmp;
+		}
+	};
+
+	typedef VectorIterator iterator;
+	typedef VectorReverseIterator reverse_iterator;
+	typedef VectorIterator const_iterator;
+	typedef VectorReverseIterator const_reverse_iterator;
 
    protected:
 	alloc _alloc;

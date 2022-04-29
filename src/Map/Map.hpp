@@ -100,7 +100,7 @@ class map {
 		nodePtr ptr;
 	};
 
-	class MapReverseIterator {
+	class MapReverseIterator{
 	   public:
 		MapReverseIterator(nodePtr ptr) : ptr(ptr) {}
 		MapReverseIterator(const MapReverseIterator& other) : ptr(other.ptr) {}
@@ -541,6 +541,16 @@ class map {
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
 	/*
+	INFO Add pair <first> to <last> to the tree
+	INFO Can throw exception (calls)
+	*/
+	void insert(iterator first, iterator last) {
+		while (first != last) {
+			insert(*first);
+			++first;
+		}
+	};
+	/*
 	INFO Add pair (non const) <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
@@ -832,7 +842,7 @@ class map {
 	INFO Get the nodePtr of the minimum value
 	INFO No exception
 	*/
-	nodePtr getMin(void) {
+	nodePtr getMin(void) const {
 		nodePtr curNode = _root;
 		while (curNode->left)
 			curNode = curNode->left;
@@ -842,7 +852,7 @@ class map {
 	INFO Get the nodePtr of the maximum value
 	INFO No exception
 	*/
-	nodePtr getMax(void) {
+	nodePtr getMax(void) const {
 		nodePtr curNode = _root;
 		while (curNode->right)
 			curNode = curNode->right;
