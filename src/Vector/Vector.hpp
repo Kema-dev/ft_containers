@@ -11,6 +11,7 @@
 
 #include "../Tools/Exceptions.hpp"
 #include "../Iterators/Iterator.hpp"
+#include "../Tools/Utils.hpp"
 
 namespace ft {
 
@@ -157,7 +158,7 @@ class vector {
 	INFO Construct an empty vector
 	INFO Combined both default constructor and allocator constructor
 	*/
-	vector(const allocator_type& alloct = allocator_type()) {
+	explicit vector(const allocator_type& alloct = allocator_type()) {
 		_array = NULL;
 		_size = 0;
 		_capacity = 0;
@@ -165,15 +166,16 @@ class vector {
 	};
 	// INFO Construct a vector with <count> elements <value> (specifying allocator type <alloct>)
 	explicit vector(size_type count, const T& value = T(), const allocator_type& alloct = allocator_type())
-		: _alloc(alloct), _capacity(count * EXPANDING_RATIO), _size(count) {
+		: _alloc(alloct), _size(count), _capacity(count * EXPANDING_RATIO) {
 		_array = _alloc.allocate(_capacity);
 		for (size_type i = 0; i < _size; i++)
 			_alloc.construct(&_array[i], value);
 	};
 
 	// INFO Construct a vector with elements <first> to <last> (specifying allocator type <alloc>)
+	// template <class InputIt>
 	template <class InputIt>
-	vector(InputIt first, InputIt last, const allocator_type& alloct = allocator_type())
+	vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt >::type first, InputIt last, const allocator_type& alloct = allocator_type())
 		: _alloc(alloct) {
 		if (first > last)
 			throw std::out_of_range("ft::vector::vector : first > last");

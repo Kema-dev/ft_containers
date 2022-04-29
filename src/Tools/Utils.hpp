@@ -85,7 +85,7 @@ struct is_integral<unsigned long long int> { static const bool value = true; };
 // !SECTION is_integral
 
 // SECTION enable_if
-template <bool Cond, class T = void>
+template <bool Cond, class T>
 struct enable_if {};
 
 template <class T>
