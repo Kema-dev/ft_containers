@@ -22,6 +22,18 @@ int main(void) {
 	v.push_back(4);
 	v.push_back(5);
 	print_v(v);
+	typedef ft::iterator_traits<ft::vector<int> > traits;
+	if (typeid(traits::iterator_category)==typeid(std::bidirectional_iterator_tag))
+    	std::cout << "ft::vector<int> is a bidirectional iterator" << std::endl;
+	ft::map<int, std::string> m;
+	m[1] = "one";
+	m[2] = "two";
+	m[3] = "three";
+	m[4] = "four";
+	traits::difference_type d = m.size();
+	std::cout << "m.size() = " << d << std::endl;
+	m.insert(ft::pair<int, std::string>(1, "a"));
+	m.print();
 	return 0;
 }
 

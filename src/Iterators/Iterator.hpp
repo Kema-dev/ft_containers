@@ -9,21 +9,21 @@ namespace ft {
 template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
 class iterator {
    public:
-	Category iterator_category;
-	T value_type;
-	Distance difference_type;
-	Pointer pointer;
-	Reference reference;
+	typedef Category iterator_category;
+	typedef T value_type;
+	typedef Distance difference_type;
+	typedef Pointer pointer_it;
+	typedef Reference reference;
 };
 
 template <class T>
 class iterator_traits {
 	public:
-		typedef T::iterator::difference_type difference_type;
-		typedef T::iterator::value_type value_type;
-		typedef T::iterator::pointer pointer;
-		typedef T::iterator::reference reference;
-		typedef T::iterator::iterator_category iterator_category;
+		typedef typename T::iterator::difference_type difference_type;
+		typedef typename T::iterator::value_type value_type;
+		typedef typename T::iterator::pointer_it pointer;
+		typedef typename T::iterator::reference reference;
+		typedef typename T::iterator::iterator_category iterator_category;
 };
 
 }  // namespace ft
