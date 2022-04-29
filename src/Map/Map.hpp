@@ -6,7 +6,7 @@
 
 #include "../Tools/Exceptions.hpp"
 #include "../Tools/Node.hpp"
-#include "../Iterator/Iterator.hpp"
+#include "../Iterators/Iterator.hpp"
 
 namespace ft {
 
@@ -32,7 +32,13 @@ class map {
 	typedef Allocator allocator_type;
 	typedef Compare key_compare;
 
-	class MapIterator {
+	class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, value_type> {
+	   public:
+		typedef typename ft::iterator_traits<map<K, V> >::difference_type difference_type;
+		typedef typename ft::iterator_traits<map<K, V> >::value_type value_type;
+		typedef typename ft::iterator_traits<map<K, V> >::pointer pointer;
+		typedef typename ft::iterator_traits<map<K, V> >::reference reference;
+		typedef typename ft::iterator_traits<map<K, V> >::iterator_category iterator_category;
 	   public:
 		MapIterator(nodePtr ptr) : ptr(ptr) {}
 		MapIterator(const MapIterator& other) : ptr(other.ptr) {}
@@ -91,6 +97,12 @@ class map {
 		bool operator!() {
 			return ptr == nullptr;
 		}
+		// const K& first() {
+		// 	return ptr->pair.first();
+		// }
+		// const V& second() {
+		// 	return ptr->pair.second();
+		// }
 		MapIterator operator+(int n) {
 			return ptr + n;
 		}
@@ -100,7 +112,13 @@ class map {
 		nodePtr ptr;
 	};
 
-	class MapReverseIterator{
+	class MapReverseIterator : public ft::iterator<std::bidirectional_iterator_tag, value_type> {
+	   public:
+		typedef typename ft::iterator_traits<map<K, V> >::difference_type difference_type;
+		typedef typename ft::iterator_traits<map<K, V> >::value_type value_type;
+		typedef typename ft::iterator_traits<map<K, V> >::pointer pointer;
+		typedef typename ft::iterator_traits<map<K, V> >::reference reference;
+		typedef typename ft::iterator_traits<map<K, V> >::iterator_category iterator_category;
 	   public:
 		MapReverseIterator(nodePtr ptr) : ptr(ptr) {}
 		MapReverseIterator(const MapReverseIterator& other) : ptr(other.ptr) {}
@@ -158,6 +176,12 @@ class map {
 		}
 		bool operator!() {
 			return ptr == nullptr;
+		}
+		const K& first() {
+			return ptr->pair.first();
+		}
+		const V& second() {
+			return ptr->pair.second();
 		}
 		MapReverseIterator operator+(int n) {
 			return ptr + n;

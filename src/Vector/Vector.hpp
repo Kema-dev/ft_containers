@@ -10,10 +10,11 @@
 #define B 2
 
 #include "../Tools/Exceptions.hpp"
+#include "../Iterators/Iterator.hpp"
 
 namespace ft {
 
-template <typename T, class alloc = allocator<T> >
+template <typename T, class alloc = std::allocator<T> >
 class vector {
    public:
 	typedef T value_type;
@@ -25,7 +26,13 @@ class vector {
 	typedef ptrdiff_t difference_type;
 	typedef alloc allocator_type;
 
-	class VectorIterator {
+	class VectorIterator : public ft::iterator<std::bidirectional_iterator_tag, value_type> {
+	public:
+		typedef typename ft::iterator_traits<vector<T, alloc> >::difference_type difference_type;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::value_type value_type;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::pointer pointer;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::reference reference;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::iterator_category iterator_category;
 	protected:
 		pointer _array;
 
@@ -81,7 +88,13 @@ class vector {
 		bool operator>=(const VectorIterator& it) const { return _array >= it._array; }
 	};
 
-	class VectorReverseIterator {
+	class VectorReverseIterator  : public ft::iterator<std::bidirectional_iterator_tag, value_type> {
+		public:
+		typedef typename ft::iterator_traits<vector<T, alloc> >::difference_type difference_type;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::value_type value_type;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::pointer pointer;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::reference reference;
+		typedef typename ft::iterator_traits<vector<T, alloc> >::iterator_category iterator_category;
 	protected:
 		pointer _array;
 
