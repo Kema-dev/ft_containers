@@ -38,6 +38,7 @@ class vector {
 		pointer _array;
 
 	public:
+		VectorIterator(void) : _array(NULL) {}
 		VectorIterator(pointer array) : _array(array) {}
 		VectorIterator(const VectorIterator& it) : _array(it._array) {}
 
@@ -100,9 +101,12 @@ class vector {
 		pointer _array;
 
 	public:
-		VectorReverseIterator(pointer array)
-			: _array(array) {}
-		VectorReverseIterator(VectorReverseIterator& it) : _array(it._array) {}
+		VectorReverseIterator(void) : _array(NULL) {}
+		VectorReverseIterator(pointer array) : _array(array) {}
+		VectorReverseIterator(const VectorReverseIterator& it) : _array(it._array) {}
+
+		reference operator*() const { return *_array; }
+		pointer operator->() const { return _array; }
 
 		VectorReverseIterator& operator++() {
 			_array--;
@@ -140,6 +144,14 @@ class vector {
 			tmp -= n;
 			return tmp;
 		}
+		difference_type operator-(const VectorReverseIterator& it) const { return _array - it._array; }
+		reference operator[](difference_type n) const { return _array[n]; }
+		bool operator==(const VectorReverseIterator& it) const { return _array == it._array; }
+		bool operator!=(const VectorReverseIterator& it) const { return _array != it._array; }
+		bool operator<(const VectorReverseIterator& it) const { return _array < it._array; }
+		bool operator>(const VectorReverseIterator& it) const { return _array > it._array; }
+		bool operator<=(const VectorReverseIterator& it) const { return _array <= it._array; }
+		bool operator>=(const VectorReverseIterator& it) const { return _array >= it._array; }
 	};
 
 	typedef VectorIterator iterator;
@@ -247,7 +259,7 @@ class vector {
 	};
 	// INFO Assign elements <first> to <last>
 	template <class InputIt>
-	void assign(InputIt first, InputIt last) {
+	void assign(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt >::type first, InputIt last) {
 		if (first > last)
 			throw std::out_of_range("ft::vector::assign : first > last");
 		clear();
@@ -407,16 +419,25 @@ class vector {
 	};
 	// INFO Insert elements <first> to <last> at position <pos>
 	template <class InputIt>
-	void insert(iterator pos, InputIt first, InputIt last) {
+	void insert(iterator pos, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt >::type first, InputIt last) {
 		if (first == last) {
 			return;
 		} else if (first > last) {
 			throw std::length_error("ft::Vector::insert : first > last");
 		}
+		if (pos < this->begin()) {
+			throw std::out_of_range("ft::Vector::insert : pos < this->begin()");
+		} else if (pos > this->end()) {
+			throw std::out_of_range("ft::Vector::insert : pos > this->end()");
+		}
 		size_type delta = last - first;
 		if (_size + delta > _capacity) {
 			reserve((_size + delta) * EXPANDING_RATIO);
 		}
+		// printf("this->end() - this->begin(): %ld\n", this->end() - this->begin());
+		// printf("pos - this->begin(): %d\n", pos - this->begin());
+		// std::cout << "pos - this->begin()" << pos - this->begin() << std::endl;
+		std::cout << "end - pos: " << pos - this->begin() << std::endl; // FIXME How the heck : begin <= pos <= end AND end - begin = 6 (-> 0 <= pos <= 6) AND pos - begin < 0
 		for (size_type i = _size; i > pos - this->begin(); i--) {
 			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
