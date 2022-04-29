@@ -92,6 +92,10 @@ template <class T>
 struct enable_if<true, T> { typedef T type; };
 // !SECTION enable_if
 
+// SECTION iterator_traits
+
+// !SECTION
+
 }  // namespace ft
 
 #endif
