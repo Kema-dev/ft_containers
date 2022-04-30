@@ -95,7 +95,7 @@ class map {
 			return ptr != other.ptr;
 		}
 		bool operator!() {
-			return ptr == nullptr;
+			return ptr == NULL;
 		}
 		// const K& first() {
 		// 	return ptr->pair.first();
@@ -175,7 +175,7 @@ class map {
 			return ptr != other.ptr;
 		}
 		bool operator!() {
-			return ptr == nullptr;
+			return ptr == NULL;
 		}
 		const K& first() {
 			return ptr->pair.first();

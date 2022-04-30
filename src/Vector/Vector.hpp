@@ -408,7 +408,7 @@ class vector {
 		if (_size + count > _capacity) {
 			reserve((_size + count) * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > pos - this->begin(); i--) {
+		for (size_type i = _size; i > pos - this->begin(); i--) { // FIXME : Comparing unsigned int with signed int
 			_alloc.construct(&_array[i + count - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
@@ -438,7 +438,7 @@ class vector {
 		// printf("pos - this->begin(): %d\n", pos - this->begin());
 		// std::cout << "pos - this->begin()" << pos - this->begin() << std::endl;
 		std::cout << "end - pos: " << pos - this->begin() << std::endl; // FIXME How the heck : begin <= pos <= end AND end - begin = 6 (-> 0 <= pos <= 6) AND pos - begin < 0
-		for (size_type i = _size; i > pos - this->begin(); i--) {
+		for (size_type i = _size; i > pos - this->begin(); i--) {  // FIXME : Comparing unsigned int with signed int
 			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
