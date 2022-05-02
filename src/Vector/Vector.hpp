@@ -407,15 +407,15 @@ class vector {
 	// INFO Insert <count> elements <value> at position <pos>
 	void insert(iterator pos, size_type count, const T& value) {
 		difference_type delta = pos - this->begin();
-		if (_size + count > _capacity) {
+        if (_size + count > _capacity) {
 			reserve((_size + count) * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > count; i--) {
-			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
+		for (difference_type i = _size; i > delta; i--) {
+			_alloc.construct(&_array[i + count - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
-		for (difference_type i = 0; i < delta; i++) {
-			_alloc.construct(&_array[count + i], value);
+		for (size_type i = 0; i < count; i++) {
+			_alloc.construct(&_array[delta + i], value);
 		}
 		_size += count;
 	};
