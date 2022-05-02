@@ -269,7 +269,7 @@ class vector {
 		}
 		size_type delta = last - first;
 		if (delta > _capacity) {
-			resize(delta);
+			reserve(delta);
 		}
 		_size = delta;
 		for (size_type i = 0; i < _size; i++) {
@@ -321,35 +321,35 @@ class vector {
 	};
 	// INFO Get iterator to first element
 	iterator begin(void) {
-		return iterator(_array);
+		return _array;
 	};
 	// INFO Get iterator to last element
 	iterator end(void) {
-		return iterator(_array + _size);
+		return _array + _size;
 	};
 	// INFO Get const iterator to first element
 	// const_iterator begin(void) const {
-	// 	return const_iterator(_array);
+	// 	return _array;
 	// };
 	// INFO Get const iterator to last element
 	// const_iterator end(void) const {
-	// 	return const_iterator(_array + _size);
+	// 	return _array + _size;
 	// };
 	// INFO Get reverse iterator to first element (reverse order)
 	reverse_iterator rbegin(void) {
-		return reverse_iterator(_array + _size - 1);
+		return _array + _size - 1;
 	};
 	// INFO Get reverse iterator to last element (reverse order)
 	reverse_iterator rend(void) {
-		return reverse_iterator(_array - 1);
+		return _array - 1;
 	};
 	// INFO Get const reverse iterator to first element (reverse order)
 	// const_reverse_iterator rbegin(void) const {
-	// 	return const_reverse_iterator(_array + _size - 1);
+	// 	return _array + _size - 1;
 	// };
 	// INFO Get const reverse iterator to last element (reverse order)
 	// const_reverse_iterator rend(void) const {
-	// 	return const_reverse_iterator(_array - 1);
+	// 	return _array - 1;
 	// };
 	// INFO Check if _size == 0
 	bool empty(void) const {
@@ -392,58 +392,60 @@ class vector {
 	};
 	// INFO Insert element <val> at position <pos>
 	iterator insert(iterator pos, const T& val) {
+		difference_type delta = pos - this->begin();
 		if (_size >= _capacity) {
 			reserve(_capacity * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > size_type(pos - this->begin()); i--) {
+		for (size_type i = _size; i > size_type(delta); i--) {
 			_alloc.construct(&_array[i], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
-		_alloc.construct(&_array[pos - this->begin()], val);
+		_alloc.construct(&_array[delta], val);
 		_size++;
 		return pos;
 	};
 	// INFO Insert <count> elements <value> at position <pos>
 	void insert(iterator pos, size_type count, const T& value) {
+		difference_type delta = pos - this->begin();
 		if (_size + count > _capacity) {
 			reserve((_size + count) * EXPANDING_RATIO);
 		}
-		for (size_type i = _size; i > pos - this->begin(); i--) { // FIXME : Comparing unsigned int with signed int
-			_alloc.construct(&_array[i + count - 1], _array[i - 1]);
+		for (size_type i = _size; i > count; i--) {
+			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
-		for (size_type i = 0; i < count; i++) {
-			_alloc.construct(&_array[pos - this->begin() + i], value);
+		for (difference_type i = 0; i < delta; i++) {
+			_alloc.construct(&_array[count + i], value);
 		}
 		_size += count;
 	};
+
+	#include <typeinfo>
+
 	// INFO Insert elements <first> to <last> at position <pos>
 	template <class InputIt>
 	void insert(iterator pos, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt >::type first, InputIt last) {
 		if (first == last) {
 			return;
 		} else if (first > last) {
-			throw std::length_error("ft::Vector::insert : first > last");
+			throw std::out_of_range("ft::Vector::insert : first > last");
 		}
 		if (pos < this->begin()) {
 			throw std::out_of_range("ft::Vector::insert : pos < this->begin()");
 		} else if (pos > this->end()) {
 			throw std::out_of_range("ft::Vector::insert : pos > this->end()");
 		}
-		size_type delta = last - first;
+		difference_type count = pos - this->begin();
+		difference_type delta = last - first;
 		if (_size + delta > _capacity) {
 			reserve((_size + delta) * EXPANDING_RATIO);
 		}
-		// printf("this->end() - this->begin(): %ld\n", this->end() - this->begin());
-		// printf("pos - this->begin(): %d\n", pos - this->begin());
-		// std::cout << "pos - this->begin()" << pos - this->begin() << std::endl;
-		std::cout << "end - pos: " << pos - this->begin() << std::endl; // FIXME How the heck : begin <= pos <= end AND end - begin = 6 (-> 0 <= pos <= 6) AND pos - begin < 0
-		for (size_type i = _size; i > pos - this->begin(); i--) {  // FIXME : Comparing unsigned int with signed int
+		for (difference_type i = _size; i > count; i--) {
 			_alloc.construct(&_array[i + delta - 1], _array[i - 1]);
 			_alloc.destroy(&_array[i - 1]);
 		}
-		for (size_type i = 0; i < delta; i++) {
-			_alloc.construct(&_array[pos - this->begin() + i], *(first + i));
+		for (difference_type i = 0; i < delta; i++) {
+			_alloc.construct(&_array[count + i], *(first + i));
 		}
 		_size += delta;
 	};
@@ -457,7 +459,7 @@ class vector {
 		}
 		_alloc.destroy(&_array[_size - 1]);
 		_size--;
-		return iterator(_array + size_type(pos - this->begin()));
+		return _array + size_type(pos - this->begin());
 	};
 	// INFO Erase elements from position <first> to position <last>
 	iterator erase(iterator first, iterator last) {
@@ -475,7 +477,7 @@ class vector {
 			_alloc.destroy(&_array[_size - 1 - i]);
 		}
 		_size -= delta;
-		return iterator(_array + size_type(first - this->begin()));
+		return _array + size_type(first - this->begin());
 	};
 	// INFO Add element <val> at end
 	void push_back(const T& val) {
