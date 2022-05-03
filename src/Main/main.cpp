@@ -14,10 +14,27 @@
 #include "../Tools/Utils.hpp"
 #endif
 
+
+int intcmp(int int1, int int2) 
+{
+    return ((int1 > int2) ? int1 : int2);
+}
+
+struct classcomp {
+bool operator() (const char& lhs, const char& rhs) const
+    {
+        return lhs<rhs;
+        }
+};
+
 int main(void) 
 {
     {
         // SECTION VECTOR TESTS
+        std::cout << "------------------------------------------" << std::endl;
+        std::cout << "---------------VECTOR TESTS---------------" << std::endl;
+        std::cout << "------------------------------------------" << std::endl;
+        std::cout << std::endl;
         {
             // SECTION pop_back()
             std::cout << "----------TESTING pop_back()----------" << std::endl;
@@ -311,24 +328,116 @@ int main(void)
 
     {
         //SECTION MAP TESTS
+        std::cout << std::endl;
+        std::cout << "---------------------------------------" << std::endl;
+        std::cout << "---------------MAP TESTS---------------" << std::endl;
+        std::cout << "---------------------------------------" << std::endl;
+        std::cout << std::endl;
+
         {
             // SECTION constructor()
-
-            ft::map<char,int> first;
-
+            std::cout << "----------TESTING constructors()----------" << std::endl;
+            ft::map<int,int> first;
             first['a']=10;
             first['b']=30;
             first['c']=50;
             first['d']=70;
+            for (ft::map<int, int>::iterator it = first.begin(); it != first.end(); it++)
+                std::cout << it->second << std::endl;
+            int(*ptr)(int,int) = intcmp;
+            ft::map<int,int, int(*)(int,int)> second(first.begin(),first.end(), ptr);
+            ft::map<char,int,classcomp> fifth;
+            ft::map<int, int, int(*)(int,int)> fourth(ptr); 
+            ft::map<int,int, int(*)(int,int)> third(second);
+            //!SECTION
+            std::cout << std::endl;
+        }
 
-            ft::map<char,int> second (first.begin(),first.end());
+        {
+            // SECTION operator= size()
+            std::cout << "----------TESTING operator= size()----------" << std::endl;
+            ft::map<char,int> first;
+            ft::map<char,int> second;
+            first['x']=8;
+            first['y']=16;
+            first['z']=32;
+            second=first;
+            first=ft::map<char,int>();
+            std::cout << "First and second shouldn't have the same size" << std::endl;
+            std::cout << "Size of first: " << first.size() << std::endl;
+            std::cout << "Size of second: " << second.size() << std::endl;
+            //!SECTION
+            std::cout << std::endl;
+        }
 
-            ft::map<char,int> third (second);
+        {
+            //SECTION rbegin() rend()
+            std::cout << "----------TESTING rbegin() rend()----------" << std::endl;
+            ft::map<char,int> mymap;
+            mymap['x'] = 100;
+            mymap['y'] = 200;
+            mymap['z'] = 300;
+            ft::map<char,int>::reverse_iterator vache_qui_rit;
+            for (vache_qui_rit=mymap.rbegin(); vache_qui_rit!=mymap.rend(); ++vache_qui_rit)
+                std::cout << vache_qui_rit->first << " => " << vache_qui_rit->second << std::endl;
+            //!SECTION
+            std::cout << std::endl;
+        }
 
+        {
+            //SECTION empty()
+            std::cout << "----------TESTING empty()----------" << std::endl;
+            ft::map<char,int> mymap;
+            mymap['a']=10;
+            mymap['b']=20;
+            mymap['c']=30;
+            while (!mymap.empty()) {
+                std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+                mymap.erase(mymap.begin());
+            }
+            //!SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            //SECTION max_size()
+            std::cout << "----------TESTING max_size()----------" << std::endl;
+            ft::map<int,int> mymap;
+            size_t tmax = SIZE_T_MAX;
+            if (mymap.max_size() != tmax) {
+                std::cout << "There is a problem" << std::endl;
+            }
+            else {
+                std::cout << "max_size returns correct value: 18446744073709551615" << std::endl;
+            }
+            //!SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            //SECTION erase()
+            std::cout << "----------TESTING erase()----------" << std::endl;
+            ft::map<char,int> mymap;
+            ft::map<char,int>::iterator it;
+            mymap['a']=10;
+            mymap['b']=20;
+            mymap['c']=30;
+            mymap['d']=40;
+            mymap['e']=50;
+            mymap['f']=60;
+            it=mymap.find('b');
+            mymap.erase (it);
+            mymap.erase ('c');
+            it=mymap.find ('e');
+            mymap.erase ( it, mymap.end() );
+            for (it=mymap.begin(); it!=mymap.end(); ++it)
+                std::cout << it->first << " => " << it->second << '\n';
+            //!SECTION
+            std::cout << std::endl;
         }
 
 
-        //!SECTION
+        //!SECTION MAP TESTS
     }
 	return (0);
 }

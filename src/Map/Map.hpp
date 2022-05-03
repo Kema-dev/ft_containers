@@ -34,12 +34,13 @@ class map {
 
 	class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, value_type> {
 	   public:
-		typedef typename ft::iterator_traits<map<K, V> >::difference_type difference_type;
-		typedef typename ft::iterator_traits<map<K, V> >::value_type value_type;
-		typedef typename ft::iterator_traits<map<K, V> >::pointer pointer;
-		typedef typename ft::iterator_traits<map<K, V> >::reference reference;
-		typedef typename ft::iterator_traits<map<K, V> >::iterator_category iterator_category;
+		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::difference_type difference_type;
+		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::value_type value_type;
+		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::pointer pointer;
+		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::reference reference;
+		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::iterator_category iterator_category;
 	   public:
+		MapIterator(void) : ptr(NULL) {}
 		MapIterator(nodePtr ptr) : ptr(ptr) {}
 		MapIterator(const MapIterator& other) : ptr(other.ptr) {}
 		MapIterator& operator=(const MapIterator& other) {
@@ -97,12 +98,12 @@ class map {
 		bool operator!() {
 			return ptr == NULL;
 		}
-		// const K& first() {
-		// 	return ptr->pair.first();
-		// }
-		// const V& second() {
-		// 	return ptr->pair.second();
-		// }
+		const K& first() {
+			return ptr->pair.first();
+		}
+		const V& second() {
+			return ptr->pair.second();
+		}
 		MapIterator operator+(int n) {
 			return ptr + n;
 		}
@@ -114,12 +115,13 @@ class map {
 
 	class MapReverseIterator : public ft::iterator<std::bidirectional_iterator_tag, value_type> {
 	   public:
-		typedef typename ft::iterator_traits<map<K, V> >::difference_type difference_type;
-		typedef typename ft::iterator_traits<map<K, V> >::value_type value_type;
-		typedef typename ft::iterator_traits<map<K, V> >::pointer pointer;
-		typedef typename ft::iterator_traits<map<K, V> >::reference reference;
-		typedef typename ft::iterator_traits<map<K, V> >::iterator_category iterator_category;
+		typedef typename MapIterator::difference_type difference_type;
+		typedef typename MapIterator::value_type value_type;
+		typedef typename MapIterator::pointer pointer;
+		typedef typename MapIterator::reference reference;
+		typedef typename MapIterator::iterator_category iterator_category;
 	   public:
+		MapReverseIterator(void) : ptr(NULL) {}
 		MapReverseIterator(nodePtr ptr) : ptr(ptr) {}
 		MapReverseIterator(const MapReverseIterator& other) : ptr(other.ptr) {}
 		MapReverseIterator& operator=(const MapReverseIterator& other) {
@@ -200,7 +202,7 @@ class map {
 	class value_compare {
 	   public:
 		bool operator()(const mapped_type& lhs, const mapped_type& rhs) const {
-			return comp(lhs.first, rhs.first);
+			return comp(lhs, rhs);
 		}
 		value_compare(Compare comp) : comp(comp) {}
 
@@ -217,12 +219,12 @@ class map {
    public:
 	// SECTION Constructors / Destructors
 	// INFO Create an map tree with a custom allocator and comparator
-	map(const allocator_type& alloc = Allocator(), const Compare& comp = Compare())
+	explicit map(const Compare& comp = Compare(), const allocator_type& alloc = Allocator())
 		: _root(NULL), _size(0), _alloc(alloc), _comp(comp){};
 	// INFO Create a map filled with a range of elements
 	template <class InputIterator>
-	map(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
-		const Compare& comp = Compare())
+	map(InputIterator first, InputIterator last, const Compare& comp = Compare(), 
+        const allocator_type& alloc = allocator_type())
 		: _root(NULL), _size(0), _alloc(alloc), _comp(comp) {
 		insert(first, last);
 	}
@@ -273,8 +275,10 @@ class map {
 	map& operator=(map const& rhs) {
 		if (this != &rhs) {
 			clear(_root);
-			insert(rhs.begin(), rhs.end());
-			_root->color = black;
+            if (rhs.size() > 0) {
+                insert(rhs.begin(), rhs.end());
+                _root->color = black;
+            }
 		}
 		return *this;
 	};
@@ -357,7 +361,7 @@ class map {
 	};
 	// INFO erase the elements in the range [<first>, <last>)
 	void erase(iterator first, iterator last) {
-		if (!Compare(first.ptr->pair.first, last.ptr->pair.first))
+		if (!_comp(first.ptr->pair.first, last.ptr->pair.first))
 			throw std::out_of_range("map::erase: first >= last");
 		while (first != last)
 			erase(first++);
@@ -386,14 +390,14 @@ class map {
 		return iterator(searchKey(key));
 	};
 	// INFO Get the range of elements with key <key>
-	std::pair<iterator, iterator> equal_range(const key_type& key) {
+	ft::pair<iterator, iterator> equal_range(const key_type& key) {
 		nodePtr node = searchKey(key);
 		if (!node)
 			return ft::pair<iterator, iterator>(end(), end());
 		return ft::pair<iterator, iterator>(iterator(node), iterator(node + 1));
 	};
 	// INFO Get the range of elements with key <key>
-	std::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
+	ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
 		nodePtr node = searchKey(key);
 		if (!node)
 			return ft::pair<const_iterator, const_iterator>(end(), end());
@@ -524,7 +528,7 @@ class map {
 		nodePtr parent = NULL;
 		while (curNode) {
 			parent = curNode;
-			if (Compare()(newNode->pair.first, curNode->pair.first))
+			if (_comp(newNode->pair.first, curNode->pair.first))
 				curNode = curNode->left;
 			else
 				curNode = curNode->right;
@@ -536,9 +540,9 @@ class map {
 			_size++;
 			return newNode;
 		} else {
-			if (Compare()(newNode->pair.first, parent->pair.first))
+			if (_comp(newNode->pair.first, parent->pair.first))
 				parent->left = newNode;
-			else if (!Compare()(newNode->pair.first, parent->pair.first) && (newNode->pair.first != parent->pair.first))
+			else if (!_comp(newNode->pair.first, parent->pair.first) && (newNode->pair.first != parent->pair.first))
 				parent->right = newNode;
 			else {
 				std::allocator<nodeType>().deallocate(newNode, 1);
@@ -553,8 +557,9 @@ class map {
 	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	ft::pair<iterator, bool> insert(const value_type dpair) {
+	ft::pair<iterator, bool> insert(const value_type& dpair) {
 		nodePtr newNode;
+
 		try {
 			newNode = add(dpair);
 		}
@@ -564,12 +569,28 @@ class map {
 		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
+    /*
+	INFO Add pair <dpair> to the tree
+	INFO Can throw exception (calls)
+	*/
+	iterator insert(iterator pos, const value_type& dpair) {
+		static_cast<void>(pos);
+        nodePtr newNode;
+		try {
+			newNode = add(dpair);
+		}
+		catch (duplicateKey) {
+			return find(dpair.first);
+		}
+		return iterator(newNode);
+	};
 	/*
 	INFO Add pair <first> to <last> to the tree
 	INFO Can throw exception (calls)
 	*/
-	void insert(iterator first, iterator last) {
-		while (first != last) {
+    template<class InputIterator>
+	void insert(InputIterator first, InputIterator last) {
+        while (first != last) {
 			insert(*first);
 			++first;
 		}
@@ -795,7 +816,7 @@ class map {
 		} else {
 			if (key == start->pair.first) {
 				return start;
-			} else if (Compare()(key, start->pair.first)) {
+			} else if (_comp(key, start->pair.first)) {
 				return searchKey(start->left, key);
 			} else {
 				return searchKey(start->right, key);
