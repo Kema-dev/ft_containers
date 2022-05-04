@@ -426,8 +426,7 @@ int main(void)
             mymap['d']=40;
             mymap['e']=50;
             mymap['f']=60;
-            it=mymap.find('b');
-            // mymap.erase (it);
+            mymap.erase (mymap.find('b')); // FIXME This doesn't work (find why erase(find(b)) != erase(b))
             mymap.erase ('c');
             it=mymap.find ('e');
             mymap.erase ( it, mymap.end() );
