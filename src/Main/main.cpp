@@ -426,6 +426,7 @@ int main(void)
             mymap['e']=50;
             mymap['f']=60;
             it=mymap.find('b');
+            mymap.print();
             mymap.erase (it);
             mymap.erase ('c');
             it=mymap.find ('e');

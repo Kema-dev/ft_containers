@@ -361,8 +361,6 @@ class map {
 	};
 	// INFO erase the elements in the range [<first>, <last>)
 	void erase(iterator first, iterator last) {
-		if (!_comp(first.ptr->pair.first, last.ptr->pair.first))
-			throw std::out_of_range("map::erase: first >= last");
 		while (first != last)
 			erase(first++);
 	};
@@ -722,6 +720,7 @@ class map {
 		nodePtr sibling = NULL;
 		bool isLeft = false;
 		if (node->left && node->right) {
+            std::cout << "PASS" << std::endl;
 			curNode = node->right;
 			while (curNode->left)
 				curNode = curNode->left;
@@ -738,14 +737,16 @@ class map {
 			child = node->left;
 		else
 			child = node->right;
-		if (!parent)
-			_root = child;
+		if (!parent){
+            _root = child;
+        }
 		else if (parent->left == node)
 			parent->left = child;
 		else
 			parent->right = child;
 		if (child)
 			child->parent = parent;
+        // print();
 		if (node->color == black)
 			fixRemove(child, sibling, isLeft);
 		std::allocator<nodeType>().destroy(node);
@@ -889,7 +890,7 @@ class map {
 	*/
 	nodePtr getMin(void) const {
 		nodePtr curNode = _root;
-		while (curNode->left)
+		while (curNode && curNode->left)
 			curNode = curNode->left;
 		return curNode;
 	};
@@ -899,7 +900,7 @@ class map {
 	*/
 	nodePtr getMax(void) const {
 		nodePtr curNode = _root;
-		while (curNode->right)
+		while (curNode && curNode->right)
 			curNode = curNode->right;
 		return curNode;
 	};
