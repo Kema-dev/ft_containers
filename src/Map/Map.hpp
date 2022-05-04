@@ -252,7 +252,7 @@ class map {
 			return;
 		clear(node->left);
 		clear(node->right);
-		std::allocator<nodeType>().destroy(node);
+		std::allocator<nodeType>().deallocate(node, 1);
 		_size--;
 	};
 	// INFO Clear the tree (fully)
@@ -274,7 +274,7 @@ class map {
 	*/
 	map& operator=(map const& rhs) {
 		if (this != &rhs) {
-			clear(_root);
+			clear();
             if (rhs.size() > 0) {
                 insert(rhs.begin(), rhs.end());
                 _root->color = black;
@@ -561,7 +561,7 @@ class map {
 		try {
 			newNode = add(dpair);
 		}
-		catch (duplicateKey) {
+		catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair.first), false);
 		}
 		fixInsert(newNode);
@@ -577,7 +577,7 @@ class map {
 		try {
 			newNode = add(dpair);
 		}
-		catch (duplicateKey) {
+		catch (duplicateKey const&) {
 			return find(dpair.first);
 		}
 		return iterator(newNode);
@@ -603,7 +603,7 @@ class map {
 		try {
 			newNode = add(dpair2);
 		}
-		catch (duplicateKey) {
+		catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair2.first), false);
 		}
 		fixInsert(newNode);
@@ -619,7 +619,7 @@ class map {
 		try {
 			newNode = add(dpair);
 		}
-		catch (duplicateKey) {
+		catch (duplicateKey const&) {
 			return find(key).ptr;
 		}
 		fixInsert(newNode);
@@ -720,7 +720,6 @@ class map {
 		nodePtr sibling = NULL;
 		bool isLeft = false;
 		if (node->left && node->right) {
-            std::cout << "PASS" << std::endl;
 			curNode = node->right;
 			while (curNode->left)
 				curNode = curNode->left;
@@ -746,10 +745,9 @@ class map {
 			parent->right = child;
 		if (child)
 			child->parent = parent;
-        // print();
 		if (node->color == black)
 			fixRemove(child, sibling, isLeft);
-		std::allocator<nodeType>().destroy(node);
+		std::allocator<nodeType>().deallocate(node, 1);
 		_size--;
 	};
 	/*

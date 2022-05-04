@@ -420,8 +420,6 @@ class vector {
 		_size += count;
 	};
 
-	#include <typeinfo>
-
 	// INFO Insert elements <first> to <last> at position <pos>
 	template <class InputIt>
 	void insert(iterator pos, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt >::type first, InputIt last) {

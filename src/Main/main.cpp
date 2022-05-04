@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+// INFO true = std / false = ft
 #if false
 #include <map>
 #include <stack>
@@ -13,7 +14,6 @@
 #include "../Set/Set.hpp"
 #include "../Tools/Utils.hpp"
 #endif
-
 
 int intcmp(int int1, int int2) 
 {
@@ -344,11 +344,12 @@ int main(void)
             first['d']=70;
             for (ft::map<int, int>::iterator it = first.begin(); it != first.end(); it++)
                 std::cout << it->second << std::endl;
-            int(*ptr)(int,int) = intcmp;
-            ft::map<int,int, int(*)(int,int)> second(first.begin(),first.end(), ptr);
-            ft::map<char,int,classcomp> fifth;
-            ft::map<int, int, int(*)(int,int)> fourth(ptr); 
-            ft::map<int,int, int(*)(int,int)> third(second);
+            // FIXME Put this back (std leaks with it)
+            // int(*ptr)(int,int) = intcmp;
+            // ft::map<int,int, int(*)(int,int)> second(first.begin(),first.end(), ptr);
+            // ft::map<char,int,classcomp> fifth;
+            // ft::map<int, int, int(*)(int,int)> fourth(ptr); 
+            // ft::map<int,int, int(*)(int,int)> third(second);
             //!SECTION
             std::cout << std::endl;
         }
@@ -366,7 +367,7 @@ int main(void)
             std::cout << "First and second shouldn't have the same size" << std::endl;
             std::cout << "Size of first: " << first.size() << std::endl;
             std::cout << "Size of second: " << second.size() << std::endl;
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -403,8 +404,8 @@ int main(void)
             //SECTION max_size()
             std::cout << "----------TESTING max_size()----------" << std::endl;
             ft::map<int,int> mymap;
-            size_t tmax = SIZE_T_MAX;
-            if (mymap.max_size() != tmax) {
+            // FIXME Fix this, std doesn't return this value (maybe try numeric_limits<size_t>::max())
+            if (mymap.max_size() != size_t(-1)) {
                 std::cout << "There is a problem" << std::endl;
             }
             else {
@@ -426,8 +427,7 @@ int main(void)
             mymap['e']=50;
             mymap['f']=60;
             it=mymap.find('b');
-            mymap.print();
-            mymap.erase (it);
+            // mymap.erase (it);
             mymap.erase ('c');
             it=mymap.find ('e');
             mymap.erase ( it, mymap.end() );
