@@ -393,7 +393,8 @@ int main(void)
             mymap['b']=20;
             mymap['c']=30;
             while (!mymap.empty()) {
-                std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+                mymap.print();
+                std::cout << mymap.begin()->first << " => " << mymap.begin()->second << std::endl;
                 mymap.erase(mymap.begin());
             }
             //!SECTION
@@ -426,17 +427,20 @@ int main(void)
             mymap['d']=40;
             mymap['e']=50;
             mymap['f']=60;
+            mymap.print();
             mymap.erase (mymap.find('b')); // FIXME This doesn't work (find why erase(find(b)) != erase(b))
+            mymap.print();
+        
             mymap.erase ('c');
+            mymap.print();
             it=mymap.find ('e');
             mymap.erase ( it, mymap.end() );
+            mymap.print();        
             for (it=mymap.begin(); it!=mymap.end(); ++it)
                 std::cout << it->first << " => " << it->second << '\n';
             //!SECTION
             std::cout << std::endl;
         }
-
-
         //!SECTION MAP TESTS
     }
 	return (0);

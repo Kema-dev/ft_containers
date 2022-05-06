@@ -345,7 +345,7 @@ class map {
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
-		return _size == 0;
+        return _size == 0;
 	};
 	// INFO Get the size of the map
 	size_type size(void) const {
@@ -712,44 +712,163 @@ class map {
 	INFO Can throw exception (calls)
 	*/
 	void remove(nodePtr node) {
-		if (!node)
-			return;
-		nodePtr curNode = node;
-		nodePtr parent = node->parent;
-		nodePtr child = NULL;
-		nodePtr sibling = NULL;
-		bool isLeft = false;
-		if (node->left && node->right) {
-			curNode = node->right;
-			while (curNode->left)
-				curNode = curNode->left;
-			child = curNode->right;
-			sibling = curNode->parent;
-			isLeft = (curNode == sibling->left);
-			curNode->parent = parent;
-			curNode->left = node->left;
-			curNode->left->parent = curNode;
-			curNode->right = node->right;
-			curNode->right->parent = curNode;
-			curNode->color = node->color;
-		} else if (node->left)
-			child = node->left;
-		else
-			child = node->right;
-		if (!parent){
-            _root = child;
+        nodePtr nodeToReplace = NULL;
+        nodePtr sibling = NULL;
+        nodePtr nodeToReplaceParent = node->parent;
+
+        if (node->left && node->right) {
+            nodeToReplace = node->right;
+            while (nodeToReplace->left)
+                nodeToReplace = nodeToReplace->left;
         }
-		else if (parent->left == node)
-			parent->left = child;
-		else
-			parent->right = child;
-		if (child)
-			child->parent = parent;
-		if (node->color == black)
-			fixRemove(child, sibling, isLeft);
-		std::allocator<nodeType>().deallocate(node, 1);
-		_size--;
-	};
+        else if (!node->left && !node->right)
+            nodeToReplace = NULL;
+        else if (node->left)
+            nodeToReplace = node->left;
+        else
+            nodeToReplace = node->right;
+
+        bool isBlack = ((nodeToReplace == NULL || nodeToReplace->color == black) && (node->color == black));
+
+        if (!nodeToReplace) {
+            if (node == _root)
+                _root = NULL;
+            else {
+                if (isBlack)
+                    fixRemove(nodeToReplace, sibling, false); //TODO
+                else {
+                    if (node == nodeToReplaceParent->left)
+                        sibling = nodeToReplaceParent->right;
+                    else
+                        sibling = nodeToReplaceParent->left;
+                    if (sibling)
+                        sibling->color = red;
+                }
+                if (node == nodeToReplaceParent->left)
+                    nodeToReplaceParent->left = NULL;
+                else
+                    nodeToReplaceParent->right = NULL;
+            }
+            std::allocator<nodeType>().deallocate(node, 1);
+            _size--;
+            return;
+        }
+        if (!nodeToReplace->right || !nodeToReplace->left) {
+            if (node == _root){
+                //TODO fix that then it should work
+                std::cout << "nodeToReplace: " << node->pair.first << std::endl;
+                _root->pair = nodeToReplace->pair;
+                std::cout << "nodeToReplace: " << node->pair.first << std::endl;
+                node->right = NULL;
+                node->left = NULL;
+                // std::allocator<nodeType>().deallocate(nodeToReplace, 1); // TODO maybe not needed
+            }
+            else {
+                if (nodeToReplace == nodeToReplaceParent->left)
+                    nodeToReplaceParent->left = nodeToReplace;
+                else 
+                    nodeToReplaceParent->right = nodeToReplace;
+                std::allocator<nodeType>().deallocate(node, 1);
+                nodeToReplace->parent = nodeToReplaceParent;
+                if (isBlack)
+                    fixRemove(nodeToReplace, sibling, false); //TODO
+                else
+                    nodeToReplace->color = black;
+            }
+            _size--;
+            return;
+        }
+        // pairPtr temp = NULL;
+        // *temp = nodeToReplace->pair;
+        // nodeToReplace->pair = node->pair;
+        // node->pair = *temp;
+
+        remove(nodeToReplace);
+    };
+
+
+		// nodePtr curNode = node;
+		// nodePtr parent = node->parent;
+		// nodePtr child = NULL;
+		// nodePtr sibling = NULL;
+		// nodePtr tmp = NULL;
+        // nodePtr tmpr = NULL;
+		// bool isLeft = false;
+		// if (!node)
+		// 	return;
+		// if (node == _root) {
+		// 	if (node->right) {
+		// 		if (node->left)
+		// 			tmp = _root->left;
+        //         if (node->right->left)
+        //         {
+        //             tmpr = node->right->left;
+        //             node->right->left = NULL;
+        //         }
+		// 		_root = _root->right;
+		// 		_root->parent = NULL;
+		// 		if (tmp)
+		// 			_root->left = tmp;
+		// 		else
+		// 			_root->left = NULL;
+		// 		_root->color = black;
+		// 	} else if (node->left) {
+		// 		_root = node->left; 
+		// 		_root->parent = NULL;
+		// 		_root->color = black;
+		// 	} else
+		// 		_root = NULL;
+        //     if (tmpr)
+        //     {
+        //         nodePtr tmp2 = tmpr;
+        //         while (tmp2->right)
+        //         {
+        //             this->insert = tmp2->right;
+        //             tmp2 = tmp2->right;
+        //         }
+        //         tmp2 = tmpr;
+        //         while (tmp2->left)
+        //         {
+        //             this->insert = tmp2->left;
+        //             tmp2 = tmp2->left;
+        //         }
+        //         this->insert(tmpr->pair);
+        //     }
+		// 	std::allocator<nodeType>().deallocate(node, 1);
+		// 	_size--;
+		// 	return;
+		// }
+		// if (node->left && node->right) {
+		// 	curNode = node->right;
+		// 	while (curNode->left)
+		// 		curNode = curNode->left;
+		// 	child = curNode->right;
+		// 	sibling = curNode->parent;
+		// 	isLeft = (curNode == sibling->left);
+		// 	curNode->parent = parent;
+		// 	curNode->left = node->left;
+		// 	curNode->left->parent = curNode;
+		// 	curNode->right = node->right;
+		// 	curNode->right->parent = curNode;
+		// 	curNode->color = node->color;
+		// } else if (node->left)
+		// 	child = node->left;
+		// else
+		// 	child = node->right;
+		// if (!parent){
+        //     _root = child;
+        // }
+		// else if (parent->left == node)
+		// 	parent->left = child;
+		// else
+		// 	parent->right = child;
+		// if (child)
+		// 	child->parent = parent;
+		// if (node->color == black)
+		// 	fixRemove(child, sibling, isLeft);
+		// std::allocator<nodeType>().deallocate(node, 1);
+		// _size--;
+	// };
 	/*
 	INFO Fix the map after deletion of nodePtr <node>
 	INFO Can throw exception (calls)

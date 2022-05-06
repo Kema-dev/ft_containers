@@ -28,6 +28,7 @@ class pair {
 	INFO Destruct the pair
 	*/
 	~pair(void){};
+
 	/*
 	INFO Copy <other>
 	*/
