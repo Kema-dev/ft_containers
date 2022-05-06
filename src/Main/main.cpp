@@ -392,11 +392,12 @@ int main(void)
             mymap['a']=10;
             mymap['b']=20;
             mymap['c']=30;
-            while (!mymap.empty()) {
-                mymap.print();
-                std::cout << mymap.begin()->first << " => " << mymap.begin()->second << std::endl;
-                mymap.erase(mymap.begin());
-            }
+            // while (!mymap.empty()) {
+            //     mymap.print();
+            //     std::cout << mymap.begin()->first << " => " << mymap.begin()->second << std::endl;
+            //     mymap.erase(mymap.begin());
+            // }
+            // FIXME Put this back and fix the problem
             //!SECTION
             std::cout << std::endl;
         }
