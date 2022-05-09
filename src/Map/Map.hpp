@@ -353,7 +353,7 @@ class map {
 	};
 	// INFO Get the maximum size of the map
 	size_type max_size(void) const {
-		return size_type(-1);
+		return std::numeric_limits<long>::max() / 20;
 	};
 	// INFO erase the element at position <pos>
 	void erase(iterator pos) {
