@@ -342,11 +342,11 @@ int main(void) {
 			for (ft::map<int, int>::iterator it = first.begin(); it != first.end(); it++)
 				std::cout << it->second << std::endl;
 			// FIXME Put this back (std leaks with it)
-			// int(*ptr)(int,int) = intcmp;
-			// ft::map<int,int, int(*)(int,int)> second(first.begin(),first.end(), ptr);
-			// ft::map<char,int,classcomp> fifth;
-			// ft::map<int, int, int(*)(int,int)> fourth(ptr);
-			// ft::map<int,int, int(*)(int,int)> third(second);
+			int(*ptr)(int,int) = intcmp;
+			ft::map<int,int, int(*)(int,int)> second(first.begin(),first.end(), ptr);
+			ft::map<char,int,classcomp> fifth;
+			ft::map<int, int, int(*)(int,int)> fourth(ptr);
+			ft::map<int,int, int(*)(int,int)> third(second);
 			//! SECTION
 			std::cout << std::endl;
 		}
@@ -401,11 +401,11 @@ int main(void) {
 			// SECTION max_size()
 			std::cout << "----------TESTING max_size()----------" << std::endl;
 			ft::map<int, int> mymap;
-			long long max_size = mymap.max_size();
-			if (mymap.max_size() != (std::numeric_limits<long>::max() / 20)) {
+			// long long max_size = mymap.max_size();
+			if (mymap.max_size() != (std::numeric_limits<unsigned long>::max() / 20)) {
 				std::cout << "There is a problem" << std::endl;
 			} else {
-				std::cout << "max_size returns correct value)" << std::endl;
+				std::cout << "max_size returns correct value" << std::endl;
 			}
 			//! SECTION
 			std::cout << std::endl;
@@ -422,20 +422,76 @@ int main(void) {
 			mymap['d'] = 40;
 			mymap['e'] = 50;
 			mymap['f'] = 60;
-			// mymap.print();
-			mymap.erase(mymap.find('b'));  // FIXME This doesn't work (find why erase(find(b)) != erase(b))
-			// mymap.print();
-
+            it = mymap.find('b');
+			mymap.erase(it);
 			mymap.erase('c');
-			// mymap.print();
 			it = mymap.find('e');
 			mymap.erase(it, mymap.end());
-			// mymap.print();
 			for (it = mymap.begin(); it != mymap.end(); ++it)
-				std::cout << it->first << " => " << it->second << '\n';
+				std::cout << it->first << " => " << it->second << std::endl;
 			//! SECTION
 			std::cout << std::endl;
 		}
+
+        {
+            // SECTION swap()
+			std::cout << "----------TESTING swap()----------" << std::endl;
+            ft::map<char,int> foo,bar;
+            foo['x']=100;
+            foo['y']=200;
+            bar['a']=11;
+            bar['b']=22;
+            bar['c']=33;
+            foo.swap(bar);
+            std::cout << "foo contains:\n";
+            for (ft::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+            std::cout << "bar contains:\n";
+            for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+            //! SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            // SECTION clear()
+            std::cout << "----------TESTING clear()----------" << std::endl;
+            ft::map<char,int> mymap;
+            mymap['x']=100;
+            mymap['y']=200;
+            mymap['z']=300;
+            std::cout << "mymap contains:\n";
+            for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+            mymap.clear();
+            mymap['a']=1101;
+            mymap['b']=2202;
+            std::cout << "mymap contains:\n";
+            for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+            //! SECTION
+            std::cout << std::endl;
+        }
+
+
+        {
+            // SECTION key_comp()
+            std::cout << "----------TESTING key_comp()----------" << std::endl;
+            ft::map<char,int> mymap;
+            ft::map<char,int>::key_compare mycomp = mymap.key_comp();
+            mymap['a']=100;
+            mymap['b']=200;
+            mymap['c']=300;
+            std::cout << "mymap contains:\n";
+            char highest = mymap.rbegin()->first;     // key value of last element
+            ft::map<char,int>::iterator it = mymap.begin();
+            do {
+                std::cout << it->first << " => " << it->second << std::endl;
+            } while ( mycomp((*it++).first, highest) );
+            std::cout << std::endl;
+            //! SECTION
+            std::cout << std::endl;
+        }
 		//! SECTION MAP TESTS
 	}
 	return (0);

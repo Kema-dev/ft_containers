@@ -725,9 +725,11 @@ class map {
 				return;
 			}
 			if (!curNode->left) {
+
 				_root = curNode;
-				curNode->left = l;
-				curNode->left->parent = curNode;
+				_root->left = l;
+                if (l)
+				    _root->left->parent = curNode;
 				_size--;
 				return;
 			}
