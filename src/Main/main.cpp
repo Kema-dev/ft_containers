@@ -492,6 +492,24 @@ int main(void) {
             //! SECTION
             std::cout << std::endl;
         }
+
+
+        {
+            // SECTION value_comp()
+            std::cout << "----------TESTING value_comp()----------" << std::endl;
+            ft::map<char,int> mymap;
+            mymap['x']=1001;
+            mymap['y']=2002;
+            mymap['z']=3003;
+            std::cout << "mymap contains:\n";
+            ft::pair<char,int> highest = *mymap.rbegin();          // last element
+            ft::map<char,int>::iterator it = mymap.begin();
+            do {
+                std::cout << it->first << " => " << it->second << std::endl;
+            } while ( mymap.value_comp()(*it++, highest) );
+            //! SECTION
+            std::cout << std::endl;
+        }
 		//! SECTION MAP TESTS
 	}
 	return (0);

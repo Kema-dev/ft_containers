@@ -201,8 +201,8 @@ class map {
 
 	class value_compare {
 	   public:
-		bool operator()(const mapped_type& lhs, const mapped_type& rhs) const {
-			return comp(lhs, rhs);
+		bool operator()(const value_type& lhs, const value_type& rhs) const {
+			return comp(lhs.first, rhs.first);
 		}
 		value_compare(Compare comp) : comp(comp) {}
 
@@ -214,16 +214,16 @@ class map {
 	nodePtr _root;
 	size_type _size;
 	allocator_type _alloc;
-	value_compare _comp;
+	Compare _comp;
 
    public:
 	// SECTION Constructors / Destructors
 	// INFO Create an map tree with a custom allocator and comparator
-	explicit map(const Compare& comp = Compare(), const allocator_type& alloc = Allocator())
+	explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = Allocator())
 		: _root(NULL), _size(0), _alloc(alloc), _comp(comp){};
 	// INFO Create a map filled with a range of elements
 	template <class InputIterator>
-	map(InputIterator first, InputIterator last, const Compare& comp = Compare(), 
+	map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), 
         const allocator_type& alloc = allocator_type())
 		: _root(NULL), _size(0), _alloc(alloc), _comp(comp) {
 		insert(first, last);
@@ -783,90 +783,6 @@ class map {
 		std::allocator<nodeType>().deallocate(node, 1);
 		_size--;
 	};
-
-
-		// nodePtr curNode = node;
-		// nodePtr parent = node->parent;
-		// nodePtr child = NULL;
-		// nodePtr sibling = NULL;
-		// nodePtr tmp = NULL;
-        // nodePtr tmpr = NULL;
-		// bool isLeft = false;
-		// if (!node)
-		// 	return;
-		// if (node == _root) {
-		// 	if (node->right) {
-		// 		if (node->left)
-		// 			tmp = _root->left;
-        //         if (node->right->left)
-        //         {
-        //             tmpr = node->right->left;
-        //             node->right->left = NULL;
-        //         }
-		// 		_root = _root->right;
-		// 		_root->parent = NULL;
-		// 		if (tmp)
-		// 			_root->left = tmp;
-		// 		else
-		// 			_root->left = NULL;
-		// 		_root->color = black;
-		// 	} else if (node->left) {
-		// 		_root = node->left; 
-		// 		_root->parent = NULL;
-		// 		_root->color = black;
-		// 	} else
-		// 		_root = NULL;
-        //     if (tmpr)
-        //     {
-        //         nodePtr tmp2 = tmpr;
-        //         while (tmp2->right)
-        //         {
-        //             this->insert = tmp2->right;
-        //             tmp2 = tmp2->right;
-        //         }
-        //         tmp2 = tmpr;
-        //         while (tmp2->left)
-        //         {
-        //             this->insert = tmp2->left;
-        //             tmp2 = tmp2->left;
-        //         }
-        //         this->insert(tmpr->pair);
-        //     }
-		// 	std::allocator<nodeType>().deallocate(node, 1);
-		// 	_size--;
-		// 	return;
-		// }
-		// if (node->left && node->right) {
-		// 	curNode = node->right;
-		// 	while (curNode->left)
-		// 		curNode = curNode->left;
-		// 	child = curNode->right;
-		// 	sibling = curNode->parent;
-		// 	isLeft = (curNode == sibling->left);
-		// 	curNode->parent = parent;
-		// 	curNode->left = node->left;
-		// 	curNode->left->parent = curNode;
-		// 	curNode->right = node->right;
-		// 	curNode->right->parent = curNode;
-		// 	curNode->color = node->color;
-		// } else if (node->left)
-		// 	child = node->left;
-		// else
-		// 	child = node->right;
-		// if (!parent){
-        //     _root = child;
-        // }
-		// else if (parent->left == node)
-		// 	parent->left = child;
-		// else
-		// 	parent->right = child;
-		// if (child)
-		// 	child->parent = parent;
-		// if (node->color == black)
-		// 	fixRemove(child, sibling, isLeft);
-		// std::allocator<nodeType>().deallocate(node, 1);
-		// _size--;
-	// };
 	/*
 	INFO Fix the map after deletion of nodePtr <node>
 	INFO Can throw exception (calls)
