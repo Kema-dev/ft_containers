@@ -412,8 +412,8 @@ int main(void) {
 		}
 
 		{
-			// SECTION erase()
-			std::cout << "----------TESTING erase()----------" << std::endl;
+			// SECTION erase() find()
+			std::cout << "----------TESTING erase() find()----------" << std::endl;
 			ft::map<char, int> mymap;
 			ft::map<char, int>::iterator it;
 			mymap['a'] = 10;
@@ -502,11 +502,82 @@ int main(void) {
             mymap['y']=2002;
             mymap['z']=3003;
             std::cout << "mymap contains:\n";
-            ft::pair<char,int> highest = *mymap.rbegin();          // last element
+            ft::pair<const char,int> highest = *mymap.rbegin();          // last element
             ft::map<char,int>::iterator it = mymap.begin();
             do {
                 std::cout << it->first << " => " << it->second << std::endl;
             } while ( mymap.value_comp()(*it++, highest) );
+            //! SECTION
+            std::cout << std::endl;
+        }
+
+
+        {
+            // SECTION count()
+            std::cout << "----------TESTING count()----------" << std::endl;
+            ft::map<char,int> mymap;
+            char c;
+            mymap ['a']=101;
+            mymap ['c']=202;
+            mymap ['f']=303;
+            for (c = 'a'; c < 'h'; c++)
+            {
+                std::cout << c;
+                if (mymap.count(c)>0)
+                    std::cout << " is an element of mymap." << std::endl;
+                else 
+                    std::cout << " is not an element of mymap." << std::endl;
+            }
+            //! SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            //SECTION lower_bound() upper_bound()
+            std::cout << "----------TESTING lower_bound() upper_bound()----------" << std::endl;
+            ft::map<char,int> mymap;
+            ft::map<char,int>::iterator itlow,itup;
+            mymap['a']=20;
+            mymap['b']=40;
+            mymap['c']=60;
+            mymap['d']=80;
+            mymap['e']=100;
+            itlow=mymap.lower_bound ('b');
+            itup=mymap.upper_bound ('d');
+            mymap.erase(itlow,itup);
+            for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+            //! SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            // SECTION equal_range()
+            std::cout << "----------TESTING equal_range()----------" << std::endl;
+            ft::map<char,int> mymap;
+            mymap['a']=10;
+            mymap['b']=20;
+            mymap['c']=30;
+            ft::pair<ft::map<char,int>::iterator, ft::map<char,int>::iterator> ret;
+            ret = mymap.equal_range('b');
+            std::cout << "lower bound points to: ";
+            std::cout << ret.first->first << " => " << ret.first->second << std::endl;
+            std::cout << "upper bound points to: ";
+            std::cout << ret.second->first << " => " << ret.second->second << std::endl;
+            //! SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            // SECTION get_allocator()
+            std::cout << "----------TESTING get_allocator()----------" << std::endl;
+            int psize;
+            ft::map<char,int> mymap;
+            ft::pair<const char,int>* p;
+            p=mymap.get_allocator().allocate(5);
+            psize = sizeof(ft::map<char,int>::value_type)*5;
+            std::cout << "The allocated array has a size of " << psize << " bytes." << std::endl;
+            mymap.get_allocator().deallocate(p,5);
             //! SECTION
             std::cout << std::endl;
         }

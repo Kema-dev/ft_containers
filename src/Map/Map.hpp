@@ -14,15 +14,16 @@ namespace ft {
 template <class K, class V, class Compare = ft::less<K>, class Allocator = std::allocator<ft::pair<const K, V> > >
 class map {
    public:
-	typedef ft::node<const K, V>* nodePtr;
-	typedef ft::node<const K, V>& nodeRef;
-	typedef ft::node<const K, V> nodeType;
-	typedef ft::pair<const K, V> value_type;
-	typedef ft::pair<const K, V>& pairRef;
-	typedef ft::pair<const K, V>* pairPtr;
-
 	typedef K key_type;
 	typedef V mapped_type;
+
+	typedef ft::node<K, V>* nodePtr;
+	typedef ft::node<K, V>& nodeRef;
+	typedef ft::node<K, V> nodeType;
+	typedef ft::pair<const key_type, mapped_type> value_type;
+	typedef ft::pair<const key_type, mapped_type>& pairRef;
+	typedef ft::pair<const key_type, mapped_type>* pairPtr;
+
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 	typedef mapped_type* mapped_type_pointer;
@@ -74,7 +75,7 @@ class map {
 		value_type& operator*() {
 			return ptr->pair;
 		}
-		value_type* operator->() {
+		value_type* operator->() const {
 			return &(ptr->pair);
 		}
 		bool operator<(const MapIterator& other) const {
@@ -379,103 +380,82 @@ class map {
 		std::swap(_alloc, other._alloc);
 		std::swap(_comp, other._comp);
 	};
+	// SECTION Searching
+	/*
+	INFO Search for a node by <key>, from <this>'s root
+	INFO No exception
+	*/
+	nodePtr searchKey(key_type key) const {
+		return (searchKey(_root, key));
+	};
+	/*
+	INFO Search for a node by <key>, from specified nodePtr <start>
+	INFO No exception
+	*/
+	nodePtr searchKey(nodePtr start, key_type key) const {
+		if (!start || !key) {
+			return NULL;
+		} else {
+			if (key == start->pair.first) {
+				return start;
+			} else if (_comp(key, start->pair.first)) {
+				return searchKey(start->left, key);
+			} else {
+				return searchKey(start->right, key);
+			}
+		}
+	};
+	// !SECTION Searching
+	// INFO Find the first element with key <key>
+	iterator find(const key_type& key) const {
+		return iterator(searchKey(key));
+	};
+    // // INFO Find the first element with key <key>
+	// const_iterator find(const key_type& key) const{
+	// 	return const_iterator(searchKey(key));
+	// };
 	// INFO Count the number of elements with key <key>
 	size_type count(const key_type& key) const {
-		return find(key) ? 1 : 0;
-	};
-	// INFO Find the first element with key <key>
-	iterator find(const key_type& key) {
-		return iterator(searchKey(key));
+		if (!find(key))
+            return 0;
+        else
+            return 1;
 	};
 	// INFO Get the range of elements with key <key>
 	ft::pair<iterator, iterator> equal_range(const key_type& key) {
-		nodePtr node = searchKey(key);
-		if (!node)
-			return ft::pair<iterator, iterator>(end(), end());
-		return ft::pair<iterator, iterator>(iterator(node), iterator(node + 1));
+		return ft::make_pair<iterator, iterator>(lower_bound(key), upper_bound(key));
 	};
 	// INFO Get the range of elements with key <key>
-	ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
-		nodePtr node = searchKey(key);
-		if (!node)
-			return ft::pair<const_iterator, const_iterator>(end(), end());
-		return ft::pair<const_iterator, const_iterator>(const_iterator(node), const_iterator(node + 1));
+	pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
+		return ft::make_pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
 	};
 	// INFO Get the lower bound of the elements with key <key> (the first element with key >= <key>)
 	iterator lower_bound(const key_type& key) {
-		nodePtr start = _root;
-		if (!start || !key) {
-			return NULL;
-		} else {
-			if (key == start->pair.first) {
-				return start;
-			} else if (Compare(key, start->pair.first)) {
-				start = start->right;
-				while (start->left && Compare(key, start->left->pair.first)) {
-					start = start->left;
-				}
-				return start;
-			} else {
-				return getLowerBoundUtil(start->right, key);
-			}
-		}
+		iterator it = begin();
+        while (it != end() && _comp(it->first, key))
+            it++;
+        return (it);
 	};
 	// INFO Get the lower bound of the elements with key <key> (the first element with key >= <key>)
 	const_iterator lower_bound(const key_type& key) const {
-		nodePtr start = _root;
-		if (!start || !key) {
-			return NULL;
-		} else {
-			if (key == start->pair.first) {
-				return start;
-			} else if (Compare(key, start->pair.first)) {
-				start = start->right;
-				while (start->left && Compare(key, start->left->pair.first)) {
-					start = start->left;
-				}
-				return start;
-			} else {
-				return getLowerBoundUtil(start->right, key);
-			}
-		}
+		const_iterator it = begin();
+        while (it != end() && _comp(it->first, key))
+            it++;
+        return (it);
 	};
 	// INFO Get the upper bound of the elements with key <key> (the first element with key < <key>)
 	iterator upper_bound(const key_type& key) {
-		nodePtr start = _root;
-		if (!start || !key) {
-			return NULL;
-		} else {
-			if (key == start->pair.first) {
-				return start;
-			} else if (Compare(key, start->pair.first)) {
-				return start;
-			} else {
-				start = start->right;
-				while (start->left && Compare(key, start->left->pair.first)) {
-					start = start->left;
-				}
-				return start;
-			}
-		}
+		iterator it = begin();
+        while (it != end() && (_comp(it->first, key) || it->first == key))
+            it++;
+        return (it);
 	};
 	// INFO Get the upper bound of the elements with key <key> (the first element with key < <key>)
 	const_iterator upper_bound(const key_type& key) const {
-		nodePtr start = _root;
-		if (!start || !key) {
-			return NULL;
-		} else {
-			if (key == start->pair.first) {
-				return start;
-			} else if (Compare(key, start->pair.first)) {
-				return start;
-			} else {
-				start = start->right;
-				while (start->left && Compare(key, start->left->pair.first)) {
-					start = start->left;
-				}
-				return start;
-			}
-		}
+		const_iterator it = begin();
+        while (it != end() && (_comp(it->first, key) || it->first == key))
+            it++;
+        return (it);
 	};
 	// INFO Get the comparison object
 	key_compare key_comp(void) const {
@@ -597,24 +577,24 @@ class map {
 	INFO Add pair (non const) <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	ft::pair<iterator, bool> insert(const ft::pair<K, V> dpair) {
-		nodePtr newNode;
-		value_type dpair2(dpair.first, dpair.second);
-		try {
-			newNode = add(dpair2);
-		}
-		catch (duplicateKey const&) {
-			return ft::pair<iterator, bool>(find(dpair2.first), false);
-		}
-		fixInsert(newNode);
-		return ft::pair<iterator, bool>(iterator(newNode), true);
-	};
+	// ft::pair<iterator, bool> insert(const value_type dpair) {
+	// 	nodePtr newNode;
+	// 	value_type dpair2(dpair.first, dpair.second);
+	// 	try {
+	// 		newNode = add(dpair2);
+	// 	}
+	// 	catch (duplicateKey const&) {
+	// 		return ft::pair<iterator, bool>(find(dpair2.first), false);
+	// 	}
+	// 	fixInsert(newNode);
+	// 	return ft::pair<iterator, bool>(iterator(newNode), true);
+	// };
 	/*
 	INFO Add a new node with pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
 	nodePtr insert_old_kv(const K& key, const V& value) {
-		value_type dpair = ft::make_pair(key, value);
+		value_type dpair = ft::make_pair<const K, V>(key, value);
 		nodePtr newNode;
 		try {
 			newNode = add(dpair);
@@ -830,32 +810,6 @@ class map {
 		fixRemove(node, node->right, false);
 	};
 	// !SECTION Deletion
-	// SECTION Searching
-	/*
-	INFO Search for a node by <key>, from <this>'s root
-	INFO No exception
-	*/
-	nodePtr searchKey(K key) {
-		return (searchKey(_root, key));
-	};
-	/*
-	INFO Search for a node by <key>, from specified nodePtr <start>
-	INFO No exception
-	*/
-	nodePtr searchKey(nodePtr start, K key) {
-		if (!start || !key) {
-			return NULL;
-		} else {
-			if (key == start->pair.first) {
-				return start;
-			} else if (_comp(key, start->pair.first)) {
-				return searchKey(start->left, key);
-			} else {
-				return searchKey(start->right, key);
-			}
-		}
-	};
-	// !SECTION Searching
 	// SECTION Printing
 	/*
 	INFO Set the terminal color according to node color

@@ -8,7 +8,7 @@ namespace ft {
 template <typename K, typename V>
 class pair {
    public:
-	const K first;
+	K first;
 	V second;
 	/*
 	INFO Construct an empty pair
@@ -22,7 +22,7 @@ class pair {
 	/*
 	INFO Copy <other>
 	*/
-	pair(ft::pair<const K, V> const& other)
+	pair(ft::pair<K, V> const& other)
 		: first(other.first), second(other.second){};
 	/*
 	INFO Destruct the pair
@@ -30,36 +30,36 @@ class pair {
 	~pair(void){};
 
 	/*
-	INFO Copy <other>
+	INFO Copy <rhs>
 	*/
-	pair &operator=(ft::pair<const K, V> const& rhs) {
-		this->first = rhs.first;
-		this->second = rhs.second;
+	pair<K, V> &operator=(ft::pair<K, V> const& rhs) {
+        first = rhs.first;
+        second = rhs.second;
 		return *this;
 	};
 	/*
 	INFO Check if <this> == <other>
 	*/
-	bool operator==(ft::pair<const K, V> const& rhs) {
+	bool operator==(ft::pair<K, V> const& rhs) {
 		return this->first == rhs.first && this->second == rhs.second;
 	};
 	/*
 	INFO Check if<this> != <other>
 	*/
-	bool operator!=(ft::pair<const K, V> const& rhs) {
+	bool operator!=(ft::pair<K, V> const& rhs) {
 		return this->first != rhs.first || this->second != rhs.second;
 	};
 	/*
 	INFO Check if <this> < <other>
 	*/
-	bool operator<(ft::pair<const K, V> const& rhs) {
+	bool operator<(ft::pair<K, V> const& rhs) {
 		return this->first < rhs.first ||
 			   (this->first == rhs.first && this->second < rhs.second);
 	};
 	/*
 	INFO Check if <this> <= <other>
 	*/
-	bool operator<=(ft::pair<const K, V> const& rhs) {
+	bool operator<=(ft::pair<K, V> const& rhs) {
 		return this->first < rhs.first ||
 			   (this->first == rhs.first && this->second < rhs.second) ||
 			   (this->first == rhs.first && this->second == rhs.second);
@@ -67,14 +67,14 @@ class pair {
 	/*
 	INFO Check if <this> > <other>
 	*/
-	bool operator>(ft::pair<const K, V> const& rhs) {
+	bool operator>(ft::pair<K, V> const& rhs) {
 		return this->first > rhs.first ||
 			   (this->first == rhs.first && this->second > rhs.second);
 	};
 	/*
 	INFO Check if <this> >= <other>
 	*/
-	bool operator>=(ft::pair<const K, V> const& rhs) {
+	bool operator>=(ft::pair<K, V> const& rhs) {
 		return this->first > rhs.first ||
 			   (this->first == rhs.first && this->second > rhs.second) ||
 			   (this->first == rhs.first && this->second == rhs.second);
@@ -82,7 +82,7 @@ class pair {
 	/*
 	INFO Check if <this> == <other>
 	*/
-	bool compare(ft::pair<const K, V> const& lhs, ft::pair<const K, V> const& rhs) {
+	bool compare(ft::pair<K, V> const& lhs, ft::pair<K, V> const& rhs) {
 		return lhs == rhs;
 	};
 	/*
@@ -98,12 +98,12 @@ class pair {
 	// 	return this->second;
 	// };
 };
-template <typename K, typename V>
 /*
 INFO Make a new pair containing <first> and <second>
 */
-pair<const K, V> make_pair(K dkey, V dvalue) {
-	return pair<const K, V>(dkey, dvalue);
+template <typename K, typename V>
+pair<K, V> make_pair(K dkey, V dvalue) {
+	return pair<K, V>(dkey, dvalue);
 };
 }  // namespace ft
 #endif
