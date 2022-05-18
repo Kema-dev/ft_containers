@@ -25,7 +25,9 @@ class set {
 		// typedef typename ft::map<T,T,Compare,Alloc>::pointer pointer;
 		// typedef typename ft::map<T,T,Compare,Alloc>::const_pointer const_pointer;
 
-		set() : _container() {};
+		// set( void ) : _container( void ) {};
+        explicit set (const key_compare& comp = key_compare(),
+              const allocator_type& alloc = allocator_type()) : _container(comp, alloc) {};
 		set(const set& other) : _container(other._container) {};
 		template<class InputIterator>
 		set(InputIterator first, InputIterator last) : _container(first, last) {};
@@ -179,6 +181,7 @@ class set {
 			return ft::pair<iterator, bool>(iterator(buf.first), buf.second);
 		};
 		iterator insert(iterator position, const value_type& val) { return _container.insert(position, val); };
+        ft::pair<iterator,bool> insert (const value_type& val) { _container.insert(val); };
 		template<class InputIterator>
 		void insert(InputIterator first, InputIterator last) { _container.insert(first, last); };
 		void erase(iterator it) { _container.erase(it); };

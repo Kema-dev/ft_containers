@@ -51,7 +51,7 @@ int main(void) {
 			for (ft::vector<int>::iterator it = MyVector_1.begin(); it != MyVector_1.end(); ++it)
 				std::cout << *it << " ";
 			std::cout << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -78,7 +78,7 @@ int main(void) {
 			for (unsigned i = 0; i < MyVector_3.size(); i++)
 				std::cout << ' ' << MyVector_3[i];
 			std::cout << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -111,7 +111,7 @@ int main(void) {
 			for (ft::vector<int>::iterator it = MyVector_8.begin(); it != MyVector_8.end(); ++it)
 				std::cout << ' ' << *it;
 			std::cout << std::endl;
-			// SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -128,7 +128,7 @@ int main(void) {
 			for (ft::vector<int>::iterator it = MyVector_9.begin(); it != MyVector_9.end(); ++it)
 				std::cout << ' ' << *it;
 			std::cout << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -140,7 +140,7 @@ int main(void) {
 			std::cout << "MyVector_10 size: " << MyVector_10.size() << "\n";
 			std::cout << "MyVector_10 capacity: " << MyVector_10.capacity() << "\n";
 			std::cout << "MyVector_10 max_size: " << MyVector_10.max_size() << "\n";
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -155,7 +155,7 @@ int main(void) {
 				MyVector_11.pop_back();
 			}
 			std::cout << "MyVector_11 total: " << sum << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -184,7 +184,7 @@ int main(void) {
 					std::cout << "MyVector_13 capacity changed: " << sz << std::endl;
 				}
 			}
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -198,7 +198,7 @@ int main(void) {
 			for (unsigned i = 0; i < MyVector_14.size(); i++)
 				std::cout << ' ' << MyVector_14.at(i);
 			std::cout << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -213,7 +213,7 @@ int main(void) {
 			std::cout << "Front of MyVector_15 should be 62 (78-16)" << std::endl;
 			MyVector_15.front() -= MyVector_15.back();
 			std::cout << "Front of MyVector_15 is now " << MyVector_15.front() << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -232,7 +232,7 @@ int main(void) {
 			std::cout << "Size of MyVector_16: " << int(MyVector_16.size()) << std::endl;
 			std::cout << "Size of MyVector_17: " << int(MyVector_17.size()) << std::endl;
 			std::cout << "Size of MyVector_18: " << int(MyVector_18.size()) << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -276,7 +276,7 @@ int main(void) {
 			for (iter = MyVector_19.begin(); iter < MyVector_19.end(); iter++)
 				std::cout << ' ' << *iter;
 			std::cout << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -301,7 +301,7 @@ int main(void) {
 			for (unsigned i = 0; i < MyVector_21.size(); i++)
 				std::cout << ' ' << MyVector_21[i];
 			std::cout << std::endl;
-			// ! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -318,9 +318,9 @@ int main(void) {
 			std::cout << std::endl;
 			for (k = 0; k < 5; k++) MyVector_22.get_allocator().destroy(&p[k]);
 			MyVector_22.get_allocator().deallocate(p, 5);
-			//! SECTION
+			// !SECTION
 		}
-		// SECTION VECTOR TESTS
+		// !SECTION VECTOR TESTS
 	}
 
 	{
@@ -334,20 +334,17 @@ int main(void) {
 		{
 			// SECTION constructor()
 			std::cout << "----------TESTING constructors()----------" << std::endl;
-			ft::map<int, int> first;
-			first['a'] = 10;
-			first['b'] = 30;
-			first['c'] = 50;
-			first['d'] = 70;
-			for (ft::map<int, int>::iterator it = first.begin(); it != first.end(); it++)
-				std::cout << it->second << std::endl;
-			// FIXME Put this back (std leaks with it)
-			int(*ptr)(int,int) = intcmp;
-			ft::map<int,int, int(*)(int,int)> second(first.begin(),first.end(), ptr);
-			ft::map<char,int,classcomp> fifth;
-			ft::map<int, int, int(*)(int,int)> fourth(ptr);
-			ft::map<int,int, int(*)(int,int)> third(second);
-			//! SECTION
+            ft::map<char,int> first;
+            first['a']=10;
+            first['b']=30;
+            first['c']=50;
+            first['d']=70;
+            ft::map<char,int> second (first.begin(),first.end());
+            ft::map<char,int> third (second);
+            ft::map<char,int,classcomp> fourth;
+            int(*fn_pt)(int,int) = intcmp;
+            ft::map<char,int,int(*)(int,int)> fifth (fn_pt);
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -378,7 +375,7 @@ int main(void) {
 			ft::map<char, int>::reverse_iterator vache_qui_rit;
 			for (vache_qui_rit = mymap.rbegin(); vache_qui_rit != mymap.rend(); ++vache_qui_rit)
 				std::cout << vache_qui_rit->first << " => " << vache_qui_rit->second << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -393,7 +390,7 @@ int main(void) {
 				std::cout << mymap.begin()->first << " => " << mymap.begin()->second << std::endl;
 				mymap.erase(mymap.begin());
 			}
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -407,9 +404,41 @@ int main(void) {
 			} else {
 				std::cout << "max_size returns correct value" << std::endl;
 			}
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
+
+        {
+            // SECTION insert()
+            std::cout << "----------TESTING insert()----------" << std::endl;
+            ft::map<char,int> mymap;
+
+            mymap.insert ( ft::pair<char,int>('a',100) );
+            mymap.insert ( ft::pair<char,int>('z',200) );
+
+            ft::pair<ft::map<char,int>::iterator,bool> ret;
+            ret = mymap.insert ( ft::pair<char,int>('z',500) );
+            if (ret.second==false) {
+                std::cout << "element 'z' already existed";
+                std::cout << " with a value of " << ret.first->second << std::endl;
+            }
+
+            ft::map<char,int>::iterator it = mymap.begin();
+            mymap.insert (it, ft::pair<char,int>('b',300));
+            mymap.insert (it, ft::pair<char,int>('c',400));
+
+            ft::map<char,int> anothermap;
+            anothermap.insert(mymap.begin(),mymap.find('c'));
+
+            std::cout << "mymap contains:\n";
+            for (it=mymap.begin(); it!=mymap.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+
+            std::cout << "anothermap contains:\n";
+            for (it=anothermap.begin(); it!=anothermap.end(); ++it)
+                std::cout << it->first << " => " << it->second << std::endl;
+            // !SECTION
+        }
 
 		{
 			// SECTION erase() find()
@@ -429,7 +458,7 @@ int main(void) {
 			mymap.erase(it, mymap.end());
 			for (it = mymap.begin(); it != mymap.end(); ++it)
 				std::cout << it->first << " => " << it->second << std::endl;
-			//! SECTION
+			// !SECTION
 			std::cout << std::endl;
 		}
 
@@ -449,7 +478,7 @@ int main(void) {
             std::cout << "bar contains:\n";
             for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
                 std::cout << it->first << " => " << it->second << std::endl;
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -469,7 +498,7 @@ int main(void) {
             std::cout << "mymap contains:\n";
             for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
                 std::cout << it->first << " => " << it->second << std::endl;
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -489,7 +518,7 @@ int main(void) {
                 std::cout << it->first << " => " << it->second << std::endl;
             } while ( mycomp((*it++).first, highest) );
             std::cout << std::endl;
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -507,7 +536,7 @@ int main(void) {
             do {
                 std::cout << it->first << " => " << it->second << std::endl;
             } while ( mymap.value_comp()(*it++, highest) );
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -528,7 +557,7 @@ int main(void) {
                 else 
                     std::cout << " is not an element of mymap." << std::endl;
             }
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -547,7 +576,7 @@ int main(void) {
             mymap.erase(itlow,itup);
             for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
                 std::cout << it->first << " => " << it->second << std::endl;
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -564,7 +593,7 @@ int main(void) {
             std::cout << ret.first->first << " => " << ret.first->second << std::endl;
             std::cout << "upper bound points to: ";
             std::cout << ret.second->first << " => " << ret.second->second << std::endl;
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -578,10 +607,104 @@ int main(void) {
             psize = sizeof(ft::map<char,int>::value_type)*5;
             std::cout << "The allocated array has a size of " << psize << " bytes." << std::endl;
             mymap.get_allocator().deallocate(p,5);
-            //! SECTION
+            // !SECTION
             std::cout << std::endl;
         }
-		//! SECTION MAP TESTS
+		// !SECTION MAP TESTS
 	}
+
+    {
+        // SECTION STACK TESTS
+        std::cout << std::endl;
+		std::cout << "---------------------------------------" << std::endl;
+		std::cout << "--------------STACK TESTS--------------" << std::endl;
+		std::cout << "---------------------------------------" << std::endl;
+		std::cout << std::endl;
+        
+        {
+            // SECTION empty()
+            std::cout << "----------TESTING empty()----------" << std::endl;
+            ft::stack<int> mystack;
+            int sum (0);
+            for (int i=1;i<=10;i++) mystack.push(i);
+            while (!mystack.empty())
+            {
+                sum += mystack.top();
+                mystack.pop();
+            }
+            std::cout << "total: " << sum << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            // SECTION size()
+            std::cout << "----------TESTING size()----------" << std::endl;
+            ft::stack<int> myints;
+            std::cout << "0. size: " << myints.size() << std::endl;
+            for (int i=0; i<5; i++) myints.push(i);
+            std::cout << "1. size: " << myints.size() << std::endl;
+            myints.pop();
+            std::cout << "2. size: " << myints.size() << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            // SECTION top()
+            std::cout << "----------TESTING top()----------" << std::endl;
+            ft::stack<int> mystack;
+            mystack.push(10);
+            mystack.push(20);
+            mystack.top() -= 5;
+            std::cout << "mystack.top() is now " << mystack.top() << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            // SECTION push()
+            std::cout << "----------TESTING push()----------" << std::endl;
+            ft::stack<int> mystack;
+            for (int i=0; i<5; ++i) mystack.push(i);
+            std::cout << "Popping out elements...";
+            while (!mystack.empty())
+            {
+                std::cout << ' ' << mystack.top();
+                mystack.pop();
+            }
+            std::cout << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+        //!SECTION STACK TESTS
+    }
+
+    {
+        // SECTION SET TESTS (Bonus)
+        std::cout << std::endl;
+		std::cout << "---------------------------------------" << std::endl;
+		std::cout << "---------------SET TESTS---------------" << std::endl;
+		std::cout << "---------------------------------------" << std::endl;
+		std::cout << std::endl;
+
+        // {
+        //     //SECTION constructor()
+        //     std::cout << "----------TESTING constructor()----------" << std::endl;
+        //     ft::set<int> first;
+        //     int myints[]= {10,20,30,40,50};
+        //     ft::set<int> second (myints,myints + 5);
+        //     ft::set<int> third (second);
+        //     ft::set<int> fourth (second.begin(), second.end());
+        //     ft::set<int,classcomp> fifth;
+        //     int(*fn_pt)(int,int) = intcmp;
+        //     ft::set<int,int(*)(int,int)> sixth (fn_pt);
+        //     //!SECTION
+        //     std::cout << std::endl;
+        // }
+
+
+        // !SECTION SET TESTS
+    }
 	return (0);
 }

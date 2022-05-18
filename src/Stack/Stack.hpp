@@ -42,7 +42,7 @@ class stack {
 		const_reverse_iterator rend() const { return c.rend(); };
 
 		bool empty() const { return c.empty(); };
-		size_type size() const { return c.size(); };
+		size_type size()  { return c.size(); };
 		size_type max_size() const { return c.max_size(); };
 		reference top() { return c.back(); };
 		const_reference top() const { return c.back(); };
