@@ -410,22 +410,23 @@ int main(void) {
 
         {
             // SECTION insert()
+            //FIXME: insert() doesn't work with non const key
             std::cout << "----------TESTING insert()----------" << std::endl;
             ft::map<char,int> mymap;
 
-            mymap.insert ( ft::pair<char,int>('a',100) );
-            mymap.insert ( ft::pair<char,int>('z',200) );
+            mymap.insert ( ft::pair<const char,int>('a',100) );
+            mymap.insert ( ft::pair<const char,int>('z',200) );
 
             ft::pair<ft::map<char,int>::iterator,bool> ret;
-            ret = mymap.insert ( ft::pair<char,int>('z',500) );
+            ret = mymap.insert ( ft::pair<const char,int>('z',500) );
             if (ret.second==false) {
                 std::cout << "element 'z' already existed";
                 std::cout << " with a value of " << ret.first->second << std::endl;
             }
 
             ft::map<char,int>::iterator it = mymap.begin();
-            mymap.insert (it, ft::pair<char,int>('b',300));
-            mymap.insert (it, ft::pair<char,int>('c',400));
+            mymap.insert (it, ft::pair<const char,int>('b',300));
+            mymap.insert (it, ft::pair<const char,int>('c',400));
 
             ft::map<char,int> anothermap;
             anothermap.insert(mymap.begin(),mymap.find('c'));
@@ -688,20 +689,20 @@ int main(void) {
 		std::cout << "---------------------------------------" << std::endl;
 		std::cout << std::endl;
 
-        // {
-        //     //SECTION constructor()
-        //     std::cout << "----------TESTING constructor()----------" << std::endl;
-        //     ft::set<int> first;
-        //     int myints[]= {10,20,30,40,50};
-        //     ft::set<int> second (myints,myints + 5);
-        //     ft::set<int> third (second);
-        //     ft::set<int> fourth (second.begin(), second.end());
-        //     ft::set<int,classcomp> fifth;
-        //     int(*fn_pt)(int,int) = intcmp;
-        //     ft::set<int,int(*)(int,int)> sixth (fn_pt);
-        //     //!SECTION
-        //     std::cout << std::endl;
-        // }
+        {
+            //SECTION constructor()
+            std::cout << "----------TESTING constructor()----------" << std::endl;
+            ft::set<int> first;
+            int myints[]= {10,20,30,40,50};
+            ft::set<int> second (myints,myints + 5);
+            ft::set<int> third (second);
+            ft::set<int> fourth (second.begin(), second.end());
+            ft::set<int,classcomp> fifth;
+            int(*fn_pt)(int,int) = intcmp;
+            ft::set<int,int(*)(int,int)> sixth (fn_pt);
+            //!SECTION
+            std::cout << std::endl;
+        }
 
 
         // !SECTION SET TESTS
