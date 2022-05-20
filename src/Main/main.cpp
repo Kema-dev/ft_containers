@@ -979,7 +979,6 @@ int main(void) {
     //         std::cout << std::endl;
     //     }
 
-<<<<<<< HEAD
     //     {
     //         //SECTION get_allocator()
     //         std::cout << "----------TESTING get_allocator()----------" << std::endl;
@@ -997,24 +996,5 @@ int main(void) {
     //     }
     //     // !SECTION SET TESTS
     // }
-=======
-        {
-            //SECTION get_allocator()
-            std::cout << "----------TESTING get_allocator()----------" << std::endl;
-            ft::set<int> myset;
-            int * p;
-            unsigned int i;
-            p=myset.get_allocator().allocate(5);
-            for (i=0; i<5; i++) p[i]=(i+1)*10;
-            std::cout << "The allocated array contains:";
-            for (i=0; i<5; i++) std::cout << ' ' << p[i];
-            std::cout << std::endl;
-            myset.get_allocator().deallocate(p,5);
-            // !SECTION
-            std::cout << std::endl;
-        }
-        // !SECTION SET TESTS (Bonus)
-    }
->>>>>>> 06a3e2229448cf289dfffb70bc7abd334d599526
 	return (0);
 }
