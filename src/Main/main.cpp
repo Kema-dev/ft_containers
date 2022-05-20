@@ -691,6 +691,7 @@ int main(void) {
 	// 	std::cout << "---------------------------------------" << std::endl;
 	// 	std::cout << std::endl;
 
+<<<<<<< HEAD
     //     {
     //         //SECTION constructor()
     //         std::cout << "----------TESTING constructor()----------" << std::endl;
@@ -705,6 +706,22 @@ int main(void) {
     //         //!SECTION
     //         std::cout << std::endl;
     //     }
+=======
+        {
+            //SECTION constructor()
+            std::cout << "----------TESTING constructor()----------" << std::endl;
+            ft::set<int> first;
+            int myints[]= {10,20,30,40,50};
+            ft::set<int> second (myints,myints + 5);
+            ft::set<int> third (second);
+            ft::set<int> fourth (second.begin(), second.end());
+            ft::set<int,classcomp> fifth;
+            int(*fn_pt)(int,int) = intcmp;
+            ft::set<int,int(*)(int,int)> sixth (fn_pt);
+            // !SECTION
+            std::cout << std::endl;
+        }
+>>>>>>> 06a3e2229448cf289dfffb70bc7abd334d599526
 
     //     {
     //         //SECTION operator=
@@ -720,6 +737,7 @@ int main(void) {
     //         std::cout << std::endl;
     //     }
 
+<<<<<<< HEAD
     //     {
     //         //SECTION begin() end()
     //         std::cout << "----------TESTING begin() end()----------" << std::endl;
@@ -764,6 +782,52 @@ int main(void) {
     //         //!SECTION
     //         std::cout << std::endl;
     //     }
+=======
+        {
+            //SECTION begin() end()
+            std::cout << "----------TESTING begin() end()----------" << std::endl;
+            int myints[] = {75,23,65,42,13};
+            ft::set<int> myset (myints,myints+5);
+            std::cout << "myset contains:";
+            for (ft::set<int>::iterator it=myset.begin(); it!=myset.end(); ++it)
+                std::cout << ' ' << *it;
+            std::cout << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            //SECTION rbegin() rend()
+            std::cout << "----------TESTING rbegin() rend()----------" << std::endl;
+            int myints[] = {21,64,17,78,49};
+            ft::set<int> myset (myints,myints+5);
+            ft::set<int>::reverse_iterator rit;
+            std::cout << "myset contains:";
+            for (rit=myset.rbegin(); rit != myset.rend(); ++rit)
+                std::cout << ' ' << *rit;
+            std::cout << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+
+        {
+            //SECTION empty()
+            std::cout << "----------TESTING empty()----------" << std::endl;
+            ft::set<int> myset;
+            myset.insert(20);
+            myset.insert(30);
+            myset.insert(10);
+            std::cout << "myset contains:";
+            while (!myset.empty())
+            {
+                std::cout << ' ' << *myset.begin();
+                myset.erase(myset.begin());
+            }
+            std::cout << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+>>>>>>> 06a3e2229448cf289dfffb70bc7abd334d599526
 
     //     {
     //         //SECTION size()
@@ -795,6 +859,7 @@ int main(void) {
     //         std::cout << std::endl;
     //     }
 
+<<<<<<< HEAD
     //     {
     //         //SECTION insert()
     //         std::cout << "----------TESTING insert()----------" << std::endl;
@@ -816,9 +881,33 @@ int main(void) {
     //         //!SECTION
     //         std::cout << std::endl;
     //     }
+=======
+        {
+            //FIXME
+            //SECTION insert()
+            std::cout << "----------TESTING insert()----------" << std::endl;
+            ft::set<int> myset;
+            ft::set<int>::iterator it;
+            ft::pair<ft::set<int>::iterator,bool> ret;
+            for (int i=1; i<=5; ++i) myset.insert(i*10);
+            ret = myset.insert(20);
+            if (ret.second==false) it=ret.first;
+            myset.insert (it,25);
+            myset.insert (it,24);
+            myset.insert (it,26);
+            int myints[]= {5,10,15};
+            myset.insert (myints,myints+3);
+            std::cout << "myset contains:";
+            for (it=myset.begin(); it!=myset.end(); ++it)
+                std::cout << ' ' << *it;
+            std::cout << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+>>>>>>> 06a3e2229448cf289dfffb70bc7abd334d599526
 
         {
-            //SECITON erase()
+            // SECTION erase()
             std::cout << "----------TESTING erase()----------" << std::endl;
             // FIXME leaks
             ft::set<int> myset;
@@ -857,6 +946,7 @@ int main(void) {
     //         std::cout << std::endl;
     //     }
         
+<<<<<<< HEAD
     //     {
     //         //SECTION clear()
     //         std::cout << "----------TESTING clear()----------" << std::endl;
@@ -878,6 +968,29 @@ int main(void) {
     //         //!SECTION
     //         std::cout << std::endl;
     //     }
+=======
+        {
+            //SECTION clear()
+            std::cout << "----------TESTING clear()----------" << std::endl;
+            ft::set<int> myset;
+            myset.insert (100);
+            myset.insert (200);
+            myset.insert (300);
+            std::cout << "myset contains:";
+            for (ft::set<int>::iterator it=myset.begin(); it!=myset.end(); ++it)
+                std::cout << ' ' << *it;
+            std::cout << std::endl;
+            myset.clear();
+            myset.insert (1101);
+            myset.insert (2202);
+            std::cout << "myset contains:";
+            for (ft::set<int>::iterator it=myset.begin(); it!=myset.end(); ++it)
+                std::cout << ' ' << *it;
+            std::cout << std::endl;
+            // !SECTION
+            std::cout << std::endl;
+        }
+>>>>>>> 06a3e2229448cf289dfffb70bc7abd334d599526
 
     //     {
     //         //SECTION key_comp()
@@ -979,6 +1092,7 @@ int main(void) {
     //         std::cout << std::endl;
     //     }
 
+<<<<<<< HEAD
     //     {
     //         //SECTION get_allocator()
     //         std::cout << "----------TESTING get_allocator()----------" << std::endl;
@@ -996,5 +1110,24 @@ int main(void) {
     //     }
     //     // !SECTION SET TESTS
     // }
+=======
+        {
+            //SECTION get_allocator()
+            std::cout << "----------TESTING get_allocator()----------" << std::endl;
+            ft::set<int> myset;
+            int * p;
+            unsigned int i;
+            p=myset.get_allocator().allocate(5);
+            for (i=0; i<5; i++) p[i]=(i+1)*10;
+            std::cout << "The allocated array contains:";
+            for (i=0; i<5; i++) std::cout << ' ' << p[i];
+            std::cout << std::endl;
+            myset.get_allocator().deallocate(p,5);
+            // !SECTION
+            std::cout << std::endl;
+        }
+        // !SECTION SET TESTS (Bonus)
+    }
+>>>>>>> 06a3e2229448cf289dfffb70bc7abd334d599526
 	return (0);
 }
