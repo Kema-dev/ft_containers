@@ -700,7 +700,7 @@ int main(void) {
             ft::set<int,classcomp> fifth;
             int(*fn_pt)(int,int) = intcmp;
             ft::set<int,int(*)(int,int)> sixth (fn_pt);
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -727,7 +727,7 @@ int main(void) {
             for (ft::set<int>::iterator it=myset.begin(); it!=myset.end(); ++it)
                 std::cout << ' ' << *it;
             std::cout << std::endl;
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -741,7 +741,7 @@ int main(void) {
             for (rit=myset.rbegin(); rit != myset.rend(); ++rit)
                 std::cout << ' ' << *rit;
             std::cout << std::endl;
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -759,7 +759,7 @@ int main(void) {
                 myset.erase(myset.begin());
             }
             std::cout << std::endl;
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -812,12 +812,12 @@ int main(void) {
             for (it=myset.begin(); it!=myset.end(); ++it)
                 std::cout << ' ' << *it;
             std::cout << std::endl;
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
         {
-            //SECITON erase()
+            // SECTION erase()
             std::cout << "----------TESTING erase()----------" << std::endl;
             ft::set<int> myset;
             ft::set<int>::iterator it;
@@ -873,7 +873,7 @@ int main(void) {
             for (ft::set<int>::iterator it=myset.begin(); it!=myset.end(); ++it)
                 std::cout << ' ' << *it;
             std::cout << std::endl;
-            //!SECTION
+            // !SECTION
             std::cout << std::endl;
         }
 
@@ -993,7 +993,7 @@ int main(void) {
             // !SECTION
             std::cout << std::endl;
         }
-        // !SECTION SET TESTS
+        // !SECTION SET TESTS (Bonus)
     }
 	return (0);
 }
