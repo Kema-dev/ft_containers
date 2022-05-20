@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 
+#include "../Iterators/Iterator.hpp"
 #include "../Tools/Exceptions.hpp"
 #include "../Tools/Node.hpp"
-#include "../Iterators/Iterator.hpp"
 
 namespace ft {
 
@@ -40,6 +40,7 @@ class map {
 		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::pointer pointer;
 		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::reference reference;
 		typedef typename ft::iterator_traits<ft::map<K, V, Compare, Allocator> >::iterator_category iterator_category;
+
 	   public:
 		MapIterator(void) : ptr(NULL) {}
 		MapIterator(nodePtr ptr) : ptr(ptr) {}
@@ -121,6 +122,7 @@ class map {
 		typedef typename MapIterator::pointer pointer;
 		typedef typename MapIterator::reference reference;
 		typedef typename MapIterator::iterator_category iterator_category;
+
 	   public:
 		MapReverseIterator(void) : ptr(NULL) {}
 		MapReverseIterator(nodePtr ptr) : ptr(ptr) {}
@@ -224,8 +226,8 @@ class map {
 		: _root(NULL), _size(0), _alloc(alloc), _comp(comp){};
 	// INFO Create a map filled with a range of elements
 	template <class InputIterator>
-	map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), 
-        const allocator_type& alloc = allocator_type())
+	map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
+		const allocator_type& alloc = allocator_type())
 		: _root(NULL), _size(0), _alloc(alloc), _comp(comp) {
 		insert(first, last);
 	}
@@ -276,10 +278,10 @@ class map {
 	map& operator=(map const& rhs) {
 		if (this != &rhs) {
 			clear();
-            if (rhs.size() > 0) {
-                insert(rhs.begin(), rhs.end());
-                _root->color = black;
-            }
+			if (rhs.size() > 0) {
+				insert(rhs.begin(), rhs.end());
+				_root->color = black;
+			}
 		}
 		return *this;
 	};
@@ -346,7 +348,7 @@ class map {
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
-        return _size == 0;
+		return _size == 0;
 	};
 	// INFO Get the size of the map
 	size_type size(void) const {
@@ -354,8 +356,8 @@ class map {
 	};
 	// INFO Get the maximum size of the map
 	size_type max_size(void) const {
-		// return std::numeric_limits<long>::max() / 20;
-		return 20; // TODO revert previous line
+		// return std::numeric_limits<long>::max() / 20; // TODO Put this back (commented for linux concerns)
+		return 20;	// TODO Erase this line (added for linux concerns)
 	};
 	// INFO erase the element at position <pos>
 	void erase(iterator pos) {
@@ -413,16 +415,16 @@ class map {
 	iterator find(const key_type& key) const {
 		return iterator(searchKey(key));
 	};
-    // // INFO Find the first element with key <key>
+	// // INFO Find the first element with key <key>
 	// const_iterator find(const key_type& key) const{
 	// 	return const_iterator(searchKey(key));
 	// };
 	// INFO Count the number of elements with key <key>
 	size_type count(const key_type& key) const {
 		if (!find(key))
-            return 0;
-        else
-            return 1;
+			return 0;
+		else
+			return 1;
 	};
 	// INFO Get the range of elements with key <key>
 	ft::pair<iterator, iterator> equal_range(const key_type& key) {
@@ -435,30 +437,30 @@ class map {
 	// INFO Get the lower bound of the elements with key <key> (the first element with key >= <key>)
 	iterator lower_bound(const key_type& key) {
 		iterator it = begin();
-        while (it != end() && _comp(it->first, key))
-            it++;
-        return (it);
+		while (it != end() && _comp(it->first, key))
+			it++;
+		return (it);
 	};
 	// INFO Get the lower bound of the elements with key <key> (the first element with key >= <key>)
 	const_iterator lower_bound(const key_type& key) const {
 		const_iterator it = begin();
-        while (it != end() && _comp(it->first, key))
-            it++;
-        return (it);
+		while (it != end() && _comp(it->first, key))
+			it++;
+		return (it);
 	};
 	// INFO Get the upper bound of the elements with key <key> (the first element with key < <key>)
 	iterator upper_bound(const key_type& key) {
 		iterator it = begin();
-        while (it != end() && (_comp(it->first, key) || it->first == key))
-            it++;
-        return (it);
+		while (it != end() && (_comp(it->first, key) || it->first == key))
+			it++;
+		return (it);
 	};
 	// INFO Get the upper bound of the elements with key <key> (the first element with key < <key>)
 	const_iterator upper_bound(const key_type& key) const {
 		const_iterator it = begin();
-        while (it != end() && (_comp(it->first, key) || it->first == key))
-            it++;
-        return (it);
+		while (it != end() && (_comp(it->first, key) || it->first == key))
+			it++;
+		return (it);
 	};
 	// INFO Get the comparison object
 	key_compare key_comp(void) const {
@@ -548,24 +550,22 @@ class map {
 
 		try {
 			newNode = add(dpair);
-		}
-		catch (duplicateKey const&) {
+		} catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair.first), false);
 		}
 		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
-    /*
+	/*
 	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
 	iterator insert(iterator pos, const value_type& dpair) {
 		static_cast<void>(pos);
-        nodePtr newNode;
+		nodePtr newNode;
 		try {
 			newNode = add(dpair);
-		}
-		catch (duplicateKey const&) {
+		} catch (duplicateKey const&) {
 			return find(dpair.first);
 		}
 		return iterator(newNode);
@@ -579,9 +579,9 @@ class map {
 	INFO Add pair <first> to <last> to the tree
 	INFO Can throw exception (calls)
 	*/
-    template<class InputIterator>
+	template <class InputIterator>
 	void insert(InputIterator first, InputIterator last) {
-        while (first != last) {
+		while (first != last) {
 			insert(*first);
 			++first;
 		}
@@ -596,8 +596,7 @@ class map {
 		value_type dpair2(dpair.first, dpair.second);
 		try {
 			newNode = add(dpair2);
-		}
-		catch (duplicateKey const&) {
+		} catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair2.first), false);
 		}
 		fixInsert(newNode);
@@ -608,8 +607,7 @@ class map {
 		value_type dpair2(dpair.first, dpair.second);
 		try {
 			newNode = add(dpair2);
-		}
-		catch (duplicateKey const&) {
+		} catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair2.first), false);
 		}
 		fixInsert(newNode);
@@ -624,8 +622,7 @@ class map {
 		nodePtr newNode;
 		try {
 			newNode = add(dpair);
-		}
-		catch (duplicateKey const&) {
+		} catch (duplicateKey const&) {
 			return find(key).ptr;
 		}
 		fixInsert(newNode);
@@ -731,11 +728,10 @@ class map {
 				return;
 			}
 			if (!curNode->left) {
-
 				_root = curNode;
 				_root->left = l;
-                if (l)
-				    _root->left->parent = curNode;
+				if (l)
+					_root->left->parent = curNode;
 				_size--;
 				return;
 			}
@@ -744,17 +740,18 @@ class map {
 			curNode->parent->left = curNode->right;
 			if (curNode->right)
 				curNode->right->parent = curNode->parent;
-			curNode->parent = NULL;
 			_root = curNode;
-			curNode->left = l;
-			curNode->right = r;
-			if (curNode->left)
-				curNode->left->parent = curNode;
-			if (curNode->right)
-				curNode->right->parent = curNode;
+			_root->parent = NULL;
+			_root->left = l;
+			_root->right = r;
+			if (_root->left)
+				_root->left->parent = _root;
+			if (_root->right)
+				_root->right->parent = _root;
 			_size--;
 			return;
 		}
+		// FIXME doesn't work properly
 		nodePtr curNode = node;
 		nodePtr parent = node->parent;
 		nodePtr child = NULL;
@@ -777,10 +774,9 @@ class map {
 			child = node->left;
 		else
 			child = node->right;
-		if (!parent){
-            _root = child;
-        }
-		else if (parent->left == node)
+		if (!parent) {
+			_root = child;
+		} else if (parent->left == node)
 			parent->left = child;
 		else
 			parent->right = child;

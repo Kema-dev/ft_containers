@@ -182,14 +182,11 @@ class set {
 		// };
 		iterator insert(iterator position, const value_type& val) {
 			static_cast<void>(position);
-			_container.insert(ft::pair<const T, T>(val, val));
+			_container.insert(make_pair(val, val));
 			return iterator(_container.find(val));
 		};
         ft::pair<iterator,bool> insert (const value_type& val) {
 			_container.insert(ft::pair<const T, T>(val, val));
-			// std::cout << "-------------------" << std::endl;
-			// _container.print();
-			// std::cout << "-------------------" << std::endl;
 			return ft::pair<iterator,bool>(iterator(_container.find(val)), true);
 		};
 		template<class InputIterator>
