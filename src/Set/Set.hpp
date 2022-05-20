@@ -13,17 +13,17 @@ class set {
 	private:
 		ft::map<T,T,Compare,Alloc> _container;
 	public:
-		typedef typename ft::map<T,T,Compare,Alloc>::key_type key_type;
-		typedef typename ft::map<T,T,Compare,Alloc>::value_type value_type;
-		typedef typename ft::map<T,T,Compare,Alloc>::key_compare key_compare;
-		typedef typename ft::map<T,T,Compare,Alloc>::value_compare value_compare;
-		typedef typename ft::map<T,T,Compare,Alloc>::allocator_type allocator_type;
-		// typedef typename ft::map<T,T,Compare,Alloc>::reference reference;
-		// typedef typename ft::map<T,T,Compare,Alloc>::const_reference const_reference;
-		typedef typename ft::map<T,T,Compare,Alloc>::size_type size_type;
-		typedef typename ft::map<T,T,Compare,Alloc>::difference_type difference_type;
-		// typedef typename ft::map<T,T,Compare,Alloc>::pointer pointer;
-		// typedef typename ft::map<T,T,Compare,Alloc>::const_pointer const_pointer;
+		typedef T key_type;
+		typedef T value_type;
+		typedef size_t size_type;
+		typedef ptrdiff_t difference_type;
+		typedef Compare key_compare;
+		typedef Compare value_compare;
+		typedef Alloc allocator_type;
+		typedef value_type& reference;
+		typedef const value_type& const_reference;
+		typedef typename Alloc::pointer pointer;
+		typedef typename Alloc::const_pointer const_pointer;
 
 		// set( void ) : _container( void ) {};
         explicit set (const key_compare& comp = key_compare(),
@@ -176,12 +176,22 @@ class set {
 		bool empty() const { return _container.empty(); };
 		size_type size() const { return _container.size(); };
 		size_type max_size() const { return _container.max_size(); };
-		ft::pair<iterator, bool> insert(const T& val) {
-			ft::pair<typename ft::map<T,T,Compare,Alloc>::iterator, bool> buf = _container.insert(make_pair(val, val));
-			return ft::pair<iterator, bool>(iterator(buf.first), buf.second);
+		// ft::pair<iterator, bool> insert(const T& val) {
+		// 	ft::pair<typename ft::map<T,T,Compare,Alloc>::iterator, bool> buf = _container.insert(make_pair(val, val));
+		// 	return ft::pair<iterator, bool>(iterator(buf.first), buf.second);
+		// };
+		iterator insert(iterator position, const value_type& val) {
+			static_cast<void>(position);
+			_container.insert(ft::pair<const T, T>(val, val));
+			return iterator(_container.find(val));
 		};
-		iterator insert(iterator position, const value_type& val) { return _container.insert(position, val); };
-        ft::pair<iterator,bool> insert (const value_type& val) { _container.insert(val); };
+        ft::pair<iterator,bool> insert (const value_type& val) {
+			_container.insert(ft::pair<const T, T>(val, val));
+			// std::cout << "-------------------" << std::endl;
+			// _container.print();
+			// std::cout << "-------------------" << std::endl;
+			return ft::pair<iterator,bool>(iterator(_container.find(val)), true);
+		};
 		template<class InputIterator>
 		void insert(InputIterator first, InputIterator last) { _container.insert(first, last); };
 		void erase(iterator it) { _container.erase(it); };
@@ -190,7 +200,7 @@ class set {
 		void swap(set& other) { _container.swap(other._container); };
 		void clear() { _container.clear(); };
 		key_compare key_comp() const { return _container.key_comp(); };
-		value_compare value_comp() const { return _container.value_comp(); };
+		value_compare value_comp() const { return Compare(); };
 
 		iterator find(const T& value) { return _container.find(value); };
 		const_iterator find(const T& value) const { return _container.find(value); };
@@ -199,8 +209,16 @@ class set {
 		const_iterator lower_bound(const T& value) const { return _container.lower_bound(value); };
 		iterator upper_bound(const T& value) { return _container.upper_bound(value); };
 		const_iterator upper_bound(const T& value) const { return _container.upper_bound(value); };
-		ft::pair<iterator, iterator> equal_range(const T& value) { return _container.equal_range(value); };
-		ft::pair<const_iterator, const_iterator> equal_range(const T& value) const { return _container.equal_range(value); };
+		// ft::pair<iterator, iterator> equal_range(const T& value) { return _container.equal_range(value); };
+		ft::pair<iterator, iterator> equal_range(const T& value) {
+			ft::pair<typename ft::map<T,T,Compare,Alloc>::iterator, typename ft::map<T,T,Compare,Alloc>::iterator> buf = _container.equal_range(value);
+			return ft::pair<iterator, iterator>(iterator(buf.first), iterator(buf.second));
+		};
+		// ft::pair<const_iterator, const_iterator> equal_range(const T& value) const { return _container.equal_range(value); };
+		ft::pair<const_iterator, const_iterator> equal_range(const T& value) const {
+			ft::pair<typename ft::map<T,T,Compare,Alloc>::const_iterator, typename ft::map<T,T,Compare,Alloc>::const_iterator> buf = _container.equal_range(value);
+			return ft::pair<const_iterator, const_iterator>(const_iterator(buf.first), const_iterator(buf.second));
+		};
 		allocator_type get_allocator() const { return _container.get_allocator(); };
 };
 }  // namespace ft

@@ -354,7 +354,8 @@ class map {
 	};
 	// INFO Get the maximum size of the map
 	size_type max_size(void) const {
-		return std::numeric_limits<long>::max() / 20;
+		// return std::numeric_limits<long>::max() / 20;
+		return 20; // TODO revert previous line
 	};
 	// INFO erase the element at position <pos>
 	void erase(iterator pos) {
@@ -362,6 +363,8 @@ class map {
 	};
 	// INFO erase the elements in the range [<first>, <last>)
 	void erase(iterator first, iterator last) {
+		if (first > this->getMax() || last < this->getMin())
+			return;
 		while (first != last)
 			erase(first++);
 	};
@@ -506,10 +509,15 @@ class map {
 		nodePtr parent = NULL;
 		while (curNode) {
 			parent = curNode;
-			if (_comp(newNode->pair.first, curNode->pair.first))
+			if (newNode->pair.first == curNode->pair.first) {
+				std::allocator<nodeType>().destroy(newNode);
+				std::allocator<nodeType>().deallocate(newNode, 1);
+				throw duplicateKey();
+			} else if (_comp(newNode->pair.first, curNode->pair.first)) {
 				curNode = curNode->left;
-			else
+			} else {
 				curNode = curNode->right;
+			}
 		}
 		newNode->parent = parent;
 		if (!parent) {
@@ -562,6 +570,11 @@ class map {
 		}
 		return iterator(newNode);
 	};
+
+	void insert(key_type key) {
+		insert(value_type(key, mapped_type()));
+	};
+
 	/*
 	INFO Add pair <first> to <last> to the tree
 	INFO Can throw exception (calls)
@@ -577,18 +590,31 @@ class map {
 	INFO Add pair (non const) <dpair> to the tree
 	INFO Can throw exception (calls)
 	*/
-	// ft::pair<iterator, bool> insert(const value_type dpair) {
-	// 	nodePtr newNode;
-	// 	value_type dpair2(dpair.first, dpair.second);
-	// 	try {
-	// 		newNode = add(dpair2);
-	// 	}
-	// 	catch (duplicateKey const&) {
-	// 		return ft::pair<iterator, bool>(find(dpair2.first), false);
-	// 	}
-	// 	fixInsert(newNode);
-	// 	return ft::pair<iterator, bool>(iterator(newNode), true);
-	// };
+	ft::pair<iterator, bool> insert(iterator pos, const ft::pair<K, V>& dpair) {
+		static_cast<void>(pos);
+		nodePtr newNode;
+		value_type dpair2(dpair.first, dpair.second);
+		try {
+			newNode = add(dpair2);
+		}
+		catch (duplicateKey const&) {
+			return ft::pair<iterator, bool>(find(dpair2.first), false);
+		}
+		fixInsert(newNode);
+		return ft::pair<iterator, bool>(iterator(newNode), true);
+	};
+	ft::pair<iterator, bool> insert(const ft::pair<K, V>& dpair) {
+		nodePtr newNode;
+		value_type dpair2(dpair.first, dpair.second);
+		try {
+			newNode = add(dpair2);
+		}
+		catch (duplicateKey const&) {
+			return ft::pair<iterator, bool>(find(dpair2.first), false);
+		}
+		fixInsert(newNode);
+		return ft::pair<iterator, bool>(iterator(newNode), true);
+	};
 	/*
 	INFO Add a new node with pair <dpair> to the tree
 	INFO Can throw exception (calls)
@@ -722,8 +748,10 @@ class map {
 			_root = curNode;
 			curNode->left = l;
 			curNode->right = r;
-			curNode->left->parent = curNode;
-			curNode->right->parent = curNode;
+			if (curNode->left)
+				curNode->left->parent = curNode;
+			if (curNode->right)
+				curNode->right->parent = curNode;
 			_size--;
 			return;
 		}
