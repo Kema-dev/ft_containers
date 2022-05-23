@@ -365,8 +365,8 @@ class map {
 	};
 	// INFO erase the elements in the range [<first>, <last>)
 	void erase(iterator first, iterator last) {
-		if (first > this->getMax() || last < this->getMin())
-			return;
+		// if (first > this->getMax() || last < this->getMin())
+		// 	return;
 		while (first != last)
 			erase(first++);
 	};
@@ -751,7 +751,6 @@ class map {
 			_size--;
 			return;
 		}
-		// FIXME doesn't work properly
 		nodePtr curNode = node;
 		nodePtr parent = node->parent;
 		nodePtr child = NULL;
