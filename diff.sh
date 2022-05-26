@@ -1,4 +1,5 @@
 #!/bin/zsh
+mkdir diff 2> /dev/null
 cat src/Main/main.cpp | sed -e "s/#if false/#if true/g" > src/Main/main.cpp.true
 cat src/Main/main.cpp | sed -e "s/#if true/#if false/g" > src/Main/main.cpp.false
 mv src/Main/main.cpp src/Main/main.cpp.orig

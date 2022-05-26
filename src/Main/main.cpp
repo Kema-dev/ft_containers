@@ -414,8 +414,7 @@ int main(void) {
 			// SECTION max_size()
 			std::cout << "----------TESTING max_size()----------" << std::endl;
 			ft::map<int, int> mymap;
-			if (mymap.max_size() != (std::numeric_limits<unsigned long>::max() / 20)) { // TODO Put this back (commented for linux concerns)
-			// if (mymap.max_size() != (20)) { // TODO Erase this line (added for linux concerns)
+			if (mymap.max_size() != (std::numeric_limits<unsigned long>::max() / 20)) {
 				std::cout << "There is a problem" << std::endl;
 			} else {
 				std::cout << "max_size returns correct value" << std::endl;
