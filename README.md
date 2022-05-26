@@ -14,7 +14,6 @@
 </div>
 
 <!-- TABLE OF CONTENTS -->
-<details>
   <summary>Table of Contents</summary>
   <ol>
    <li>
@@ -35,7 +34,6 @@
    <li><a href="#contact">Contact</a></li>
    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
-</details>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -59,7 +57,7 @@ Full subject can be found <a href="/docs">here</a>
 
 ### Prerequisites
 
-* gcc
+* [gcc](https://gcc.gnu.org/)
 
 ### Installation
 
