@@ -58,6 +58,7 @@ Full subject can be found <a href="/docs">here</a>
 ### Prerequisites
 
 * [gcc](https://gcc.gnu.org/)
+* [make](https://www.gnu.org/software/make/)
 
 ### Installation
 
