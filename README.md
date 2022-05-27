@@ -81,15 +81,15 @@ Full subject can be found <a href="/docs">here</a>
 
 * Launch the program
 
-  ```sh
-  ./bin/ft_containers.out
-  ```
+```sh
+./bin/ft_containers.out
+```
 
 * You can also use `diff.sh` to compare our program output compared to STL one
 
 ```sh
-  ./diff.sh
-  ```
+./diff.sh
+```
 
 <!-- ROADMAP -->
 ## Roadmap
