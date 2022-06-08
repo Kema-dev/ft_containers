@@ -3,10 +3,6 @@
 
 #include "../Tools/Pair.hpp"
 
-enum e_color {
-	black,
-	red
-};
 enum e_branch {
 	left,
 	right
@@ -26,13 +22,12 @@ template <typename K, typename V>
 class node {
    public:
 	ft::pair<const K, V> pair;
-	e_color color;
 	node* parent;
 	node* left;
 	node* right;
 
 	node(ft::pair<const K, V>& dpair)
-		: pair(dpair), color(red), parent(NULL), left(NULL), right(NULL){};
+		: pair(dpair), parent(NULL), left(NULL), right(NULL){};
 	~node(){};
 	bool operator<(const node& other) const {
 		return (pair < other.pair);
@@ -54,7 +49,6 @@ class node {
 	};
 	node* operator=(const node& other) {
 		pair = other.pair;
-		color = other.color;
 		parent = other.parent;
 		left = other.left;
 		right = other.right;
