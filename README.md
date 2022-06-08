@@ -44,13 +44,9 @@ ft_containers is a 42 project, aiming to recreate some Standard Template Library
 
 Full subject can be found <a href="/docs">here</a>
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 ### Built With
 
 * [C++](https://en.wikipedia.org/wiki/C%2B%2B)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -74,8 +70,6 @@ Full subject can be found <a href="/docs">here</a>
   make
   ```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -98,8 +92,6 @@ Full subject can be found <a href="/docs">here</a>
 
 See the [open issues](https://github.com/kema-dev/ft_containers/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 <!-- CONTACT -->
 ## Contact
 
@@ -109,11 +101,7 @@ kema-dev - [GitHub](https://github.com/kema-dev)
 
 dorianginisty - [GitHub](https://github.com/dorianginisty)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 ## Acknowledgments
 
 * [Img Shields](https://shields.io)
 * [README.MD-Template](https://github.com/othneildrew/Best-README-Template)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
