@@ -2,7 +2,7 @@
 #include <string>
 
 // INFO true = std / false = ft
-#if true
+#if false
 #include <map>
 #include <stack>
 #include <vector>
