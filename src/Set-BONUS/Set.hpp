@@ -217,7 +217,6 @@ class set {
 			return ft::pair<const_iterator, const_iterator>(const_iterator(buf.first), const_iterator(buf.second));
 		};
 		allocator_type get_allocator() const { return _container.get_allocator(); };
-		void print(void) { _container.print(); };
 };
 }  // namespace ft
 #endif

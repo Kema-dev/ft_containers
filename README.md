@@ -30,6 +30,7 @@
     </ul>
    </li>
    <li><a href="#usage">Usage</a></li>
+   <li><a href="#roadmap">Roadmap</a></li>
    <li><a href="#contact">Contact</a></li>
    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -78,16 +79,27 @@ Full subject can be found <a href="/docs">here</a>
 ./bin/ft_containers.out
 ```
 
-* You can also use `correct.sh` to compare our program to STL's one
+* You can also use `diff.sh` to compare our program output compared to STL one
 
 ```sh
-./correct.sh
+./diff.sh
 ```
+
+<!-- ROADMAP -->
+## Roadmap
+
+* The project is finished and no further work is planned on it
+
+See the [open issues](https://github.com/kema-dev/ft_containers/issues) for a full list of proposed features (and known issues).
 
 <!-- CONTACT -->
 ## Contact
 
+We are two creators :
+
 kema-dev - [GitHub](https://github.com/kema-dev)
+
+dorianginisty - [GitHub](https://github.com/dorianginisty)
 
 ## Acknowledgments
 

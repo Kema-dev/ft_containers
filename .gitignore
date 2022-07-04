@@ -34,7 +34,3 @@
 # Custom files
 .vscode
 diff.txt
-bin/
-obj/
-diff/
-tmp/
