@@ -325,11 +325,11 @@ class map {
 	};
 	// INFO Get the last element as an iterator
 	iterator end(void) {
-		return iterator(NULL);
+		return NULL;
 	};
 	// INFO Get the last element as a const_iterator
 	const_iterator end(void) const {
-		return const_iterator(NULL);
+		return NULL;
 	};
 	// INFO Get the first element as a reverse_iterator
 	reverse_iterator rbegin(void) {
@@ -341,11 +341,11 @@ class map {
 	};
 	// INFO Get the last element as a reverse_iterator
 	reverse_iterator rend(void) {
-		return reverse_iterator(NULL);
+		return NULL;
 	};
 	// INFO Get the last element as a const_reverse_iterator
 	const_reverse_iterator rend(void) const {
-		return const_reverse_iterator(NULL);
+		return NULL;
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
@@ -721,7 +721,7 @@ class map {
 			nodePtr l = _root->left;
 			nodePtr r = _root->right;
 			std::allocator<nodeType>().deallocate(_root, 1);
-			nodePtr curNode = _root->right;
+			nodePtr curNode = r;
 			if (!curNode) {
 				_root = l;
 				_size--;
@@ -751,27 +751,51 @@ class map {
 			_size--;
 			return;
 		}
+		nodePtr save = node;
 		nodePtr curNode = node;
 		nodePtr parent = node->parent;
 		nodePtr child = NULL;
 		nodePtr sibling = NULL;
 		bool isLeft = false;
 		if (node->left && node->right) {
-			curNode = node->right;
-			while (curNode->left)
-				curNode = curNode->left;
-			child = curNode->right;
-			sibling = curNode->parent;
-			isLeft = (curNode == sibling->left);
+			bool isLeft = (node == node->parent->left);
+			curNode = node->left;
+			while (curNode->right)
+				curNode = curNode->right;
+			if (parent) {
+				if (isLeft)
+					parent->left = curNode;
+				else
+					parent->right = curNode;
+			} else {
+				// TODO verify this
+				_root = curNode;
+				curNode->right = save->right;
+				if (curNode->right)
+					curNode->right->parent = curNode;
+				curNode->color = save->color;
+				return;
+			}
+			if (curNode->parent->right == curNode) {
+				curNode->parent->right = NULL;
+			}
+			else {
+				curNode->parent->left = NULL;
+			}
 			curNode->parent = parent;
-			curNode->left = node->left;
-			curNode->left->parent = curNode;
-			curNode->right = node->right;
-			curNode->right->parent = curNode;
-			curNode->color = node->color;
-		} else if (node->left)
+			curNode->right = save->right;
+			if (curNode->right)
+				curNode->right->parent = curNode;
+			curNode->left = save->left;
+			if (curNode->left)
+				curNode->left->parent = curNode;
+			curNode->color = save->color;
+			std::allocator<nodeType>().deallocate(save, 1);
+			_size--;
+			return;
+		} else if (node->left) {
 			child = node->left;
-		else
+		} else
 			child = node->right;
 		if (!parent) {
 			_root = child;

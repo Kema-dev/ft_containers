@@ -14,7 +14,8 @@ make clean
 make debug
 ./bin/debug.out > diff/false.txt
 rm src/Main/main.cpp
-diff -u diff/true.txt diff/false.txt > diff/std_vs_ft.diff
+echo "- : std\n+ : ft" > diff/std_vs_ft.diff
+diff -u diff/true.txt diff/false.txt >> diff/std_vs_ft.diff
 rm diff/true.txt diff/false.txt
 mv tmp/main_orig.cpp src/Main/main.cpp
 rm -r tmp
