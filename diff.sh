@@ -1,18 +1,20 @@
 #!/bin/zsh
 mkdir diff 2> /dev/null
-cat src/Main/main.cpp | sed -e "s/#if false/#if true/g" > src/Main/main.cpp.true
-cat src/Main/main.cpp | sed -e "s/#if true/#if false/g" > src/Main/main.cpp.false
-mv src/Main/main.cpp src/Main/main.cpp.orig
-mv src/Main/main.cpp.true src/Main/main.cpp
+mkdir tmp 2> /dev/null
+cat src/Main/main.cpp | sed -e "s/#if false/#if true/g" > tmp/main_true.cpp
+cat src/Main/main.cpp | sed -e "s/#if true/#if false/g" > tmp/main_false.cpp
+mv src/Main/main.cpp tmp/main_orig.cpp
+mv tmp/main_true.cpp src/Main/main.cpp
+make clean
 make debug
 ./bin/debug.out > diff/true.txt
-mv src/Main/main.cpp src/Main/main.cpp.old
-mv src/Main/main.cpp.false src/Main/main.cpp
+rm src/Main/main.cpp
+mv tmp/main_false.cpp src/Main/main.cpp
+make clean
 make debug
 ./bin/debug.out > diff/false.txt
 rm src/Main/main.cpp
-rm src/Main/main.cpp.old
-mv src/Main/main.cpp.orig src/Main/main.cpp
-diff diff/true.txt diff/false.txt > diff/diff.txt
-rm diff/true.txt
-rm diff/false.txt
+diff -u diff/true.txt diff/false.txt > diff/std_vs_ft.diff
+rm diff/true.txt diff/false.txt
+mv tmp/main_orig.cpp src/Main/main.cpp
+rm -r tmp

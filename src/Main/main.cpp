@@ -16,6 +16,8 @@ namespace ft = std;
 #include "../Vector/Vector.hpp"
 #endif
 
+#include <limits>
+
 int intcmp(int int1, int int2) {
 	return ((int1 > int2) ? int1 : int2);
 }
