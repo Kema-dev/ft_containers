@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <limits>
 
 #include "../Iterators/Iterator.hpp"
 #include "../Tools/Exceptions.hpp"
@@ -235,6 +236,7 @@ class map {
 	map(const map& other)
 		: _root(NULL), _size(0), _alloc(other._alloc), _comp(other._comp) {
 		insert(other.begin(), other.end());
+		_root->color = black;
 	}
 	/*
 	INFO Create a tree with root node containing pair <dpair>
@@ -242,6 +244,7 @@ class map {
 	*/
 	map(value_type dpair) {
 		_root = standaloneNode(dpair);
+		_root->color = black;
 		_size = 1;
 	};
 	/*
@@ -278,6 +281,7 @@ class map {
 			clear();
 			if (rhs.size() > 0) {
 				insert(rhs.begin(), rhs.end());
+				_root->color = black;
 			}
 		}
 		return *this;
@@ -321,11 +325,11 @@ class map {
 	};
 	// INFO Get the last element as an iterator
 	iterator end(void) {
-		return iterator(NULL);
+		return NULL;
 	};
 	// INFO Get the last element as a const_iterator
 	const_iterator end(void) const {
-		return const_iterator(NULL);
+		return NULL;
 	};
 	// INFO Get the first element as a reverse_iterator
 	reverse_iterator rbegin(void) {
@@ -337,11 +341,11 @@ class map {
 	};
 	// INFO Get the last element as a reverse_iterator
 	reverse_iterator rend(void) {
-		return reverse_iterator(NULL);
+		return NULL;
 	};
 	// INFO Get the last element as a const_reverse_iterator
 	const_reverse_iterator rend(void) const {
-		return const_reverse_iterator(NULL);
+		return NULL;
 	};
 	// INFO Check if the map is empty
 	bool empty(void) const {
@@ -394,8 +398,7 @@ class map {
 	INFO No exception
 	*/
 	nodePtr searchKey(nodePtr start, key_type key) const {
-		if (!start) {
-			// std::cout << "start is null" << std::endl;
+		if (!start || !key) {
 			return NULL;
 		} else {
 			if (key == start->pair.first) {
@@ -485,6 +488,7 @@ class map {
 			return NULL;
 		nodePtr newNode;
 		newNode = standaloneNode(node->pair);
+		newNode->color = node->color;
 		newNode->parent = NULL;
 		_size++;
 		newNode->left = copy(node->left);
@@ -520,6 +524,7 @@ class map {
 		newNode->parent = parent;
 		if (!parent) {
 			_root = newNode;
+			_root->color = black;
 			_size++;
 			return newNode;
 		} else {
@@ -532,6 +537,7 @@ class map {
 				throw duplicateKey();
 			}
 		}
+		newNode->color = red;
 		_size++;
 		return newNode;
 	};
@@ -547,6 +553,7 @@ class map {
 		} catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair.first), false);
 		}
+		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
 	/*
@@ -592,6 +599,7 @@ class map {
 		} catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair2.first), false);
 		}
+		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
 	ft::pair<iterator, bool> insert(const ft::pair<K, V>& dpair) {
@@ -602,6 +610,7 @@ class map {
 		} catch (duplicateKey const&) {
 			return ft::pair<iterator, bool>(find(dpair2.first), false);
 		}
+		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
 	/*
@@ -614,10 +623,90 @@ class map {
 		try {
 			newNode = add(dpair);
 		} catch (duplicateKey const&) {
-			cout << "on est pas sense y passer" << endl;
 			return find(key).ptr;
 		}
+		fixInsert(newNode);
 		return newNode;
+	};
+	/*
+	INFO Fix the map after insertion of nodePtr <node>
+	INFO Can throw exception (calls)
+	*/
+	void fixInsert(nodePtr node) {
+		while (node->parent && node->parent->color == red) {
+			if (node->parent == node->parent->parent->left) {
+				nodePtr uncle = node->parent->parent->right;
+				if (uncle && uncle->color == red) {
+					node->parent->color = black;
+					uncle->color = black;
+					node->parent->parent->color = red;
+					node = node->parent->parent;
+				} else {
+					if (node == node->parent->right) {
+						node = node->parent;
+						leftRotate(node);
+					}
+					node->parent->color = black;
+					node->parent->parent->color = red;
+					rightRotate(node->parent->parent);
+				}
+			} else {
+				nodePtr uncle = node->parent->parent->left;
+				if (uncle && uncle->color == red) {
+					node->parent->color = black;
+					uncle->color = black;
+					node->parent->parent->color = red;
+					node = node->parent->parent;
+				} else {
+					if (node == node->parent->left) {
+						node = node->parent;
+						rightRotate(node);
+					}
+					node->parent->color = black;
+					node->parent->parent->color = red;
+					leftRotate(node->parent->parent);
+				}
+			}
+		}
+		_root->color = black;
+	};
+	/*
+	INFO Rotate nodePtr <node> to the left
+	INFO Can throw exception (calls)
+	*/
+	void leftRotate(nodePtr node) {
+		nodePtr right = node->right;
+		node->right = right->left;
+		if (right->left)
+			right->left->parent = node;
+		right->parent = node->parent;
+		if (!node->parent)
+			_root = right;
+		else if (node == node->parent->left)
+			node->parent->left = right;
+		else
+			node->parent->right = right;
+		right->left = node;
+		node->parent = right;
+	};
+	/*
+	INFO Rotate nodePtr <node> to the right
+	INFO Can throw exception (calls)
+	*/
+	void rightRotate(nodePtr node) {
+		nodePtr left = node->left;
+		node->left = left->right;
+		if (left->right)
+			left->right->parent = node;
+		left->parent = node->parent;
+		if (!node->parent)
+			_root = left;
+		else if (node == node->parent->right)
+			node->parent->right = left;
+		else
+			node->parent->left = left;
+		left->right = node;
+		node->parent = left;
 	};
 	// !SECTION Insertion
 	// SECTION Deletion
@@ -632,7 +721,7 @@ class map {
 			nodePtr l = _root->left;
 			nodePtr r = _root->right;
 			std::allocator<nodeType>().deallocate(_root, 1);
-			nodePtr curNode = _root->right;
+			nodePtr curNode = r;
 			if (!curNode) {
 				_root = l;
 				_size--;
@@ -662,26 +751,51 @@ class map {
 			_size--;
 			return;
 		}
+		nodePtr save = node;
 		nodePtr curNode = node;
 		nodePtr parent = node->parent;
 		nodePtr child = NULL;
 		nodePtr sibling = NULL;
 		bool isLeft = false;
 		if (node->left && node->right) {
-			curNode = node->right;
-			while (curNode->left)
-				curNode = curNode->left;
-			child = curNode->right;
-			sibling = curNode->parent;
-			isLeft = (curNode == sibling->left);
+			bool isLeft = (node == node->parent->left);
+			curNode = node->left;
+			while (curNode->right)
+				curNode = curNode->right;
+			if (parent) {
+				if (isLeft)
+					parent->left = curNode;
+				else
+					parent->right = curNode;
+			} else {
+				// TODO verify this
+				_root = curNode;
+				curNode->right = save->right;
+				if (curNode->right)
+					curNode->right->parent = curNode;
+				curNode->color = save->color;
+				return;
+			}
+			if (curNode->parent->right == curNode) {
+				curNode->parent->right = NULL;
+			}
+			else {
+				curNode->parent->left = NULL;
+			}
 			curNode->parent = parent;
-			curNode->left = node->left;
-			curNode->left->parent = curNode;
-			curNode->right = node->right;
-			curNode->right->parent = curNode;
-		} else if (node->left)
+			curNode->right = save->right;
+			if (curNode->right)
+				curNode->right->parent = curNode;
+			curNode->left = save->left;
+			if (curNode->left)
+				curNode->left->parent = curNode;
+			curNode->color = save->color;
+			std::allocator<nodeType>().deallocate(save, 1);
+			_size--;
+			return;
+		} else if (node->left) {
 			child = node->left;
-		else
+		} else
 			child = node->right;
 		if (!parent) {
 			_root = child;
@@ -691,17 +805,84 @@ class map {
 			parent->right = child;
 		if (child)
 			child->parent = parent;
+		if (node->color == black)
+			fixRemove(child, sibling, isLeft);
 		std::allocator<nodeType>().deallocate(node, 1);
 		_size--;
 	};
+	/*
+	INFO Fix the map after deletion of nodePtr <node>
+	INFO Can throw exception (calls)
+	*/
+	void fixRemove(nodePtr node, nodePtr sibling, bool isLeft) {
+		if (!node)
+			return;
+		if (node->color == red) {
+			node->color = black;
+			return;
+		}
+		if (sibling) {
+			if (sibling->color == red) {
+				sibling->color = black;
+				if (isLeft) {
+					node->parent->color = red;
+					rightRotate(node->parent);
+				} else {
+					node->parent->color = red;
+					leftRotate(node->parent);
+				}
+				sibling = node->parent->left;
+			}
+			if (sibling->left->color == black && sibling->right->color == black) {
+				sibling->color = red;
+				node = node->parent;
+			} else {
+				if (sibling->left->color == black) {
+					sibling->right->color = black;
+					sibling->color = red;
+					leftRotate(sibling);
+					sibling = node->parent->left;
+				}
+				sibling->color = node->parent->color;
+				node->parent->color = black;
+				sibling->left->color = black;
+				rightRotate(node->parent);
+				node = _root;
+			}
+		} else {
+			node->color = black;
+			node = node->parent;
+		}
+		fixRemove(node, node->left, true);
+		fixRemove(node, node->right, false);
+	};
 	// !SECTION Deletion
 	// SECTION Printing
+	/*
+	INFO Set the terminal color according to node color
+	INFO No exception
+	*/
+	void setColor(nodePtr node) {
+		if (node->color == red)
+			cout << RED;
+		else if (node->color == black)
+			cout << BLACK;
+	};
+	/*
+	INFO Set the terminal color to default (white)
+	INFO No exception
+	*/
+	void unsetColor(void) {
+		cout << DEFAULT;
+	};
 	// INFO /!\ DO NOT USE /!\ (Use function "print" instead)
 	void recursivePrint(const string& prefix, const nodePtr node, bool isLeft) {
 		if (node != NULL) {
 			cout << prefix;
 			cout << (isLeft ? "├──" : "└──");
+			setColor(node);
 			cout << node->pair.first << ":" << node->pair.second << endl;
+			unsetColor();
 			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->left, true);
 			recursivePrint(prefix + (isLeft ? "│   " : "    "), node->right, false);
 		}
