@@ -66,10 +66,16 @@ class node {
 	*/
 	node* getSuccessor(void) {
 		node* nodePtr = this;
+		// std::cerr << "PASS" << std::endl;
+		if (!nodePtr) {
+			return nodePtr;
+		}
 		if (nodePtr->right != NULL) {
 			nodePtr = nodePtr->right;
 			while (nodePtr->left != NULL)
 				nodePtr = nodePtr->left;
+		} else if (nodePtr->parent && nodePtr->parent->left == nodePtr) {
+			nodePtr = nodePtr->parent;
 		} else {
 			while (nodePtr->parent != NULL && nodePtr->parent->right == nodePtr)
 				nodePtr = nodePtr->parent;
@@ -83,6 +89,9 @@ class node {
 	*/
 	node* getPredecessor(void) {
 		node* nodePtr = this;
+		if (!nodePtr) {
+			return nodePtr;
+		}
 		if (nodePtr->left != NULL) {
 			nodePtr = nodePtr->left;
 			while (nodePtr->right != NULL)

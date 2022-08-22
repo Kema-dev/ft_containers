@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 echo "\e[35mCalculating output differences\e[0m"
 mkdir diff 2> /dev/null
@@ -10,20 +10,20 @@ echo "\e[94mstl:\e[0m"
 mv src/Main/main.cpp tmp/main_orig.cpp
 mv tmp/main_true.cpp src/Main/main.cpp
 make clean
-make debug
+make re
 echo "Executing..."
-./bin/debug.out > diff/true.txt
+./bin/ft_containers.out > diff/true.txt
 
 echo "\e[94mft:\e[0m"
 mv src/Main/main.cpp tmp/main_true.cpp
 mv tmp/main_false.cpp src/Main/main.cpp
 make clean
-make debug
+make re
 echo "Executing..."
-./bin/debug.out > diff/false.txt
+./bin/ft_containers.out > diff/false.txt
 mv src/Main/main.cpp tmp/main_false.cpp
 
-echo "- : std\n+ : ft" > diff/std_vs_ft.diff
+echo -e "- : std\n+ : ft" > diff/std_vs_ft.diff
 diff -u diff/true.txt diff/false.txt >> diff/std_vs_ft.diff
 rm diff/true.txt diff/false.txt
 mv tmp/main_orig.cpp src/Main/main.cpp
