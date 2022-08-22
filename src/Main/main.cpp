@@ -28,10 +28,7 @@ struct classcomp {
 	}
 };
 
-// TODO Verify that all non standard functions are inaccessible
-
 int main(void) {
-    // goto debug; // TODO delete this debuging purpose line
 	{
 		// SECTION VECTOR TESTS
 		std::cout << "------------------------------------------" << std::endl;
@@ -834,7 +831,6 @@ int main(void) {
             //!SECTION
             std::cout << std::endl;
         }
-        // debug: // TODO delete this debuging purpose line
         {
             // SECTION erase()
             std::cout << "----------TESTING erase()----------" << std::endl;
@@ -854,7 +850,6 @@ int main(void) {
             // !SECTION
             std::cout << std::endl;
         }
-        // goto exit; // TODO delete this debuging purpose line
         {
             //SECTION swap()
             std::cout << "----------TESTING swap()----------" << std::endl;
@@ -1012,6 +1007,5 @@ int main(void) {
         }
         // !SECTION SET TESTS
     }
-    // exit: // TODO remove this line
 	return (0);
 }
