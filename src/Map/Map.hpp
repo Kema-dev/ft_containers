@@ -2,8 +2,8 @@
 #define MAP_HPP
 #include <cmath>
 #include <iostream>
-#include <string>
 #include <limits>
+#include <string>
 
 #include "../Iterators/Iterator.hpp"
 #include "../Tools/Exceptions.hpp"
@@ -251,6 +251,7 @@ class map {
 	INFO Clear the tree from nodePtr <node>
 	INFO No exception
 	*/
+	 private:
 	void clear(nodePtr node) {
 		if (!node)
 			return;
@@ -259,6 +260,7 @@ class map {
 		std::allocator<nodeType>().deallocate(node, 1);
 		_size--;
 	};
+	 public:
 	// INFO Clear the tree (fully)
 	void clear(void) {
 		clear(_root);
@@ -296,10 +298,12 @@ class map {
 	*/
 	// !SECTION Constructors / Destructors
 	// SECTION Operators and basic functions
+	 private:
 	// INFO Get the root node
 	nodePtr getRoot(void) const {
 		return _root;
 	};
+	 public:
 	// INFO access specified element with bounds checking
 	const_mapped_type_reference at(const key_type& key) {
 		iterator node = find(key);
@@ -357,7 +361,7 @@ class map {
 	};
 	// INFO Get the maximum size of the map
 	size_type max_size(void) const {
-		return std::numeric_limits<long>::max() / 20;
+		return std::numeric_limits<difference_type>::max();
 	};
 	// INFO erase the element at position <pos>
 	void erase(iterator pos) {
@@ -386,6 +390,7 @@ class map {
 		std::swap(_comp, other._comp);
 	};
 	// SECTION Searching
+	 private:
 	/*
 	INFO Search for a node by <key>, from <this>'s root
 	INFO No exception
@@ -411,6 +416,7 @@ class map {
 		}
 	};
 	// !SECTION Searching
+	 public:
 	// INFO Find the first element with key <key>
 	iterator find(const key_type& key) const {
 		return iterator(searchKey(key));
@@ -470,6 +476,7 @@ class map {
 	value_compare value_comp(void) const {
 		return _comp;
 	};
+	 private:
 	/*
 	INFO Get a mint new node with pair <dpair>
 	INFO Can throw exception (self: allocFail)
@@ -541,6 +548,7 @@ class map {
 		_size++;
 		return newNode;
 	};
+	 public:
 	/*
 	INFO Add pair <dpair> to the tree
 	INFO Can throw exception (calls)
@@ -613,6 +621,7 @@ class map {
 		fixInsert(newNode);
 		return ft::pair<iterator, bool>(iterator(newNode), true);
 	};
+	 private:
 	/*
 	INFO Add a new node with pair <dpair> to the tree
 	INFO Can throw exception (calls)
@@ -778,8 +787,7 @@ class map {
 			}
 			if (curNode->parent->right == curNode) {
 				curNode->parent->right = NULL;
-			}
-			else {
+			} else {
 				curNode->parent->left = NULL;
 			}
 			curNode->parent = parent;
@@ -949,6 +957,7 @@ class map {
 			return (make_pair(NULL, NULL));
 		}
 	};
+	 public:
 };
 // !SECTION map
 }  // namespace ft

@@ -17,9 +17,9 @@ mv src/Main/main.cpp tmp/main_orig.cpp
 mv tmp/main_true.cpp src/Main/main.cpp
 make
 echo "Running $1 iterations"
-start=`date +%s%N`
+start=`gdate +%s%N`
 ./run.sh $1
-end=`date +%s%N`
+end=`gdate +%s%N`
 delta_stl=`expr $end - $start`
 echo "Execution time was \e[33m$delta_stl nanoseconds\e[0m."
 
@@ -28,9 +28,9 @@ mv src/Main/main.cpp tmp/main_true.cpp
 mv tmp/main_false.cpp src/Main/main.cpp
 make
 echo "Running $1 iterations"
-start=`date +%s%N`
+start=`gdate +%s%N`
 ./run.sh $1
-end=`date +%s%N`
+end=`gdate +%s%N`
 delta_ft=`expr $end - $start`
 echo "Execution time was \e[33m$delta_ft nanoseconds\e[0m."
 
