@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 echo "\e[35mCalculating output differences\e[0m"
 mkdir diff 2> /dev/null
