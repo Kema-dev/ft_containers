@@ -66,7 +66,6 @@ class node {
 	*/
 	node* getSuccessor(void) {
 		node* nodePtr = this;
-		// std::cerr << "PASS" << std::endl;
 		if (!nodePtr) {
 			return nodePtr;
 		}

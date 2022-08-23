@@ -733,11 +733,15 @@ class map {
 			nodePtr curNode = r;
 			if (!curNode) {
 				_root = l;
+				if (_root)
+					_root->parent = NULL;
 				_size--;
 				return;
 			}
 			if (!curNode->left) {
 				_root = curNode;
+				if (_root)
+					_root->parent = NULL;
 				_root->left = l;
 				if (l)
 					_root->left->parent = curNode;
@@ -758,6 +762,8 @@ class map {
 			if (_root->right)
 				_root->right->parent = _root;
 			_size--;
+			if (_root)
+				_root->parent = NULL;
 			return;
 		}
 		nodePtr save = node;

@@ -25,12 +25,12 @@ mv src/Main/main.cpp tmp/main_false.cpp
 
 echo -e "- : std\n+ : ft" > diff/std_vs_ft.diff
 diff -u diff/true.txt diff/false.txt >> diff/std_vs_ft.diff
-rm diff/true.txt diff/false.txt
 mv tmp/main_orig.cpp src/Main/main.cpp
 rm -r tmp
 
 if [ `cat diff/std_vs_ft.diff | wc -l` -eq 2 ]
 then
+	rm diff/true.txt diff/false.txt
 	echo "\e[92mNo diff found\e[0m"
 else
 	echo "\e[91mDiffs found\e[0m, see diff/std_vs_ft.diff"
