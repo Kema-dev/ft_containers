@@ -6,6 +6,13 @@ then
 	exit 1
 fi
 
+case $(uname | tr '[:upper:]' '[:lower:]') in
+	darwin*)
+		shopt -s expand_aliases
+		alias date=gdate
+		;;
+esac
+
 echo "\e[35mCalculating execution time differences\e[0m"
 mkdir diff 2> /dev/null
 mkdir tmp 2> /dev/null
