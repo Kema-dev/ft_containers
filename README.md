@@ -1,6 +1,5 @@
 <div id="top"></div>
 <p align=center>
-  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/kema-dev/ft_containers">
   <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/kema-dev/ft_containers">
   <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/kema-dev/ft_containers">
 </p>
@@ -9,7 +8,7 @@
 <br />
 <div align="center">
   <a>
-   <img src="assets/CPPSTL.png" alt="CPP STL image">
+   <img src="assets/CPPSTL.png" alt="CPP STL image" style="height:30vh">
   </a>
 </div>
 
