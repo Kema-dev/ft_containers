@@ -13,6 +13,7 @@ make clean
 make re
 echo "Executing..."
 ./bin/ft_containers.out > diff/true.txt
+echo "Done, saved to diff/true.txt"
 
 echo "\e[94mft:\e[0m"
 mv src/Main/main.cpp tmp/main_true.cpp
@@ -21,6 +22,7 @@ make clean
 make re
 echo "Executing..."
 ./bin/ft_containers.out > diff/false.txt
+echo "Done, saved to diff/false.txt"
 mv src/Main/main.cpp tmp/main_false.cpp
 
 echo -e "- : std\n+ : ft" > diff/std_vs_ft.diff
@@ -28,6 +30,7 @@ diff -u diff/true.txt diff/false.txt >> diff/std_vs_ft.diff
 mv tmp/main_orig.cpp src/Main/main.cpp
 rm -r tmp
 
+echo "\e[94mComparing...\e[0m"
 if [ `cat diff/std_vs_ft.diff | wc -l` -eq 2 ]
 then
 	rm diff/true.txt diff/false.txt

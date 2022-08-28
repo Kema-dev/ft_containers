@@ -28,7 +28,7 @@ start=`date +%s%N`
 ./run.sh $1
 end=`date +%s%N`
 delta_stl=`expr $end - $start`
-echo "Execution time was \e[33m$delta_stl nanoseconds\e[0m."
+echo "Execution time: \e[35m$delta_stl nanoseconds\e[0m."
 
 echo "\e[94mft:\e[0m"
 mv src/Main/main.cpp tmp/main_true.cpp
@@ -39,14 +39,13 @@ start=`date +%s%N`
 ./run.sh $1
 end=`date +%s%N`
 delta_ft=`expr $end - $start`
-echo "Execution time was \e[33m$delta_ft nanoseconds\e[0m."
+echo "Execution time: \e[35m$delta_ft nanoseconds\e[0m."
 
 ratio=`perl -e "print $delta_ft / $delta_stl * 100 - 100"`
 out=`printf "%.2f\n" $ratio`
-echo -n "ft's execution time = stl's execution time "
 if [ ${out:0:1} -eq "-" ]
 then
-	echo -e "\e[32m$out%\e[0m"
+	echo -e "\e[92mft's execution time = stl's execution time $out%\e[0m"
 else
-	echo -e "\e[31m+$out%\e[0m"
+	echo -e "\e[91mft's execution time = stl's execution time +$out%\e[0m"
 fi
