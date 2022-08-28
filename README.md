@@ -8,7 +8,7 @@
 <br />
 <div align="center">
   <a>
-   <img src="assets/CPPSTL.png" alt="CPP STL image" style="height:30vh">
+   <img src="assets/correction.png" alt="correction script image" style="height:40vh">
   </a>
 </div>
 

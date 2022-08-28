@@ -1,4 +1,4 @@
 #!/bin/zsh
 
 ./diff.sh
-./time.sh 1000
+./time.sh 5000

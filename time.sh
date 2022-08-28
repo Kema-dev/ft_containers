@@ -41,5 +41,12 @@ end=`date +%s%N`
 delta_ft=`expr $end - $start`
 echo "Execution time was \e[33m$delta_ft nanoseconds\e[0m."
 
-ratio=`perl -e "print $delta_ft / $delta_stl"`
-echo "ft has stl's execution time * \e[92m$ratio\e[0m"
+ratio=`perl -e "print $delta_ft / $delta_stl * 100 - 100"`
+out=`printf "%.2f\n" $ratio`
+echo -n "ft's execution time = stl's execution time "
+if [ ${out:0:1} -eq "-" ]
+then
+	echo -e "\e[32m$out%\e[0m"
+else
+	echo -e "\e[31m+$out%\e[0m"
+fi
