@@ -1,7 +1,8 @@
 <div id="top"></div>
 <p align=center>
-  <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/kema-dev/ft_containers">
-  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/kema-dev/ft_containers">
+  <img alt="Project's status" src="https://img.shields.io/badge/Status-Finished-brightgreen">
+  <img alt="Project's primary language" src="https://img.shields.io/badge/Language-C++-blue">
+  <img alt="Project's focus" src="https://img.shields.io/badge/Focus-Efficient%20programming-blue">
 </p>
 
 <!-- PROJECT LOGO -->
