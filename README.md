@@ -16,7 +16,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-ft_containers is a 42 project, aiming to recreate some Standard Template Library (STL) containers in C++, compliant with C++98 standard.
+**ft_containers** is a 42 project, aiming to recreate some Standard Template Library (STL) containers in C++, compliant with C++98 standard.
 
 4 containers have been recreated : Vector, Map, Set, and Stack.
 
