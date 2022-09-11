@@ -57,7 +57,7 @@ Full subject can be found <a href="/docs">here</a>
 ./bin/ft_containers.out
 ```
 
-* You can also use `correct.sh` to compare our program to STL's one
+* You can also use `correct.sh` to compare my program to STL's one
 
 ```sh
 ./correct.sh
